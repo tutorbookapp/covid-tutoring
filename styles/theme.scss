@@ -46,7 +46,7 @@ $highlight: #79ffe1;
   --accents-6: #444;
 
   --header-border-bottom: inset 0 -1px 0 0 rgba(0, 0, 0, 0.1);
-  --header-background: rgba(255, 255, 255, 0.8);
+  --header-background: #{rgba($background, 0.8)};
   --shadow-large: 0 30px 60px rgba(0, 0, 0, 0.12);
 
   .mdc-select__dropdown-icon {
@@ -102,7 +102,7 @@ $highlight: #79ffe1;
   --accents-1: #111;
 
   --header-border-bottom: inset 0 -1px 0 0 hsla(0, 0%, 100%, 0.1);
-  --header-background: rgba(18, 18, 18, 0.5);
+  --header-background: #{rgba($background, 0.8)};
   --shadow-large: 0 0 0 1px var(--accents-2);
 
   .mdc-select__dropdown-icon {
