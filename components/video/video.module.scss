@@ -20,9 +20,6 @@ figure.wrapper {
     top: 0;
     width: 100%;
     cursor: pointer;
-  }
-
-  video.radius {
     border-radius: 4px;
   }
 
@@ -37,7 +34,7 @@ figure.wrapper {
     display: flex;
     justify-content: center;
     padding-bottom: calc(100% / 16 * 9);
-    background-color: var(--accents-1);
+    background-color: var(--accents-2);
   }
 
   .caption {
@@ -48,6 +45,7 @@ figure.wrapper {
   }
 
   div.controls {
+    border-radius: 4px;
     position: absolute;
     bottom: 5%;
     background: var(--background);
