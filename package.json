@@ -137,7 +137,7 @@
     "handlebars": "^4.7.6",
     "mixpanel-browser": "^2.39.0",
     "nanoid": "^3.1.12",
-    "next": "^10.0.1",
+    "next": "^10.0.2",
     "next-translate": "^0.17.1",
     "nprogress": "^0.2.0",
     "password-generator": "^2.3.2",
