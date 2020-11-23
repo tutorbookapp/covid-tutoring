@@ -2,7 +2,12 @@ import * as admin from 'firebase-admin';
 import { ObjectWithObjectID } from '@algolia/client-search';
 import { v4 as uuid } from 'uuid';
 
-import { Account, AccountInterface, isAccountJSON } from 'lib/model/account';
+import {
+  Account,
+  AccountInterface,
+  AccountJSON,
+  isAccountJSON,
+} from 'lib/model/account';
 import { Aspect, isAspect } from 'lib/model/aspect';
 import {
   Availability,
@@ -104,17 +109,22 @@ export type UserSearchHit = ObjectWithObjectID &
 
 export type UserJSON = Omit<
   UserInterface,
-  'availability' | 'verifications' | 'zooms' | 'token' | 'hash'
-> & {
-  availability: AvailabilityJSON;
-  verifications: VerificationJSON[];
-  zooms: ZoomUserJSON[];
-  token: string | null;
-  hash: string | null;
-};
+  | keyof AccountInterface
+  | 'availability'
+  | 'verifications'
+  | 'zooms'
+  | 'token'
+  | 'hash'
+> &
+  AccountJSON & {
+    availability: AvailabilityJSON;
+    verifications: VerificationJSON[];
+    zooms: ZoomUserJSON[];
+    token: string | null;
+    hash: string | null;
+  };
 
 export function isUserJSON(json: unknown): json is UserJSON {
-  if (!isAccountJSON(json)) return false;
   if (!isJSON(json)) return false;
   if (!isStringArray(json.orgs)) return false;
   if (!isArray(json.zooms, isZoomUserJSON)) return false;
@@ -128,6 +138,7 @@ export function isUserJSON(json: unknown): json is UserJSON {
   if (!isArray(json.featured, isAspect)) return false;
   if (json.token && typeof json.token !== 'string') return false;
   if (json.hash && typeof json.hash !== 'string') return false;
+  if (!isAccountJSON(json)) return false;
   return true;
 }
 
@@ -241,26 +252,45 @@ export class User extends Account implements UserInterface {
   }
 
   public static fromJSON(json: UserJSON): User {
-    const { availability, verifications, zooms, token, hash, ...rest } = json;
+    const {
+      availability,
+      verifications,
+      zooms,
+      token,
+      hash,
+      background,
+      ...rest
+    } = json;
     return new User({
       ...rest,
       availability: Availability.fromJSON(availability),
       verifications: verifications.map((v) => Verification.fromJSON(v)),
       zooms: zooms.map((z) => ZoomUser.fromJSON(z)),
+      background: background || undefined,
       token: token || undefined,
       hash: hash || undefined,
     });
   }
 
   public toJSON(): UserJSON {
-    const { availability, verifications, zooms, ref, ...rest } = this;
+    const {
+      availability,
+      verifications,
+      zooms,
+      token,
+      hash,
+      background,
+      ref,
+      ...rest
+    } = this;
     return {
       ...rest,
       availability: availability.toJSON(),
       verifications: verifications.map((v) => v.toJSON()),
       zooms: zooms.map((z) => z.toJSON()),
-      token: null,
-      hash: null,
+      background: background || null,
+      token: token || null,
+      hash: hash || null,
     };
   }
 }

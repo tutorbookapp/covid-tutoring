@@ -1,6 +1,11 @@
 import * as admin from 'firebase-admin';
 
-import { Account, AccountInterface, isAccountJSON } from 'lib/model/account';
+import {
+  Account,
+  AccountInterface,
+  AccountJSON,
+  isAccountJSON,
+} from 'lib/model/account';
 import { Aspect, isAspect } from 'lib/model/aspect';
 import { isArray, isJSON, isStringArray } from 'lib/model/json';
 import { UserInterface } from 'lib/model/user';
@@ -16,7 +21,6 @@ type SignupConfig = AspectConfig<{ header: string; body: string }>;
 type HomeConfig = Config<{
   header: string;
   body: string;
-  photo?: string;
 }>;
 
 export function isSignupConfig(config: unknown): config is SignupConfig {
@@ -109,15 +113,18 @@ export interface OrgInterface extends AccountInterface {
   matchURL?: string;
 }
 
-export type OrgJSON = Omit<OrgInterface, 'subjects' | 'zoom' | 'matchURL'> & {
-  subjects: string[] | null;
-  zoom: ZoomAccount | null;
-  matchURL: string | null;
-};
+export type OrgJSON = Omit<
+  OrgInterface,
+  keyof AccountInterface | 'subjects' | 'zoom' | 'matchURL'
+> &
+  AccountJSON & {
+    subjects: string[] | null;
+    zoom: ZoomAccount | null;
+    matchURL: string | null;
+  };
 
 // TODO: Check that the `profiles` key only contains keys of the `User` object.
 export function isOrgJSON(json: unknown): json is OrgJSON {
-  if (!isAccountJSON(json)) return false;
   if (!isJSON(json)) return false;
   if (!isStringArray(json.members)) return false;
   if (!isArray(json.aspects, isAspect)) return false;
@@ -128,6 +135,7 @@ export function isOrgJSON(json: unknown): json is OrgJSON {
   if (!isSignupConfig(json.signup)) return false;
   if (!isHomeConfig(json.home)) return false;
   if (json.matchURL && typeof json.matchURL !== 'string') return false;
+  if (!isAccountJSON(json)) return false;
   return true;
 }
 
@@ -176,7 +184,6 @@ export class Org extends Account implements OrgInterface {
   public home: HomeConfig = {
     en: {
       header: 'How it works',
-      photo: 'https://assets.tutorbook.app/jpgs/rocky-beach.jpg',
       body:
         'First, new volunteers register using the sign-up form linked to the ' +
         'right. Organization admins then vet those volunteers (to ensure ' +
@@ -212,18 +219,21 @@ export class Org extends Account implements OrgInterface {
   }
 
   public static fromJSON(json: OrgJSON): Org {
+    const { background, matchURL, subjects, zoom, ...rest } = json;
     return new Org({
-      ...json,
-      matchURL: json.matchURL || undefined,
-      subjects: json.subjects || undefined,
-      zoom: json.zoom || undefined,
+      ...rest,
+      background: background || undefined,
+      matchURL: matchURL || undefined,
+      subjects: subjects || undefined,
+      zoom: zoom || undefined,
     });
   }
 
   public toJSON(): OrgJSON {
-    const { ref, matchURL, subjects, zoom, ...rest } = this;
+    const { ref, background, matchURL, subjects, zoom, ...rest } = this;
     return {
       ...rest,
+      background: background || null,
       matchURL: matchURL || null,
       subjects: subjects || null,
       zoom: zoom || null,

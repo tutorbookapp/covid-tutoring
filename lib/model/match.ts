@@ -70,8 +70,8 @@ export interface MatchInterface {
 }
 
 export type MatchJSON = Omit<MatchInterface, 'time' | 'request' | 'venue'> & {
-  time?: TimeslotJSON;
-  request?: MatchJSON;
+  time: TimeslotJSON | null;
+  request: MatchJSON | null;
   venue: VenueJSON;
 };
 
@@ -159,8 +159,8 @@ export class Match implements MatchInterface {
     const { time, request, venue, ref, ...rest } = this;
     return {
       ...rest,
-      time: time ? time.toJSON() : undefined,
-      request: request ? request.toJSON() : undefined,
+      time: time ? time.toJSON() : null,
+      request: request ? request.toJSON() : null,
       venue: venue.toJSON(),
     };
   }

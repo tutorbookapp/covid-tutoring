@@ -1,4 +1,4 @@
-import { useCallback, FormEvent } from 'react';
+import { FormEvent, useCallback } from 'react';
 import { TextField } from '@rmwc/textfield';
 import useTranslation from 'next-translate/useTranslation';
 
@@ -14,21 +14,15 @@ export default function Home(): JSX.Element {
   const { org, setOrg } = useSettings();
 
   const onPhotoChange = useCallback(
-    (photo: string) => {
-      setOrg((prev: Org) => {
-        const home = {
-          ...prev.home,
-          [locale]: { ...prev.home[locale], photo },
-        };
-        return new Org({ ...prev, home });
-      });
+    (background: string) => {
+      setOrg((prev) => new Org({ ...prev, background }));
     },
-    [locale, setOrg]
+    [setOrg]
   );
   const onHeaderChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const header = evt.currentTarget.value;
-      setOrg((prev: Org) => {
+      setOrg((prev) => {
         const home = {
           ...prev.home,
           [locale]: { ...prev.home[locale], header },
@@ -41,7 +35,7 @@ export default function Home(): JSX.Element {
   const onBodyChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const body = evt.currentTarget.value;
-      setOrg((prev: Org) => {
+      setOrg((prev) => {
         const home = { ...prev.home, [locale]: { ...prev.home[locale], body } };
         return new Org({ ...prev, home });
       });
@@ -54,7 +48,7 @@ export default function Home(): JSX.Element {
       <div className={styles.inputs}>
         <PhotoInput
           label={t('org:home-photo')}
-          value={org.home[locale].photo || ''}
+          value={org.background || ''}
           onChange={onPhotoChange}
           className={styles.field}
           outlined
