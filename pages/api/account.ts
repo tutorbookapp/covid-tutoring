@@ -1,5 +1,6 @@
 import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 import { dequal } from 'dequal/lite';
+import to from 'await-to-js';
 
 import {
   Availability,
@@ -89,9 +90,12 @@ function mergeUsers(overrides: User, baseline: User): User {
 async function updateAccount(req: Req, res: Res): Promise<void> {
   const body = verifyBody<User, UserJSON>(req.body, isUserJSON, User);
 
+  // Revert to old behavior if user doesn't already exist; just create it.
+  const [err, user] = await to(getUser(body.id));
+
   // Merge the two users giving priority to the request body (but preventing any
   // loss of data; `mergeUsers` won't allow falsy values or empty arrays).
-  const merged = mergeUsers(body, await getUser(body.id));
+  const merged = mergeUsers(body, user || new User());
 
   // TODO: Check the existing data, not the data that is being sent with the
   // request (e.g. b/c I could fake data and add users to my org).
