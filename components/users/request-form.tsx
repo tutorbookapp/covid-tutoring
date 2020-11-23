@@ -259,7 +259,7 @@ export default function RequestForm({
   );
 
   const forOthers = useMemo(() => {
-    if (students.length === 1 && students[0].label === 'Myself') return '';
+    if (students.length <= 1 && students[0].label === 'Myself') return '';
     return 'for-others-';
   }, [students]);
 
