@@ -289,8 +289,8 @@ export class User extends Account implements UserInterface {
       verifications: verifications.map((v) => v.toJSON()),
       zooms: zooms.map((z) => z.toJSON()),
       background: background || null,
-      token: token || null,
-      hash: hash || null,
+      token: null,
+      hash: null,
     };
   }
 }
