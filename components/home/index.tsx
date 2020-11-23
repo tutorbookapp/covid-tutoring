@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import cn from 'classnames';
 import { useMemo } from 'react';
 import useTranslation from 'next-translate/useTranslation';
@@ -33,21 +34,20 @@ export default function Home({ org }: HomeProps): JSX.Element {
     return t('home:about', { name, person, people, aspects: join(as) });
   }, [org, t]);
 
-  // TODO: Replace the <img /> tag with the Next.js <Image />, ensure that the
-  // banner images are always the same ratio (using a back-end API), and then
-  // restyle this to allow for automatic image optimization.
-  // @see {@link https://github.com/tutorbookapp/tutorbook/issues/139}
-  // @see {@link https://github.com/vercel/next.js/issues/18871}
-
   return (
     <div data-cy='org-home' className={cn({ [styles.loading]: !org })}>
       {(!org || org.home[locale].photo) && (
         <div className={styles.background}>
-          <img
-            data-cy='backdrop'
-            src={org?.home[locale].photo || ''}
-            alt={`Background of ${org ? org.name : 'Organization'}`}
-          />
+          {org?.home[locale].photo && (
+            <Image
+              layout='fill'
+              objectFit='cover'
+              data-cy='backdrop'
+              objectPosition='center 50%'
+              src={org.home[locale].photo}
+              alt={`Background of ${org ? org.name : 'Organization'}`}
+            />
+          )}
         </div>
       )}
       <div className={styles.content}>

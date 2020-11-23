@@ -4,22 +4,6 @@
 @use 'styles/socials';
 @use 'styles/typography';
 
-.background img {
-  @include typography.typography('subtitle1');
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0;
-  width: 100%;
-  height: calc(40vh + var(--header-height));
-  opacity: 1;
-  object-fit: cover;
-  object-position: center 50%;
-  margin-top: calc(-1 * var(--header-height));
-  background: var(--accents-2);
-  font-size: 0;
-}
-
 .content {
   @include common.wrapper(var(--form-width-with-margin));
   display: flex;
@@ -109,8 +93,23 @@
   }
 }
 
+.background {
+  height: 40vh;
+  margin-top: calc(-1 * var(--header-height));
+  background: var(--accents-2);
+  position: relative;
+  font-size: 0;
+
+  img {
+    @include typography.typography('subtitle1');
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
 .loading {
-  .background img {
+  .background {
     @include loader.loading;
   }
 
