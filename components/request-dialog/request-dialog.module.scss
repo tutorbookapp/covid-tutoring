@@ -78,29 +78,7 @@
     }
 
     .field {
-      margin: 8px 0;
-      width: 100%;
-      display: inline-flex;
-
-      textarea {
-        resize: vertical;
-      }
-
-      &:first-child {
-        margin-top: 0;
-      }
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-
-      :global(.mdc-select__anchor) {
-        width: 100%;
-      }
-
-      &:global(.mdc-select > .mdc-menu > .mdc-list > .mdc-list-item) {
-        white-space: nowrap;
-      }
+      @include common.field;
     }
 
     .button {

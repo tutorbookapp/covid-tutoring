@@ -3,6 +3,8 @@
 @use 'styles/loader';
 @use 'styles/typography';
 
+@include common.card-styles;
+
 .wrapper {
   @include common.wrapper(var(--form-width-with-margin));
   margin: 60px auto;
@@ -50,8 +52,7 @@
     }
   }
 
-  .formCard {
-    @include common.card;
+  .card {
     position: relative;
     margin: 16px 0;
 

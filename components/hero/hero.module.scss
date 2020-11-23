@@ -1,5 +1,7 @@
 @use 'styles/common';
 
+@include common.card-styles;
+
 .wrapper {
   @include common.wrapper;
 }
@@ -20,8 +22,4 @@
   @media (max-width: 800px) {
     padding-bottom: 24px;
   }
-}
-
-.card {
-  @include common.card;
 }

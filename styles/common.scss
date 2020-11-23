@@ -26,6 +26,10 @@
     width: 100%;
   }
 
+  &:global(.mdc-select > .mdc-menu > .mdc-list > .mdc-list-item) {
+    white-space: nowrap;
+  }
+
   &:not(:global(.mdc-menu-surface--anchor)) textarea {
     min-height: 47px;
   }
@@ -39,17 +43,24 @@
   border-top: 1px solid var(--accents-2);
 }
 
-@mixin card {
-  @include elevation.elevation(0);
-  border: 1px solid var(--accents-2);
-  border-radius: 4px;
-  transition: elevation.transition-value(),
-    border elevation.$transition-duration elevation.$transition-timing-function;
-  will-change: elevation.$property, border;
+@mixin card-styles {
+  .card {
+    border: 1px solid var(--accents-2);
+    border-radius: 4px;
+  }
 
-  &:hover {
-    @include elevation.elevation(8);
-    border: 1px solid var(--background);
+  :global(html:not(.dark)) .card {
+    @include elevation.elevation(0);
+    transition: elevation.transition-value(),
+      border elevation.$transition-duration
+        elevation.$transition-timing-function;
+    will-change: elevation.$property, border-color;
+
+    &:hover,
+    &:focus-within {
+      @include elevation.elevation(8);
+      border-color: var(--background);
+    }
   }
 }
 

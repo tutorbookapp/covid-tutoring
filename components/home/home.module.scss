@@ -4,6 +4,8 @@
 @use 'styles/socials';
 @use 'styles/typography';
 
+@include common.card-styles;
+
 .content {
   @include common.wrapper(var(--form-width-with-margin));
   display: flex;
@@ -68,10 +70,9 @@
 
     .actions {
       position: sticky;
-      top: var(--header-height) + 24px;
+      top: calc(var(--header-height) + 24px);
 
       .card {
-        @include common.card;
         padding: 16px;
         margin-bottom: 24px;
 

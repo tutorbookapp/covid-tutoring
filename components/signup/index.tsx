@@ -182,7 +182,7 @@ export default function Signup({ aspect }: SignupProps): JSX.Element {
           {!org ? '' : (org.signup[locale].tutoring || {}).body || ''}
         </animated.div>
       </div>
-      <div className={styles.formCard}>
+      <div className={styles.card}>
         <Loader active={loading} checked={checked} />
         <form className={styles.form} onSubmit={onSubmit}>
           <div className={styles.inputs}>
