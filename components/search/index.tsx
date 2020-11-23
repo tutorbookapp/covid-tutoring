@@ -6,6 +6,7 @@ import Carousel from 'components/carousel';
 import Pagination from 'components/pagination';
 
 import { Callback, User, UserJSON, UsersQuery } from 'lib/model';
+import { useOrg } from 'lib/context/org';
 
 import Form from './form';
 import Result from './result';
@@ -63,6 +64,8 @@ export default function Search({
     return () => window.removeEventListener('scroll', listener);
   });
 
+  const { org } = useOrg();
+
   return (
     <div className={styles.wrapper}>
       <Form query={query} onChange={onChange} />
@@ -73,9 +76,11 @@ export default function Search({
             {!searching &&
               results.map((res) => (
                 <Result
+                  key={res.id}
                   user={User.fromJSON(res)}
-                  key={res.id || nanoid()}
-                  onClick={() => setViewing(res)}
+                  href={`/${org?.id || 'default'}/users/${res.id}?aspect=${
+                    query.aspect
+                  }`}
                 />
               ))}
           </ul>

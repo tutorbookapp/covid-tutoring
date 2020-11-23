@@ -1,11 +1,14 @@
 {
   "login-to-proxy-request": "You must be logged in to send requests for others",
   "phone": "Your phone number",
-  "people": "Who is this for?",
+  "students": "Who needs help?",
   "subjects": "What would you like to learn?",
   "time": "When would you like to meet?",
   "message": "What specifically do you need help with?",
-  "message-placeholder": "Ex: I could really use your help with my {{subject}} project...",
+  "message-placeholder": "Ex: {{person}} could really use your help with a {{subject}} project...",
+  "for-others-subjects": "What would they like to learn?",
+  "for-others-time": "When would they like to meet?",
+  "for-others-message": "What specifically do they need help with?",
   "send-btn": "Send request",
   "signup-btn": "Signup and send"
 }

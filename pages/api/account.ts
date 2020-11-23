@@ -91,7 +91,7 @@ async function updateAccount(req: Req, res: Res): Promise<void> {
   const body = verifyBody<User, UserJSON>(req.body, isUserJSON, User);
 
   // Revert to old behavior if user doesn't already exist; just create it.
-  const [err, user] = await to(getUser(body.id));
+  const user = (await to(getUser(body.id)))[1];
 
   // Merge the two users giving priority to the request body (but preventing any
   // loss of data; `mergeUsers` won't allow falsy values or empty arrays).

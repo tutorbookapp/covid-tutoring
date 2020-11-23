@@ -27,6 +27,7 @@ import {
   Timeslot,
   User,
   UserJSON,
+  isAspect,
 } from 'lib/model';
 import { join, period } from 'lib/utils';
 import { useAnalytics, useTrack } from 'lib/hooks';
@@ -53,10 +54,10 @@ export default function RequestForm({
   const { t } = useTranslation();
 
   const { org } = useOrg();
-  const { user: currentUser, updateUser } = useUser();
   const { query } = useRouter();
+  const { user: currentUser, updateUser } = useUser();
 
-  const aspects = useRef<Aspect[]>([query.aspect as Aspect]);
+  const aspects = useRef<Aspect[]>([]);
   const [students, setStudents] = useState<UserOption[]>([]);
   const [subjects, setSubjects] = useState<SubjectOption[]>([]);
   const [message, setMessage] = useState<string>('');
@@ -78,21 +79,15 @@ export default function RequestForm({
   }, [currentUser]);
 
   useEffect(() => {
+    if (isAspect(query.aspect) && !aspects.current.includes(query.aspect))
+      aspects.current.push(query.aspect);
+  }, [query.aspect]);
+  useEffect(() => {
     subjects.forEach((s) => {
       if (s.aspect && !aspects.current.includes(s.aspect))
         aspects.current.push(s.aspect);
     });
   }, [subjects]);
-  useEffect(() => {
-    const options = [...user.tutoring.subjects, ...user.mentoring.subjects];
-    setSubjects((prev) => {
-      const selected: Set<string> = new Set();
-      prev.forEach((subject) => {
-        if (options.includes(subject.value)) selected.add(subject.value);
-      });
-      return [...selected].map((s) => ({ label: s, value: s }));
-    });
-  }, [user.tutoring.subjects, user.mentoring.subjects]);
 
   // We have to use React refs in order to access updated state information in
   // a callback that was called (and thus was also defined) before the update.
@@ -304,6 +299,7 @@ export default function RequestForm({
           onSelectedChange={setSubjects}
           selected={subjects}
           options={[...user.tutoring.subjects, ...user.mentoring.subjects]}
+          aspect={isAspect(query.aspect) ? query.aspect : undefined}
         />
         <TimeSelect
           required
