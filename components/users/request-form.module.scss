@@ -1,0 +1,17 @@
+@use 'styles/common';
+
+@include common.card-styles;
+
+.card {
+  position: relative;
+  padding: 16px;
+
+  .field {
+    @include common.field;
+  }
+
+  .button {
+    width: 100%;
+    margin: 8px 0 0;
+  }
+}

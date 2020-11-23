@@ -1,5 +1,5 @@
 import { getDaysInMonth, getNextDateWithDay } from 'lib/utils/time';
-import { onlyFirstNameAndLastInitial } from 'lib/api/get/truncated-users';
+import { onlyFirstNameAndLastInitial } from 'lib/api/get/truncated-user';
 
 import admin from 'cypress/fixtures/users/admin.json';
 import match from 'cypress/fixtures/match.json';

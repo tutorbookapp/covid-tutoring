@@ -7,9 +7,9 @@ import {
   UsersQueryURL,
   isUsersQueryURL,
 } from 'lib/model';
-import { handle } from 'lib/api/error';
-import getTruncatedUsers from 'lib/api/get/truncated-users';
+import getTruncatedUser from 'lib/api/get/truncated-user';
 import getUsers from 'lib/api/get/users';
+import { handle } from 'lib/api/error';
 import verifyAuth from 'lib/api/verify/auth';
 import verifyQuery from 'lib/api/verify/query';
 
@@ -34,7 +34,7 @@ export default async function listUsers(
     );
     res.status(200).json({
       hits,
-      users: (err ? getTruncatedUsers(users) : users).map((u) => u.toJSON()),
+      users: (err ? users.map(getTruncatedUser) : users).map((u) => u.toJSON()),
     });
   } catch (e) {
     handle(e, res);

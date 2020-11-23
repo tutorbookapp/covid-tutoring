@@ -9,7 +9,7 @@ import Avatar from 'components/avatar';
 
 import { Callback, MatchJSON, MeetingJSON, Person, Timeslot } from 'lib/model';
 import { join, period } from 'lib/utils';
-import { onlyFirstNameAndLastInitial } from 'lib/api/get/truncated-users';
+import { onlyFirstNameAndLastInitial } from 'lib/api/get/truncated-user';
 
 import styles from './display-page.module.scss';
 

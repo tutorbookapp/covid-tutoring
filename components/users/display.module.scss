@@ -1,0 +1,140 @@
+@use 'sass:map';
+@use 'styles/common';
+@use 'styles/loader';
+@use 'styles/socials';
+@use 'styles/typography';
+
+.divider {
+  border-top: 1px solid var(--accents-2);
+  margin: 32px 0;
+}
+
+.right {
+  width: 400px;
+
+  .sticky {
+    position: sticky;
+    top: calc(var(--header-height) + 24px);
+    text-align: center;
+
+    .actions {
+      margin-top: 8px;
+      display: inline-block;
+
+      .btn {
+        margin: 0 4px;
+      }
+    }
+  }
+}
+
+.content {
+  @include common.wrapper();
+  display: flex;
+  padding: 48px 24px;
+
+  $cutoff: 570px;
+
+  @media (max-width: $cutoff) {
+    flex-direction: column;
+  }
+
+  .left {
+    flex: 1 1 auto;
+    margin-right: 72px;
+
+    @media (max-width: $cutoff) {
+      margin-right: 0;
+      margin-bottom: 48px;
+    }
+
+    .wrapper {
+      display: flex;
+      align-items: center;
+
+      .img {
+        display: block;
+        min-width: 120px;
+        margin-right: 16px;
+      }
+
+      .name {
+        @include typography.typography('headline4');
+        color: var(--on-background);
+        line-height: 2.2rem;
+        margin: 0 0 8px;
+      }
+
+      .socials {
+        height: 28px;
+      }
+
+      @include socials.core-styles;
+    }
+
+    h2 {
+      @include typography.typography('headline6');
+      color: var(--on-background);
+      font-weight: 600;
+      margin: 24px 0 0;
+    }
+
+    p {
+      @include typography.typography('body1');
+      color: var(--accents-5);
+      white-space: pre-wrap;
+      margin: 0 0 8px;
+    }
+  }
+
+  .right {
+    flex: none;
+  }
+}
+
+.background {
+  height: 40vh;
+  margin-top: calc(-1 * var(--header-height));
+  background: var(--accents-2);
+  position: relative;
+  font-size: 0;
+
+  img {
+    @include typography.typography('subtitle1');
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.loading {
+  .background {
+    @include loader.loading;
+  }
+
+  .name,
+  .socials,
+  h2,
+  p {
+    @include loader.loading;
+    border-radius: 4px;
+  }
+
+  .name {
+    height: 2.2rem;
+    width: 200px;
+  }
+
+  .socials {
+    width: 200px;
+  }
+
+  h2 {
+    height: 32px;
+    margin-bottom: 8px !important;
+  }
+
+  p {
+    height: 100px;
+  }
+}

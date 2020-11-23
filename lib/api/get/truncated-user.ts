@@ -18,20 +18,17 @@ export function onlyFirstNameAndLastInitial(name: string): string {
  * @return An array of user objects that only contain some of the information
  * included in `users`.
  */
-export default function getTruncatedUsers(users: User[]): User[] {
-  return users.map(
-    (user) =>
-      new User({
-        name: onlyFirstNameAndLastInitial(user.name),
-        photo: user.photo,
-        bio: user.bio,
-        orgs: user.orgs,
-        availability: user.availability,
-        mentoring: user.mentoring,
-        tutoring: user.tutoring,
-        socials: user.socials,
-        langs: user.langs,
-        id: user.id,
-      })
-  );
+export default function getTruncatedUser(user: User): User {
+  return new User({
+    name: onlyFirstNameAndLastInitial(user.name),
+    photo: user.photo,
+    bio: user.bio,
+    orgs: user.orgs,
+    availability: user.availability,
+    mentoring: user.mentoring,
+    tutoring: user.tutoring,
+    socials: user.socials,
+    langs: user.langs,
+    id: user.id,
+  });
 }
