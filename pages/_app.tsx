@@ -119,7 +119,10 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   }, []);
 
   // Initially set theme using system preferences, cache settings when changed.
-  const [theme, setTheme] = useState<Theme>('system');
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof localStorage === 'undefined') return 'system';
+    return localStorage.getItem('theme') as Theme;
+  });
   const [dark, setDark] = useState<boolean>(theme === 'dark');
 
   useEffect(() => {
@@ -133,9 +136,6 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   useEffect(() => {
     document.documentElement.className = dark ? 'dark' : '';
   }, [dark]);
-  useEffect(() => {
-    setTheme((prev) => (localStorage.getItem('theme') as Theme) || prev);
-  }, [setTheme]);
   useEffect(() => {
     localStorage.setItem('theme', theme);
   }, [theme]);
