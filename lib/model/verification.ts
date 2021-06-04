@@ -41,17 +41,17 @@ export function isCheck(json: unknown): json is Check {
 
 /**
  * A verification is run by a non-profit organization (the `org`) by a member of
- * that organization (the `user`). The non-profit takes full responsibility for
- * their verification and liability for the user's actions.
+ * that organization (the `creator`). The non-profit takes full responsibility 
+ * for their verification and liability for the user's actions.
  * @typedef {Object} Verification
  * @extends Resource
- * @property user - The uID of the user who ran the verification.
- * @property org - The id of the non-profit org that the `user` belongs to.
+ * @property creator - The uID of the user who ran the verification.
+ * @property org - The id of the non-profit org that the `creator` belongs to.
  * @property notes - Any notes about the verification (e.g. what happened).
  * @property checks - An array of checks (@see {@link Check}) passed.
  */
 export interface VerificationInterface extends ResourceInterface {
-  user: string;
+  creator: string;
   org: string;
   notes: string;
   checks: Check[];
@@ -76,7 +76,7 @@ export type VerificationSearchHit = Omit<
 export function isVerificationJSON(json: unknown): json is VerificationJSON {
   if (!isResourceJSON(json)) return false;
   if (!isJSON(json)) return false;
-  if (typeof json.user !== 'string') return false;
+  if (typeof json.creator !== 'string') return false;
   if (typeof json.org !== 'string') return false;
   if (typeof json.notes !== 'string') return false;
   if (!isArray(json.checks, isCheck)) return false;
@@ -84,7 +84,7 @@ export function isVerificationJSON(json: unknown): json is VerificationJSON {
 }
 
 export class Verification extends Resource implements VerificationInterface {
-  public user = '';
+  public creator = '';
 
   public org = 'default';
 
