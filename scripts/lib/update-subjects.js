@@ -1,3 +1,9 @@
+// A reusable function that sanitizes a list of subjects, ensuring that each of
+// the subjects is included in our subject CSV files (which are then included in
+// our subject Algolia indices that power the `SubjectSelect` components).
+//
+// TODO: Rewrite this to be more general or just get rid of it.
+
 const fs = require('fs');
 const prompt = require('prompt-sync')();
 

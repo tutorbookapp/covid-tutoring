@@ -1,3 +1,18 @@
+// Imports Picktime data (exported from the "Reports" tab by month) as matches
+// and recurring meetings. Creates new students and parents as necessary.
+//
+// This script is resumable as it creates multiple "cache" files that are used
+// to keep track of progress:
+// - `errors.json` is a record of all the errors encountered while importing.
+// - `matches-created.json` is a record of all the matches created.
+// - `meetings-created.json` is a record of all the meetings created, organized
+// by match (i.e. each `matchId` is a key that holds an array of meetings).
+// - `name-to-user.json` maps Picktime user names with TB's user data.
+// - `rows-created.txt` keeps track of the CSV rows already processed.
+//
+// Removing any of those files and restarting the script will result in data
+// duplication. DO NOT DO THIS.
+
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
@@ -13,6 +28,17 @@ const { default: to } = require('await-to-js');
 const { exec } = require('child_process');
 const { nanoid } = require('nanoid');
 const Bottleneck = require('bottleneck');
+
+const errorsPath = './errors.json';
+const errors = require(errorsPath);
+const matchesPath = './matches-created.json';
+const matches = require(matchesPath);
+const meetingsPath = './meetings-created.json';
+const meetings = require(meetingsPath);
+const usersPath = './name-to-user.json';
+const users = require(usersPath);
+const rowsPath = './rows-created.txt';
+const rows = fs.readFileSync(rowsPath).toString().split('\n');
 
 const logger = winston.createLogger({
   level: 'info',
@@ -287,17 +313,6 @@ function timeToUntilString(time, utc = true) {
     utc ? 'Z' : '',
   ].join('');
 }
-
-const errorsPath = './errors.json';
-const errors = require(errorsPath);
-const matchesPath = './matches-created.json';
-const matches = require(matchesPath);
-const meetingsPath = './meetings-created.json';
-const meetings = require(meetingsPath);
-const usersPath = './name-to-user.json';
-const users = require(usersPath);
-const rowsPath = './rows-created.txt';
-const rows = fs.readFileSync(rowsPath).toString().split('\n');
 
 async function importPicktime(path, dryRun = false) {
   let count = 0;

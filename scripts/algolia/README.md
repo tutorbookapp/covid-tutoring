@@ -1,4 +1,4 @@
-# Algolia Utils
+# `scripts/algolia` 
 
 These are utilities to update our `subjects` Algolia search index. This is the
 index that stores all of the subjects that users can select via the

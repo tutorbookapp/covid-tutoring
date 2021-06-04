@@ -1,3 +1,5 @@
+// Removes the default availability (9am-5pm weekdays) from QuaranTunes' users.
+
 const path = require('path');
 const dotenv = require('dotenv');
 

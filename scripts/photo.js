@@ -1,10 +1,8 @@
-/**
- * Node.js example script that uses OpenCV, Smartcrop.js, and Sharp to crop and
- * resize images to 500x500 pixel squares.
- * @see {@link https://github.com/jwagner/smartcrop.js#node}
- * @see {@link https://github.com/jwagner/smartcrop-sharp}
- * @see {@link https://github.com/lovell/sharp}
- */
+// Node.js example script that uses OpenCV, Smartcrop.js, and Sharp to crop and
+// resize images to 500x500 pixel squares.
+// @see {@link https://github.com/jwagner/smartcrop.js#node}
+// @see {@link https://github.com/jwagner/smartcrop-sharp}
+// @see {@link https://github.com/lovell/sharp}
 
 const sharp = require('sharp');
 const smartcrop = require('smartcrop-sharp');

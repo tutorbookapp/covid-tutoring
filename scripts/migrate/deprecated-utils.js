@@ -1,3 +1,11 @@
+// A massive file of all our old utility functions. Whenever I needed to get
+// something done, I would just create a new function here and run the file.
+// That process has made this file grow to unmanageable sizes and thus I'm going
+// to be better organizing my utility scripts in the future.
+//
+// Hence, this file is deprecated but is being kept around in case I need to
+// copy some of it's code into a more organized script.
+
 const url = require('url');
 const path = require('path');
 const dotenv = require('dotenv');

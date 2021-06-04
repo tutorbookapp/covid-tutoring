@@ -1,3 +1,7 @@
+// Some basic WIP wrappers around the Supabase GoTrue Admin API endpoints.
+// @see {@link https://github.com/supabase/gotrue-js/issues/90}
+// @see {@link https://github.com/supabase/gotrue}
+
 const path = require('path');
 const dotenv = require('dotenv');
 

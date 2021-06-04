@@ -1,3 +1,11 @@
+// Script that creates the analytics documents for org activity by:
+// 1. Fetching all org users, meetings, and matches.
+// 2. Updating the tags on all of those resources.
+// 3. Iterating over those resources, trying to add to existing analytics doc
+//    (within 24 hours of resource create timestamp). If we can't, create a new
+//    analytics doc and insert it into the growing timeline.
+// 4. Uploading the created timeline to Firestore.
+
 const fs = require('fs');
 const url = require('url');
 const path = require('path');
@@ -323,15 +331,6 @@ function generateTimeline(orgId) {
   return timeline;
 }
 
-/**
- * Script that creates the analytics documents for org activity by:
- * 1. Fetching all org users, meetings, and matches.
- * 2. Updating the tags on all of those resources.
- * 3. Iterating over those resources, trying to add to existing analytics doc
- *    (within 24 hours of resource create timestamp). If we can't, create a new
- *    analytics doc and insert it into the growing timeline.
- * 4. Uploading the created timeline to Firestore.
- */
 async function main(orgId) {
   await downloadData(orgId);
   await Promise.all([
@@ -372,3 +371,5 @@ async function inspectData(orgId, tags) {
 
   debugger;
 }
+
+if (require.main === module) main();

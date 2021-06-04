@@ -1,3 +1,5 @@
+// Rewrite of the `lib/utils/time.ts` but in JavaScript for Node.js scripts.
+
 /**
  * Returns the next date (from now or from a given date) that has the given
  * times.
