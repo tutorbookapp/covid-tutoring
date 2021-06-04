@@ -2,8 +2,9 @@
 
 const phone = require('phone');
 const { nanoid } = require('nanoid');
-const supabase = require('./supabase');
-const firebase = require('./firebase');
+const supabase = require('../lib/supabase');
+const firebase = require('../lib/firebase');
+const logger = require('../lib/logger');
 
 async function migrate() {
   logger.info('Fetching user docs...');

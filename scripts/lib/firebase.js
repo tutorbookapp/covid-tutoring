@@ -1,14 +1,15 @@
 const path = require('path');
 const dotenv = require('dotenv');
+const logger = require('./logger');
 
 const env = process.env.NODE_ENV || 'production';
-console.log(`Loading ${env} environment variables...`);
+logger.info(`Loading ${env} environment variables...`);
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
 dotenv.config({ path: path.resolve(__dirname, `../../.env.${env}`) });
 dotenv.config({ path: path.resolve(__dirname, `../../.env.${env}.local`) });
 
-console.log(
+logger.info(
   'Using Firebase configuration:',
   JSON.stringify(
     {

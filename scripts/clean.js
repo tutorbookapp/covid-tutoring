@@ -2,6 +2,7 @@ const path = require('path');
 
 const algoliasearch = require('algoliasearch');
 const dotenv = require('dotenv');
+const logger = require('./lib/logger');
 
 // Follow the Next.js convention for loading `.env` files.
 // @see {@link https://nextjs.org/docs/basic-features/environment-variables}
@@ -12,7 +13,7 @@ const env = process.env.NODE_ENV || 'development';
   path.resolve(__dirname, `../.env.${env}`),
   path.resolve(__dirname, '../.env'),
 ].forEach((dotfile) => {
-  console.log(`Loaded env from ${dotfile}`);
+  logger.info(`Loaded env from ${dotfile}`);
   dotenv.config({ path: dotfile });
 });
 
@@ -26,7 +27,7 @@ const matchesIdx = search.initIndex(`${prefix}-matches`);
 const meetingsIdx = search.initIndex(`${prefix}-meetings`);
 
 function deleteIndices() {
-  console.log('Deleting indices...');
+  logger.info('Deleting indices...');
   return Promise.all([
     usersIdx.delete(),
     matchesIdx.delete(),

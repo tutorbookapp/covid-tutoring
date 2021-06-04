@@ -19,7 +19,6 @@ const axios = require('axios');
 const phone = require('phone');
 const dotenv = require('dotenv');
 const parse = require('csv-parse');
-const winston = require('winston');
 const prompt = require('prompt-sync')();
 const progress = require('cli-progress');
 const algoliasearch = require('algoliasearch');
@@ -40,22 +39,16 @@ const users = require(usersPath);
 const rowsPath = './rows-created.txt';
 const rows = fs.readFileSync(rowsPath).toString().split('\n');
 
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.json(),
-  transports: [
-    new winston.transports.Console({ format: winston.format.simple() }),
-  ],
-});
+const logger = require('../../lib/logger');
 
 const env = 'production';
 const apiDomain = 'http://localhost:5000';
 logger.info(`Loading ${env} environment variables...`);
 [
-  path.resolve(__dirname, '../../.env'),
-  path.resolve(__dirname, '../../.env.local'),
-  path.resolve(__dirname, `../../.env.${env}`),
-  path.resolve(__dirname, `../../.env.${env}.local`),
+  path.resolve(__dirname, '../../../.env'),
+  path.resolve(__dirname, '../../../.env.local'),
+  path.resolve(__dirname, `../../../.env.${env}`),
+  path.resolve(__dirname, `../../../.env.${env}.local`),
 ].forEach((path) => {
   logger.debug(`Loading .env file (${path})...`);
   dotenv.config({ path });
