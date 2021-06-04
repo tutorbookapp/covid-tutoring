@@ -17,13 +17,8 @@ create type subjects as (
   "searches" text[]
 );
 
-create type verification as (
-  "created" timestamptz,
-  "updated" timestamptz
-);
-
 create type timeslot as (
-  "id" uuid,
+  "id" text,
   "from" timestamptz,
   "to" timestamptz,
   "exdates" timestamptz[],
@@ -51,12 +46,11 @@ create table public.users (
   "mentoring" subjects not null,
   "tutoring" subjects not null,
   "langs" text[] not null check(cardinality(langs) > 0),
-  "verifications" verification[] not null,
   "visible" boolean not null,
   "featured" aspect[] not null,
   "tags" user_tag[] not null,
   "reference" text not null,
-  "timezone" text not null,
+  "timezone" text,
   "age" integer
 );
 
@@ -81,6 +75,18 @@ create table public.orgs (
   "home" jsonb not null,
   "booking" jsonb not null,
   "matchURL" url
+);
+
+create type verification_check as enum('email', 'background-check', 'academic-email', 'training', 'interview');
+create table public.verifications (
+  "id" bigint generated always as identity primary key,
+  "created" timestamptz not null,
+  "updated" timestamptz not null,
+  "creator" uuid references public.users(id) not null,
+  "user" uuid references public.users(id) not null,
+  "org" text references public.orgs(id) not null,
+  "checks" verification_check[] not null check(cardinality(checks) > 0),
+  "notes" text not null
 );
 
 create type match_tag as enum('meeting');
