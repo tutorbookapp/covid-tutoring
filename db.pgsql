@@ -40,12 +40,12 @@ create type user_tag as enum ('meeting');
 create table public.users (
   "id" uuid references auth.users(id) unique not null primary key,
   "name" text not null check(length(name) > 1 AND name !~ '\s'),
-  "photo" url not null,
-  "email" email unique not null,
-  "phone" phone unique not null,
+  "photo" url,
+  "email" email unique,
+  "phone" phone unique,
   "bio" text not null,
-  "background" url not null,
-  "venue" url not null,
+  "background" url,
+  "venue" url, /* TODO: Set default URL to Jitsi venue. */
   "socials" social[] not null,
   "availability" timeslot[] not null,
   "mentoring" subjects not null,
