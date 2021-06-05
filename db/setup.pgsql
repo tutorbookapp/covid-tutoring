@@ -1,6 +1,6 @@
 create domain url as text check (value ~ '^https?:\/\/\S+$');
-create domain phone as text check (value ~ '^(\+\d{1,2})\d{10}$');
-create domain email as text check (value ~ '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$');
+create domain phone as text check (value ~ '^(\+\d{1,3})\d{10}$');
+create domain email as text check (value ~ '^[A-Za-z0-9._~+%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$');
 create domain rrule as text check (value ~ '^RRULE:FREQ=(WEEKLY|DAILY);?(INTERVAL=2;?)?(UNTIL=(\d{4})(\d{2})(\d{2})(T(\d{2})(\d{2})(\d{2})Z?)?)?$');
 
 create type aspect as enum ('mentoring', 'tutoring');
@@ -34,7 +34,8 @@ create type venue as (
 /* TODO: See if there's a way to simply extend the existing `role` enum. */
 create type user_tag as enum ('vetted', 'matched', 'meeting', 'tutor', 'tutee', 'mentor', 'mentee', 'parent');
 create table public.users (
-  "id" uuid references auth.users(id) unique not null primary key,
+  "id" bigint generated always as identity primary key,
+  "uid" uuid references auth.users(id) unique,
   "name" text not null check(length(name) > 1 AND name !~ '^\s+$'),
   "photo" url,
   "email" email unique,
@@ -83,8 +84,8 @@ create table public.verifications (
   "id" bigint generated always as identity primary key,
   "created" timestamptz not null,
   "updated" timestamptz not null,
-  "creator" uuid references public.users(id) not null,
-  "user" uuid references public.users(id) not null,
+  "creator" bigint references public.users(id) not null,
+  "user" bigint references public.users(id) not null,
   "org" text references public.orgs(id) not null,
   "checks" verification_check[] not null check(cardinality(checks) > 0),
   "notes" text not null
@@ -94,7 +95,7 @@ create type match_tag as enum('meeting');
 create table public.matches (
   "id" bigint generated always as identity primary key,
   "org" text references public.orgs(id) not null,
-  "creator" uuid references public.users(id) not null,
+  "creator" bigint references public.users(id) not null,
   "subjects" text[] not null check(cardinality(subjects) > 0),
   "message" text not null,
   "tags" match_tag[] not null
@@ -105,7 +106,7 @@ create type meeting_status as enum('created', 'pending', 'logged', 'approved');
 create table public.meetings (
   "id" bigint generated always as identity primary key,
   "org" text references public.orgs(id) not null,
-  "creator" uuid references public.users(id) not null,
+  "creator" bigint references public.users(id) not null,
   "subjects" text[] not null check(cardinality(subjects) > 0),
   "status" meeting_status not null default 'created',
   "match" bigint references public.matches(id),
@@ -116,19 +117,19 @@ create table public.meetings (
 );
 
 create table relation_parent (
-  "user" uuid references public.users(id),
-  "parent" uuid references public.users(id)
+  "user" bigint references public.users(id),
+  "parent" bigint references public.users(id)
 );
 create table relation_org (
-  "user" uuid references public.users(id),
+  "user" bigint references public.users(id),
   "org" text references public.orgs(id)
 );
 create table relation_member (
-  "user" uuid references public.users(id),
+  "user" bigint references public.users(id),
   "org" text references public.orgs(id)
 );
 create table relation_people (
-  "user" uuid references public.users(id),
+  "user" bigint references public.users(id),
   "meeting" bigint references public.meetings(id),
   "roles" role[] not null check(cardinality(roles) > 0)
 );
