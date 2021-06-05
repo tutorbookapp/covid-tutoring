@@ -10,17 +10,12 @@ dotenv.config({ path: path.resolve(__dirname, `../../.env.${env}`) });
 dotenv.config({ path: path.resolve(__dirname, `../../.env.${env}.local`) });
 
 logger.info(
-  'Using Firebase configuration:',
-  JSON.stringify(
-    {
-      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-      serviceAccountId: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
-      storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-      databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
-    },
-    null,
-    2
-  )
+  `Using Firebase configuration: ${JSON.stringify({
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    serviceAccountId: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
+  }, null, 2)}`
 );
 
 const admin = require('firebase-admin');
