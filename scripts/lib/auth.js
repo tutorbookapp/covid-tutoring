@@ -15,7 +15,7 @@ dotenv.config({ path: path.resolve(__dirname, `../../.env.${env}.local`) });
 
 const axios = require('axios');
 const { default: to } = require('await-to-js');
-const url = 'https://yixbyyrnwuksbrzlhjvn.supabase.co';
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
 const headers = {
   apiKey: process.env.SUPABASE_KEY,
@@ -28,30 +28,38 @@ const data = {
   password: 'password',
 };
 
+function handle(err, res, action) {
+  if (err && err.response) {
+    logger.error(`${err.name} ${action}: ${err.response.data.message}`);
+    debugger;
+  } else if (err) {
+    logger.error(`${err.name} ${action}: ${err.message}`);
+    debugger;
+  } else {
+    logger.debug(`Received: ${JSON.stringify(res.data, null, 2)}`);
+    return res;
+  }
+}
+
 async function createUser(data) {
   const endpoint = `${url}/auth/v1/admin/users`;
   logger.debug(`POST ${endpoint} ${JSON.stringify(data, null, 2)}`);
   const [err, res] = await to(axios.post(endpoint, data, { headers }));
-  logger.debug(JSON.stringify((err ? err.response : res).data, null, 2));
-  debugger;
+  return handle(err, res, 'creating user');
 }
 
-async function getUser() {
-  const endpoint = `${url}/auth/v1/admin/users/${uid}`;
+async function getUser(id) {
+  const endpoint = `${url}/auth/v1/admin/users/${id}`;
   logger.debug(`GET ${endpoint}`);
   const [err, res] = await to(axios.get(endpoint, { headers }));
-  logger.debug(JSON.stringify((err ? err.response : res).data, null, 2));
-  debugger;
+  return handle(err, res, 'getting user');
 }
 
-async function updateUser() {
-  const endpoint = `${url}/auth/v1/admin/users/${uid}`;
-  data.password = 'updated-password';
-  data.data.key = 'updated-value';
+async function updateUser(data) {
+  const endpoint = `${url}/auth/v1/admin/users/${data.id}`;
   logger.debug(`PUT ${endpoint} ${JSON.stringify(data, null, 2)}`);
   const [err, res] = await to(axios.put(endpoint, data, { headers }));
-  logger.debug(JSON.stringify((err ? err.response : res).data, null, 2));
-  debugger;
+  return handle(err, res, 'updating user');
 }
 
 module.exports = { createUser, getUser, updateUser };
