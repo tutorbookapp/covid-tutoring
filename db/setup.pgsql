@@ -1,7 +1,7 @@
-create domain url as text check (value ~* '^https?:\/\/\S+$');
-create domain phone as text check (value ~* '^(\+\d{1,2})\d{10}$');
-create domain email as text check (value ~* '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$');
-create domain rrule as text check (value ~* '^RRULE:FREQ=(WEEKLY|DAILY);?(INTERVAL=2;?)?(UNTIL=(\d{4})(\d{2})(\d{2})(T(\d{2})(\d{2})(\d{2})Z?)?)?$');
+create domain url as text check (value ~ '^https?:\/\/\S+$');
+create domain phone as text check (value ~ '^(\+\d{1,2})\d{10}$');
+create domain email as text check (value ~ '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$');
+create domain rrule as text check (value ~ '^RRULE:FREQ=(WEEKLY|DAILY);?(INTERVAL=2;?)?(UNTIL=(\d{4})(\d{2})(\d{2})(T(\d{2})(\d{2})(\d{2})Z?)?)?$');
 
 create type aspect as enum ('mentoring', 'tutoring');
 create type role as enum('tutor', 'tutee', 'mentor', 'mentee', 'parent');
@@ -31,7 +31,8 @@ create type venue as (
   "url" url
 );
 
-create type user_tag as enum ('meeting');
+/* TODO: See if there's a way to simply extend the existing `role` enum. */
+create type user_tag as enum ('vetted', 'matched', 'meeting', 'tutor', 'tutee', 'mentor', 'mentee', 'parent');
 create table public.users (
   "id" uuid references auth.users(id) unique not null primary key,
   "name" text not null check(length(name) > 1 AND name !~ '\s'),
@@ -114,20 +115,19 @@ create table public.meetings (
   "tags" meeting_tag[] not null
 );
 
-create schema relations;
-create table relations.parent (
+create table relation_parent (
   "user" uuid references public.users(id),
   "parent" uuid references public.users(id)
 );
-create table relations.org (
+create table relation_org (
   "user" uuid references public.users(id),
   "org" text references public.orgs(id)
 );
-create table relations.member (
+create table relation_member (
   "user" uuid references public.users(id),
   "org" text references public.orgs(id)
 );
-create table relations.people (
+create table relation_people (
   "user" uuid references public.users(id),
   "meeting" bigint references public.meetings(id),
   "roles" role[] not null check(cardinality(roles) > 0)
