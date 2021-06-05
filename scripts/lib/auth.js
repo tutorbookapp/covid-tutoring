@@ -28,18 +28,19 @@ const data = {
   password: 'password',
 };
 
-async function createUser(user) {
+async function createUser(data) {
   const endpoint = `${url}/auth/v1/admin/users`;
-  console.log(`POST ${endpoint}`, data);
+  logger.debug(`POST ${endpoint} ${JSON.stringify(data, null, 2)}`);
   const [err, res] = await to(axios.post(endpoint, data, { headers }));
-  console.log((err ? err.response : res).data);
+  logger.debug(JSON.stringify((err ? err.response : res).data, null, 2));
   debugger;
 }
 
 async function getUser() {
   const endpoint = `${url}/auth/v1/admin/users/${uid}`;
+  logger.debug(`GET ${endpoint}`);
   const [err, res] = await to(axios.get(endpoint, { headers }));
-  console.log((err ? err.response : res).data);
+  logger.debug(JSON.stringify((err ? err.response : res).data, null, 2));
   debugger;
 }
 
@@ -47,8 +48,9 @@ async function updateUser() {
   const endpoint = `${url}/auth/v1/admin/users/${uid}`;
   data.password = 'updated-password';
   data.data.key = 'updated-value';
+  logger.debug(`PUT ${endpoint} ${JSON.stringify(data, null, 2)}`);
   const [err, res] = await to(axios.put(endpoint, data, { headers }));
-  console.log((err ? err.response : res).data);
+  logger.debug(JSON.stringify((err ? err.response : res).data, null, 2));
   debugger;
 }
 

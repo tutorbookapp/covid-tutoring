@@ -1,17 +1,19 @@
 // Copies our Firebase data to Supabase (both authentication and PostgreSQL).
 
 const phone = require('phone');
+const { v4: uuid } = require('uuid');
 const { nanoid } = require('nanoid');
 const supabase = require('../lib/supabase');
 const firebase = require('../lib/firebase');
 const logger = require('../lib/logger');
+const auth = require('../lib/auth');
 
 async function migrate() {
   logger.info('Fetching user docs...');
-  const { docs } = await firebase.db.collection('users').get();
+  const { docs } = await firebase.db.collection('users').limit(5).get();
   logger.info(`Parsing ${docs.length} user docs...`);
   const users = docs.map((d) => d.data()).map((d) => ({
-    id: d.id,
+    id: uuid(),
     name: d.name,
     photo: d.photo || null,
     email: d.email || null,
@@ -38,9 +40,10 @@ async function migrate() {
     timezone: d.timezone || null,
     age: d.age || null,
   }));
-  debugger;
   logger.info(`Inserting ${users.length} user rows...`);
   const { data, error } = await supabase.from('users').insert(users);
+  if (error) logger.error(error.message);
+  debugger;
 }
 
 if (require.main === module) migrate();
