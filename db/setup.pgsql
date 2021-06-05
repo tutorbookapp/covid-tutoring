@@ -6,7 +6,7 @@ create domain rrule as text check (value ~ '^RRULE:FREQ=(WEEKLY|DAILY);?(INTERVA
 create type aspect as enum ('mentoring', 'tutoring');
 create type role as enum('tutor', 'tutee', 'mentor', 'mentee', 'parent');
 
-create type social_type as enum('facebook', 'instagram', 'twitter');
+create type social_type as enum('website', 'linkedin', 'twitter', 'facebook', 'instagram', 'github', 'indiehackers');
 create type social as (
   "type" social_type,
   "url" url
@@ -35,7 +35,7 @@ create type venue as (
 create type user_tag as enum ('vetted', 'matched', 'meeting', 'tutor', 'tutee', 'mentor', 'mentee', 'parent');
 create table public.users (
   "id" uuid references auth.users(id) unique not null primary key,
-  "name" text not null check(length(name) > 1 AND name !~ '\s'),
+  "name" text not null check(length(name) > 1 AND name !~ '^\s+$'),
   "photo" url,
   "email" email unique,
   "phone" phone unique,
@@ -58,7 +58,7 @@ create table public.users (
 create type profile_field as enum('name', 'photo', 'email', 'phone', 'bio', 'background', 'venue', 'availability', 'subjects', 'langs', 'reference'); 
 create table public.orgs (
   "id" text unique not null primary key,
-  "name" text not null check(length(name) > 1 AND name !~ '\s'),
+  "name" text not null check(length(name) > 1 AND name !~ '^\s+$'),
   "photo" url not null,
   "email" email unique not null,
   "phone" phone unique not null,
