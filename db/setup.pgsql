@@ -42,7 +42,7 @@ create table public.users (
   "phone" phone unique,
   "bio" text not null,
   "background" url,
-  "venue" url, /* TODO: Set default URL to Jitsi venue. */
+  "venue" url,
   "socials" social[] not null,
   "availability" timeslot[] not null,
   "mentoring" subjects not null,
@@ -60,18 +60,18 @@ create type profile_field as enum('name', 'photo', 'email', 'phone', 'bio', 'bac
 create table public.orgs (
   "id" text unique not null primary key,
   "name" text not null check(length(name) > 1 AND name !~ '^\s+$'),
-  "photo" url not null,
-  "email" email unique not null,
-  "phone" phone unique not null,
-  "bio" text,
-  "background" url not null, 
-  "venue" url not null,
+  "photo" url,
+  "email" email unique,
+  "phone" phone unique,
+  "bio" text not null,
+  "background" url,
+  "venue" url,
   "socials" social[] not null,
   "aspects" aspect[] not null check(cardinality(aspects) > 0),
-  "domains" text[],
+  "domains" text[] check(cardinality(domains) > 0),
   /* TODO: Check that at least one contact info field is included. */
-  "profiles" profile_field[] not null check(cardinality(profiles) > 3),
-  "subjects" text[],
+  "profiles" profile_field[] check(cardinality(profiles) > 3),
+  "subjects" text[] check(cardinality(subjects) > 0),
   /* TODO: Verify these are valid config objects. */
   "signup" jsonb not null,
   "home" jsonb not null,
@@ -116,20 +116,22 @@ create table public.meetings (
   "tags" meeting_tag[] not null
 );
 
-create table relation_parent (
-  "user" bigint references public.users(id),
-  "parent" bigint references public.users(id)
+create table relation_parents (
+  "user" bigint references public.users(id) not null,
+  "parent" bigint references public.users(id) not null
 );
-create table relation_org (
-  "user" bigint references public.users(id),
-  "org" text references public.orgs(id)
+create table relation_orgs (
+  "user" bigint references public.users(id) not null,
+  "org" text references public.orgs(id) not null
 );
-create table relation_member (
-  "user" bigint references public.users(id),
-  "org" text references public.orgs(id)
+create table relation_members (
+  "user" bigint references public.users(id) not null,
+  "org" text references public.orgs(id) not null
 );
 create table relation_people (
-  "user" bigint references public.users(id),
+  "user" bigint references public.users(id) not null,
   "meeting" bigint references public.meetings(id),
-  "roles" role[] not null check(cardinality(roles) > 0)
+  "match" bigint references public.matches(id),
+  "roles" role[] not null check(cardinality(roles) > 0),
+  check(meeting is not null or match is not null)
 );
