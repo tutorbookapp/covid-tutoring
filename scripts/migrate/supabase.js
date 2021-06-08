@@ -3,16 +3,12 @@
 const fs = require('fs');
 const path = require('path');
 const phone = require('phone');
-const progress = require('cli-progress');
 const { default: to } = require('await-to-js');
 const { v4: uuid } = require('uuid');
 const { nanoid } = require('nanoid');
 const supabase = require('../lib/supabase');
 const firebase = require('../lib/firebase');
 const logger = require('../lib/logger');
-
-const usersPath = path.resolve(__dirname, './users.json');
-const errorsPath = path.resolve(__dirname, './errors.json');
 
 function social({ type, url }) {
   if (/^https?:\/\/\S+$/.test(url)) return url;
@@ -36,11 +32,47 @@ function social({ type, url }) {
   }
 }
 
-async function fetch() {
-  logger.info('Fetching user docs...');
-  const { docs } = await firebase.db.collection('users').get();
-  logger.info(`Parsing ${docs.length} user docs...`);
-  const users = docs.map((d) => d.data()).map((d) => ({
+async function fetch(table, convertToRow) {
+  const rowsPath = path.resolve(__dirname, `./${table}.json`);
+  const origPath = path.resolve(__dirname, `./orig-${table}.json`);
+  logger.info(`Fetching ${table}...`);
+  const { docs } = await firebase.db.collection(table).get();
+  const orig = docs.map((d) => d.data());
+  logger.info(`Saving original data to ${origPath}...`);
+  fs.writeFileSync(origPath, JSON.stringify(orig, null, 2));
+  logger.info(`Parsing ${docs.length} ${table}...`);
+  const rows = orig.map((d) => ({ orig: d.id, ...convertToRow(d) }));
+  logger.info(`Saving parsed data to ${rowsPath}...`);
+  fs.writeFileSync(rowsPath, JSON.stringify(rows, null, 2));
+}
+
+async function fetchOrgs() {
+  await fetch('orgs', (d) => ({
+    id: d.id,
+    name: d.name,
+    photo: d.photo || null,
+    email: d.email || null,
+    phone: phone(d.phone)[0] || null,
+    bio: d.bio,
+    background: d.background || null,
+    venue: d.venue ? d.venue.trim() : null,
+    socials: (d.socials || []).map((s) => ({
+      type: s.type,
+      url: social(s).trim().split(' ').join('%20'),
+    })),
+    aspects: d.aspects,
+    domains: (d.domains || []).length ? d.domains : null,
+    profiles: d.profiles,
+    subjects: (d.subjects || []).length ? d.subjects : null,
+    signup: d.signup,
+    home: d.home,
+    booking: d.booking,
+    matchURL: d.matchURL || null,
+  }));
+}
+
+async function fetchUsers() {
+  await fetch('users', (d) => ({
     name: d.name,
     photo: d.photo || null,
     email: d.email || null,
@@ -70,56 +102,69 @@ async function fetch() {
     timezone: d.timezone || null,
     age: d.age ? Math.floor(d.age) : null,
   }));
-  logger.info(`Saving parsed data to ${usersPath}...`);
-  fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
 }
 
-async function insert() {
-  logger.info(`Fetching parsed data from ${usersPath}...`);
-  const users = require(usersPath);
-  const errors = require(errorsPath);
-  const bar = new progress.SingleBar({}, progress.Presets.shades_classic);
-  let count = 0;
-  logger.info(`Inserting ${users.length} user rows...`);
-  bar.start(users.length, count);
-  for await (const user of users) {
-    const { data, error } = await supabase.from('users').insert(user);
-    if (error) {
-      console.log('\n');
-      logger.info(JSON.stringify(user, null, 2));
-      logger.error(`${error.name} inserting user: ${error.message}`);
-      debugger;
-      errors.push({ data, error, user });
-    }
-    bar.update((count += 1));
+async function fetchMatches() {
+  const userIds = require(path.resolve(__dirname, './ids-users.json'));
+  await fetch('matches', (d) => ({
+    org: d.org || 'default',
+    creator: userIds[d.creator.id],
+    subjects: d.subjects,
+    message: d.message,
+    tags: d.tags || [],
+  }));
+}
+
+async function fetchMatchPeople() {
+  const matchIds = require(path.resolve(__dirname, './ids-matches.json'));
+  const userIds = require(path.resolve(__dirname, './ids-users.json'));
+  const matches = require(path.resolve(__dirname, './orig-matches.json'));
+  logger.info(`Parsing ${matches.length} match relations...`);
+  const people = matches.map((m) => m.people.map((p) => ({
+    user: userIds[p.id],
+    meeting: null,
+    match: matchIds[m.id],
+    roles: p.roles,
+  }))).flat();
+  const peoplePath = path.resolve(__dirname, './people.json');
+  logger.info(`Saving parsed match relations to ${peoplePath}...`);
+  fs.writeFileSync(peoplePath, JSON.stringify(people, null, 2));
+}
+
+async function insert(table) {
+  const rowsPath = path.resolve(__dirname, `./${table}.json`);
+  const rowIdsPath = path.resolve(__dirname, `./ids-${table}.json`);
+  logger.info(`Fetching parsed data from ${rowsPath}...`);
+  const rows = require(rowsPath);
+  const rowIds = {};
+  const origIds = rows.map((row) => {
+    const origId = row.orig;
+    delete row.orig;
+    return origId;
+  });
+  logger.info(`Inserting ${rows.length} rows into ${table}...`);
+  const { data, error } = await supabase.from(table).insert(rows);
+  if (error) {
+    logger.error(`Error inserting rows: ${JSON.stringify(error, null, 2)}`);
+    debugger;
+    throw new Error(`Error inserting rows: ${error.message}`);
+  } else {
+    origIds.forEach((origId, idx) => {
+      logger.debug(`Mapping ${table} (${origId}) to (${data[idx].id})...`);
+      rowIds[origId] = data[idx].id;
+    });
   }
-  bar.stop();
-  fs.writeFileSync(errorsPath, JSON.stringify(errors, null, 2));
+  fs.writeFileSync(rowIdsPath, JSON.stringify(rowIds, null, 2));
+  debugger;
 }
 
-async function retry() {
-  logger.info(`Fetching errors from ${errorsPath}...`);
-  const errors = require(errorsPath);
-  const bar = new progress.SingleBar({}, progress.Presets.shades_classic);
-  let count = 0;
-  logger.info(`Retrying ${errors.length} errored inserts...`);
-  bar.start(errors.length, count);
-  let idx = errors.length;
-  while (idx--) {
-    const { user } = errors[idx];
-    const { data, error } = await supabase.from('users').insert(user);
-    if (error) {
-      console.log('\n');
-      logger.info(JSON.stringify(user, null, 2));
-      logger.error(`${error.name} inserting user: ${error.message}`);
-      debugger;
-    } else {
-      errors.splice(idx, 1);
-    }
-    bar.update((count += 1));
-  }
-  bar.stop();
-  fs.writeFileSync(errorsPath, JSON.stringify(errors, null, 2));
+async function migrate() {
+  //await fetchUsers();
+  //await fetchOrgs();
+  //await fetchMatches();
+  //await insert('users');
+  //await insert('orgs');
+  await insert('matches');
 }
 
-if (require.main === module) retry();
+if (require.main === module) migrate();
