@@ -37,11 +37,11 @@ async function fetch(table, convertToRow) {
   const origPath = path.resolve(__dirname, `./orig-${table}.json`);
   logger.info(`Fetching ${table}...`);
   const { docs } = await firebase.db.collection(table).get();
-  const orig = docs.map((d) => d.data());
+  const orig = docs.map((d) => ({ id: d.id, ...d.data() }));
   logger.info(`Saving original data to ${origPath}...`);
   fs.writeFileSync(origPath, JSON.stringify(orig, null, 2));
   logger.info(`Parsing ${docs.length} ${table}...`);
-  const rows = orig.map((d) => ({ orig: d.id, ...convertToRow(d) }));
+  const rows = docs.map((d) => ({ orig: d.id, ...convertToRow(d.data()) }));
   logger.info(`Saving parsed data to ${rowsPath}...`);
   fs.writeFileSync(rowsPath, JSON.stringify(rows, null, 2));
 }
@@ -115,20 +115,105 @@ async function fetchMatches() {
   }));
 }
 
-async function fetchMatchPeople() {
+function buildRelationPeople() {
   const matchIds = require(path.resolve(__dirname, './ids-matches.json'));
   const userIds = require(path.resolve(__dirname, './ids-users.json'));
   const matches = require(path.resolve(__dirname, './orig-matches.json'));
-  logger.info(`Parsing ${matches.length} match relations...`);
-  const people = matches.map((m) => m.people.map((p) => ({
-    user: userIds[p.id],
-    meeting: null,
-    match: matchIds[m.id],
-    roles: p.roles,
-  }))).flat();
-  const peoplePath = path.resolve(__dirname, './people.json');
-  logger.info(`Saving parsed match relations to ${peoplePath}...`);
+  logger.info(`Parsing ${matches.length} people relations...`);
+  const people = matches.map((m) => m.people.map((p) => {
+    if (!userIds[p.id]) {
+      logger.error(`No user (${m.id}): ${JSON.stringify(p, null, 2)}`);
+      debugger;
+    }
+    if (!matchIds[m.id]) {
+      logger.error(`No match (${m.id}): ${JSON.stringify(m, null, 2)}`);
+      debugger;
+    }
+    if (!p.roles.length) {
+      logger.error(`No roles (${m.id}): ${JSON.stringify(p, null, 2)}`);
+      debugger;
+    }
+    return {
+      user: userIds[p.id],
+      meeting: null,
+      match: matchIds[m.id],
+      roles: p.roles,
+    };
+  })).flat();
+  const peoplePath = path.resolve(__dirname, './relation_people.json');
+  logger.info(`Saving parsed people relations to ${peoplePath}...`);
   fs.writeFileSync(peoplePath, JSON.stringify(people, null, 2));
+}
+
+function buildRelationOrgs() {
+  const userIds = require(path.resolve(__dirname, './ids-users.json'));
+  const orgIds = require(path.resolve(__dirname, './ids-orgs.json'));
+  const users = require(path.resolve(__dirname, './orig-users.json'));
+  logger.info(`Parsing ${users.length} org relations...`);
+  const orgs = users.map((u) => u.orgs.map((orgId) => {
+    if (!userIds[u.id]) {
+      logger.error(`No user (${u.id}): ${JSON.stringify(u, null, 2)}`);
+      debugger;
+    }
+    if (!orgIds[orgId]) {
+      logger.error(`No org (${u.id}): (${orgId})`);
+      debugger;
+    }
+    return {
+      user: userIds[u.id],
+      org: orgIds[orgId],
+    };
+  })).flat();
+  const orgsPath = path.resolve(__dirname, './relation_orgs.json');
+  logger.info(`Saving parsed org relations to ${orgsPath}...`);
+  fs.writeFileSync(orgsPath, JSON.stringify(orgs, null, 2));
+}
+
+function buildRelationMembers() {
+  const userIds = require(path.resolve(__dirname, './ids-users.json'));
+  const orgIds = require(path.resolve(__dirname, './ids-orgs.json'));
+  const orgs = require(path.resolve(__dirname, './orig-orgs.json'));
+  logger.info(`Parsing ${orgs.length} member relations...`);
+  const members = orgs.map((o) => o.members.map((id) => {
+    if (!userIds[id]) {
+      logger.error(`No user (${o.id}): (${id})`);
+      debugger;
+    }
+    if (!orgIds[o.id]) {
+      logger.error(`No org (${o.id}): ${JSON.stringify(o, null, 2)}`);
+      debugger;
+    }
+    return {
+      user: userIds[id],
+      org: orgIds[o.id],
+    };
+  })).flat();
+  const membersPath = path.resolve(__dirname, './relation_members.json');
+  logger.info(`Saving parsed member relations to ${membersPath}...`);
+  fs.writeFileSync(membersPath, JSON.stringify(members, null, 2));
+}
+
+function buildRelationParents() {
+  const userIds = require(path.resolve(__dirname, './ids-users.json'));
+  const users = require(path.resolve(__dirname, './orig-users.json'));
+  logger.info(`Parsing ${users.length} parent relations...`);
+  const parents = users.map((u) => u.parents.map((id) => {
+    if (!userIds[u.id]) {
+      logger.error(`No user (${u.id}): ${JSON.stringify(u, null, 2)}`);
+      debugger;
+    }
+    if (!userIds[id]) {
+      logger.error(`No parent (${u.id}): (${id})`);
+      debugger;
+    }
+    return {
+      user: userIds[u.id],
+      parent: userIds[id],
+    };
+  })).flat();
+  const parentsPath = path.resolve(__dirname, './relation_parents.json');
+  logger.info(`Saving parsed parent relations to ${parentsPath}...`);
+  fs.writeFileSync(parentsPath, JSON.stringify(parents, null, 2));
 }
 
 async function insert(table) {
@@ -159,12 +244,22 @@ async function insert(table) {
 }
 
 async function migrate() {
-  //await fetchUsers();
-  //await fetchOrgs();
-  //await fetchMatches();
-  //await insert('users');
-  //await insert('orgs');
+  await fetchUsers();
+  await insert('users');
+  buildRelationParents();
+  await insert('relation_parents');
+
+  await fetchOrgs();
+  await insert('orgs');
+  buildRelationMembers();
+  await insert('relation_members');
+  buildRelationOrgs();
+  await insert('relation_orgs');
+
+  await fetchMatches();
   await insert('matches');
+  buildRelationPeople();
+  await insert('relation_people');
 }
 
 if (require.main === module) migrate();
