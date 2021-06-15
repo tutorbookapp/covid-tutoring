@@ -67,7 +67,7 @@ export default function EditPage({
     (evt: FormEvent<HTMLInputElement>) => {
       const url = evt.currentTarget.value;
       setEditing((prev) => {
-        const venue = new Venue({ ...prev.venue, url, updated: new Date() });
+        const venue = Venue.parse({ ...prev.venue, url, updated: new Date() });
         return Meeting.parse({ ...prev, venue });
       });
     },

@@ -77,12 +77,12 @@ export default function VerificationsTable({
       const enabled = evt.currentTarget.checked;
       return setUser((prev) => {
         const verifications = clone(prev.verifications).map(
-          (v) => new Verification(v)
+          (v) => Verification.parse(v)
         );
         const idx = verifications.findIndex((v) => v.checks.includes(c));
         if (idx < 0 && enabled) {
           verifications.push(
-            new Verification({
+            Verification.parse({
               org,
               notes: '',
               checks: [c],
@@ -115,7 +115,7 @@ export default function VerificationsTable({
       return setUser((prev) => {
         if (!enabled) return User.parse({ ...prev, verifications: [] });
         const verifications = clone(prev.verifications).map(
-          (v) => new Verification(v)
+          (v) => Verification.parse(v)
         );
         const isChecked = verifications.reduce(
           (a, c) => a.concat(c.checks),
@@ -124,7 +124,7 @@ export default function VerificationsTable({
         const notChecked = checks.filter((c) => !isChecked.includes(c));
         notChecked.forEach((check) =>
           verifications.push(
-            new Verification({
+            Verification.parse({
               org,
               notes: '',
               checks: [check],
@@ -153,12 +153,12 @@ export default function VerificationsTable({
       const { value: notes } = evt.currentTarget;
       return setUser((prev) => {
         const verifications = clone(prev.verifications).map(
-          (v) => new Verification(v)
+          (v) => Verification.parse(v)
         );
         const idx = verifications.findIndex((v) => v.checks.includes(c));
         if (idx < 0) {
           verifications.push(
-            new Verification({
+            Verification.parse({
               org,
               notes,
               checks: [c],
