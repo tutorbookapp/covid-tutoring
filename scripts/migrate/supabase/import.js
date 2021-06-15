@@ -6,9 +6,25 @@ const phone = require('phone');
 const { default: to } = require('await-to-js');
 const { v4: uuid } = require('uuid');
 const { nanoid } = require('nanoid');
-const supabase = require('../lib/supabase');
-const firebase = require('../lib/firebase');
-const logger = require('../lib/logger');
+const supabase = require('../../lib/supabase');
+const firebase = require('../../lib/firebase');
+const logger = require('../../lib/logger');
+
+function email(email, required = false) {
+  if (!required && email === null) return null;
+  if (/^[A-Za-z0-9._~+%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$/.test(email)) return email;
+  logger.error(`Invalid email: ${email}`);
+  debugger;
+  throw new Error(`Invalid email: ${email}`);
+}
+
+function url(url, required = false) {
+  if (!required && url === null) return null;
+  if (/^https?:\/\/\S+$/.test(url)) return url;
+  logger.error(`Invalid URL: ${url}`);
+  debugger;
+  throw new Error(`Invalid URL: ${url}`);
+}
 
 function social({ type, url }) {
   if (/^https?:\/\/\S+$/.test(url)) return url;
@@ -50,15 +66,15 @@ async function fetchOrgs() {
   await fetch('orgs', (d) => ({
     id: d.id,
     name: d.name,
-    photo: d.photo || null,
-    email: d.email || null,
+    photo: url(d.photo || null),
+    email: email(d.email || null),
     phone: phone(d.phone)[0] || null,
     bio: d.bio,
-    background: d.background || null,
-    venue: d.venue ? d.venue.trim() : null,
+    background: url(d.background || null),
+    venue: url(d.venue ? d.venue.trim() : null),
     socials: (d.socials || []).map((s) => ({
       type: s.type,
-      url: social(s).trim().split(' ').join('%20'),
+      url: url(social(s).trim().split(' ').join('%20')),
     })),
     aspects: d.aspects,
     domains: (d.domains || []).length ? d.domains : null,
@@ -67,22 +83,22 @@ async function fetchOrgs() {
     signup: d.signup,
     home: d.home,
     booking: d.booking,
-    matchURL: d.matchURL || null,
+    matchURL: url(d.matchURL || null),
   }));
 }
 
 async function fetchUsers() {
   await fetch('users', (d) => ({
     name: d.name,
-    photo: d.photo || null,
-    email: d.email || null,
+    photo: url(d.photo || null),
+    email: email(d.email || null),
     phone: phone(d.phone)[0] || null,
     bio: d.bio,
-    background: d.background || null,
-    venue: d.venue ? d.venue.trim() : null,
+    background: url(d.background || null),
+    venue: url(d.venue ? d.venue.trim() : null),
     socials: (d.socials || []).map((s) => ({
       type: s.type,
-      url: social(s).trim().split(' ').join('%20'),
+      url: url(social(s).trim().split(' ').join('%20')),
     })),
     availability: d.availability.map((t) => ({
       id: t.id || nanoid(),
@@ -216,7 +232,7 @@ function buildRelationParents() {
   fs.writeFileSync(parentsPath, JSON.stringify(parents, null, 2));
 }
 
-async function insert(table) {
+async function insert(table, debug = false) {
   const rowsPath = path.resolve(__dirname, `./${table}.json`);
   const rowIdsPath = path.resolve(__dirname, `./ids-${table}.json`);
   logger.info(`Fetching parsed data from ${rowsPath}...`);
@@ -228,19 +244,30 @@ async function insert(table) {
     return origId;
   });
   logger.info(`Inserting ${rows.length} rows into ${table}...`);
-  const { data, error } = await supabase.from(table).insert(rows);
-  if (error) {
-    logger.error(`Error inserting rows: ${JSON.stringify(error, null, 2)}`);
-    debugger;
-    throw new Error(`Error inserting rows: ${error.message}`);
+  if (debug) {
+    await Promise.all(rows.map(async (row) => {
+      const { data, error } = await supabase.from(table).insert(row);
+      if (error) {
+        logger.error(`Error inserting row: ${JSON.stringify(error, null, 2)}`);
+        debugger;
+        throw new Error(`Error inserting row: ${error.message}`);
+      }
+    }));
   } else {
-    origIds.forEach((origId, idx) => {
-      logger.debug(`Mapping ${table} (${origId}) to (${data[idx].id})...`);
-      rowIds[origId] = data[idx].id;
-    });
+    const { data, error } = await supabase.from(table).insert(rows);
+    if (error) {
+      logger.error(`Error inserting rows: ${JSON.stringify(error, null, 2)}`);
+      debugger;
+      throw new Error(`Error inserting rows: ${error.message}`);
+    } else {
+      origIds.forEach((origId, idx) => {
+        logger.debug(`Mapping ${table} (${origId}) to (${data[idx].id})...`);
+        rowIds[origId] = data[idx].id;
+      });
+    }
+    fs.writeFileSync(rowIdsPath, JSON.stringify(rowIds, null, 2));
+    debugger;
   }
-  fs.writeFileSync(rowIdsPath, JSON.stringify(rowIds, null, 2));
-  debugger;
 }
 
 async function migrate() {
