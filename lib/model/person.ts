@@ -1,11 +1,12 @@
-import { isArray, isJSON } from 'lib/model/json';
+import { z } from 'zod';
 
-export type Role = 'tutor' | 'tutee' | 'mentor' | 'mentee' | 'parent';
-
-export function isRole(role: unknown): role is Role {
-  if (typeof role !== 'string') return false;
-  return ['tutor', 'tutee', 'mentor', 'mentee', 'parent'].includes(role);
-}
+export const Role = z.union([
+  z.literal('tutor'),
+  z.literal('tutee'),
+  z.literal('mentor'),
+  z.literal('mentee'),
+  z.literal('parent'),
+]);
 
 /**
  * Represents a person that is involved in a request or match. Here, roles are
@@ -20,18 +21,9 @@ export function isRole(role: unknown): role is Role {
  * when user documents are updated so as to keep profile info in sync).
  * @property roles - The user's roles in this request or match (e.g. `tutor`).
  */
-export interface Person {
-  id: string;
-  name?: string;
-  photo?: string;
-  roles: Role[];
-}
-
-export function isPerson(json: unknown): json is Person {
-  if (!isJSON(json)) return false;
-  if (typeof json.id !== 'string') return false;
-  if (json.name && typeof json.name !== 'string') return false;
-  if (json.photo && typeof json.photo !== 'string') return false;
-  if (!isArray(json.roles, isRole)) return false;
-  return true;
-}
+export const Person = z.object({
+  id: z.string(), 
+  name: z.string().optional(), 
+  photo: z.string().url().optional(),
+  roles: z.array(Role), 
+});
