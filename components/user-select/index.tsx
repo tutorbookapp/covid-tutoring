@@ -63,13 +63,13 @@ export default function UserSelect({
       if (orgs.length)
         promises.push(
           axios.get<ListUsersRes>(
-            new UsersQuery({ search, orgs: orgs.map((o) => o.id) }).endpoint
+            UsersQuery.parse({ search, orgs: orgs.map((o) => o.id) }).endpoint
           )
         );
       if (user.id)
         promises.push(
           axios.get<ListUsersRes>(
-            new UsersQuery({ search, parents: [user.id] }).endpoint
+            UsersQuery.parse({ search, parents: [user.id] }).endpoint
           )
         );
       const suggestions: UserOption[] = [];

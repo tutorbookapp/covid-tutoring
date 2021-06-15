@@ -40,7 +40,7 @@ export default memo(function ResultsList({
   // Prefetch the next page of results (using SWR's global cache).
   // @see {@link https://swr.vercel.app/docs/prefetching}
   useEffect(() => {
-    const nextPageQuery = new UsersQuery(
+    const nextPageQuery = UsersQuery.parse(
       clone({ ...query, page: query.page + 1 })
     );
     void prefetch(nextPageQuery.endpoint);

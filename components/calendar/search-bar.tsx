@@ -55,7 +55,7 @@ function SearchBar({
           value={query.search}
           onChange={(evt) => {
             const search = evt.currentTarget.value;
-            setQuery((prev) => new MeetingsQuery({ ...prev, search }));
+            setQuery((prev) => MeetingsQuery.parse({ ...prev, search }));
           }}
         />
       </div>

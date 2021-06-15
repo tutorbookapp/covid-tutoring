@@ -17,7 +17,7 @@ export default function SearchForm(): JSX.Element {
 
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [query, setQuery] = useState<UsersQuery>(
-    new UsersQuery({ langs: [], subjects: [] })
+    UsersQuery.parse({ langs: [], subjects: [] })
   );
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function SearchForm(): JSX.Element {
   }, [query, user.orgs]);
 
   const onSubjectsChange = useCallback((subjects: Option[]) => {
-    setQuery((prev: UsersQuery) => new UsersQuery({ ...prev, subjects }));
+    setQuery((prev: UsersQuery) => UsersQuery.parse({ ...prev, subjects }));
   }, []);
 
   const searchMentors = useCallback(
@@ -33,7 +33,7 @@ export default function SearchForm(): JSX.Element {
       evt.preventDefault();
       evt.stopPropagation();
       setSubmitting(true);
-      const qry = new UsersQuery({ ...query, aspect: 'mentoring' });
+      const qry = UsersQuery.parse({ ...query, aspect: 'mentoring' });
       return Router.push(qry.getURL(`/${user.orgs[0] || 'default'}/search`));
     },
     [query, user.orgs]
@@ -43,7 +43,7 @@ export default function SearchForm(): JSX.Element {
       evt.preventDefault();
       evt.stopPropagation();
       setSubmitting(true);
-      const qry = new UsersQuery({ ...query, aspect: 'tutoring' });
+      const qry = UsersQuery.parse({ ...query, aspect: 'tutoring' });
       return Router.push(qry.getURL(`/${user.orgs[0] || 'default'}/search`));
     },
     [query, user.orgs]

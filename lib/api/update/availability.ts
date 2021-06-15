@@ -17,7 +17,7 @@ import getMeetings from 'lib/api/get/meetings';
  * (e.g. "Allow bookings 3 weeks in advance").
  */
 export default async function updateAvailability(user: User): Promise<void> {
-  const query = new MeetingsQuery({
+  const query = MeetingsQuery.parse({
     people: [{ label: user.name, value: user.id }],
     to: new Date(new Date().getFullYear(), new Date().getMonth() + 3),
     from: new Date(),

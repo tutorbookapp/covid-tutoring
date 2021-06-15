@@ -73,19 +73,19 @@ export default function FilterForm({
   }, []);
   const onSubjectsChange = useCallback(
     (subjects: Option[]) => {
-      onChange((prev) => new UsersQuery({ ...prev, subjects, page: 0 }));
+      onChange((prev) => UsersQuery.parse({ ...prev, subjects, page: 0 }));
     },
     [onChange]
   );
   const onAvailabilityChange = useCallback(
     (availability: Availability) => {
-      onChange((prev) => new UsersQuery({ ...prev, availability, page: 0 }));
+      onChange((prev) => UsersQuery.parse({ ...prev, availability, page: 0 }));
     },
     [onChange]
   );
   const onLangsChange = useCallback(
     (langs: Option[]) => {
-      onChange((prev) => new UsersQuery({ ...prev, langs, page: 0 }));
+      onChange((prev) => UsersQuery.parse({ ...prev, langs, page: 0 }));
     },
     [onChange]
   );

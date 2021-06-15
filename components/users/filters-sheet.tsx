@@ -33,25 +33,25 @@ function FiltersSheet({
 
   const onSubjectsChange = useCallback(
     (subjects: Option[]) => {
-      setQuery((prev) => new UsersQuery({ ...prev, subjects, page: 0 }));
+      setQuery((prev) => UsersQuery.parse({ ...prev, subjects, page: 0 }));
     },
     [setQuery]
   );
   const onAvailabilityChange = useCallback(
     (availability: Availability) => {
-      setQuery((prev) => new UsersQuery({ ...prev, availability, page: 0 }));
+      setQuery((prev) => UsersQuery.parse({ ...prev, availability, page: 0 }));
     },
     [setQuery]
   );
   const onLangsChange = useCallback(
     (langs: Option[]) => {
-      setQuery((prev) => new UsersQuery({ ...prev, langs, page: 0 }));
+      setQuery((prev) => UsersQuery.parse({ ...prev, langs, page: 0 }));
     },
     [setQuery]
   );
   const onTagsChange = useCallback(
     (tags: UserHitTag[]) => {
-      setQuery((prev) => new UsersQuery({ ...prev, tags, page: 0 }));
+      setQuery((prev) => UsersQuery.parse({ ...prev, tags, page: 0 }));
     },
     [setQuery]
   );

@@ -71,7 +71,7 @@ export default function Search({
               const search = event.currentTarget.value;
               // TODO: Throttle the actual API requests but immediately show the
               // loading state (i.e. we can't just throttle `setQuery` updates).
-              onChange((p) => new UsersQuery({ ...p, search, page: 0 }));
+              onChange((p) => UsersQuery.parse({ ...p, search, page: 0 }));
             }}
           />
         </div>

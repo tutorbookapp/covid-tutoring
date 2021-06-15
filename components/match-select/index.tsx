@@ -80,7 +80,7 @@ function MatchSelect({
 
   const onQueryChange = useCallback((param: CallbackParam<MatchesQuery>) => {
     setQuery((prev) => {
-      let updated = prev || new MatchesQuery({ hitsPerPage: HITS_PER_PG });
+      let updated = prev || MatchesQuery.parse({ hitsPerPage: HITS_PER_PG });
       if (typeof param === 'object') updated = param;
       if (typeof param === 'function') updated = param(updated);
       if (dequal(updated, prev)) return prev;
@@ -99,11 +99,11 @@ function MatchSelect({
     onQueryChange((prev) => {
       if (org) {
         if (!prev.people.length && prev.org === org.id) return prev;
-        return new MatchesQuery({ ...prev, people: [], org: org.id });
+        return MatchesQuery.parse({ ...prev, people: [], org: org.id });
       }
       if (!user.id) return prev;
       const people = [{ label: user.name, value: user.id }];
-      return new MatchesQuery({ ...prev, people });
+      return MatchesQuery.parse({ ...prev, people });
     });
   }, [org, user, onQueryChange]);
 
@@ -126,7 +126,7 @@ function MatchSelect({
   useEffect(() => {
     setSearching(true);
     const searchTimeoutId = setTimeout(() => {
-      setQuery((prev) => new MatchesQuery({ ...prev, search, page: 0 }));
+      setQuery((prev) => MatchesQuery.parse({ ...prev, search, page: 0 }));
     }, 500);
     return () => clearTimeout(searchTimeoutId);
   }, [search]);

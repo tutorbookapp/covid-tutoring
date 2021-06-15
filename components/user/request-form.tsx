@@ -45,7 +45,7 @@ export default function RequestForm({
   const { query } = useRouter();
   const { user, updateUser } = useUser();
   const { t, lang: locale } = useTranslation();
-  const { data: children } = useSWR<ListUsersRes>(user.id ? new UsersQuery({ parents: [user.id] }).endpoint : null);
+  const { data: children } = useSWR<ListUsersRes>(user.id ? UsersQuery.parse({ parents: [user.id] }).endpoint : null);
     
   const [child, setChild] = useState<User>(User.parse({}));
   const [student, setStudent] = useState<string>('Me');

@@ -43,7 +43,7 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
   const { t } = useTranslation();
   const { user: currentUser, orgs, loggedIn } = useUser();
 
-  const [query, setQuery] = useState<UsersQuery>(new UsersQuery());
+  const [query, setQuery] = useState<UsersQuery>(UsersQuery.parse({}));
   const [hits, setHits] = useState<number>(query.hitsPerPage);
   const [auth, setAuth] = useState<boolean>(false);
   const [canSearch, setCanSearch] = useState<boolean>(false);
@@ -90,7 +90,7 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
   // Prefetch the next page of results (using SWR's global cache).
   // @see {@link https://swr.vercel.app/docs/prefetching}
   useEffect(() => {
-    const nextPageQuery = new UsersQuery(
+    const nextPageQuery = UsersQuery.parse(
       clone({ ...query, page: query.page + 1 })
     );
     void prefetch(nextPageQuery.endpoint);
@@ -100,7 +100,7 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
   // ever filter by more than one at once.
   useEffect(() => {
     setQuery((prev: UsersQuery) => {
-      const updated = new UsersQuery({
+      const updated = UsersQuery.parse({
         ...prev,
         available: true,
         visible: true,

@@ -29,19 +29,19 @@ function FiltersSheet({
 
   const onSubjectsChange = useCallback(
     (subjects: Option[]) => {
-      setQuery((prev) => new MeetingsQuery({ ...prev, subjects, page: 0 }));
+      setQuery((prev) => MeetingsQuery.parse({ ...prev, subjects, page: 0 }));
     },
     [setQuery]
   );
   const onPeopleChange = useCallback(
     (people: Option[]) => {
-      setQuery((prev) => new MeetingsQuery({ ...prev, people, page: 0 }));
+      setQuery((prev) => MeetingsQuery.parse({ ...prev, people, page: 0 }));
     },
     [setQuery]
   );
   const onTagsChange = useCallback(
     (tags: MeetingHitTag[]) => {
-      setQuery((prev) => new MeetingsQuery({ ...prev, tags, page: 0 }));
+      setQuery((prev) => MeetingsQuery.parse({ ...prev, tags, page: 0 }));
     },
     [setQuery]
   );

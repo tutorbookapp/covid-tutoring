@@ -48,7 +48,7 @@ function SearchBar({ query, setQuery, setOpen }: SearchBarProps): JSX.Element {
               setQuery((prev) => {
                 const { visible: vprev } = prev;
                 const visible = vprev !== true ? true : undefined;
-                return new UsersQuery({ ...prev, visible, page: 0 });
+                return UsersQuery.parse({ ...prev, visible, page: 0 });
               });
             }}
             selected={query.visible === true}
@@ -60,7 +60,7 @@ function SearchBar({ query, setQuery, setOpen }: SearchBarProps): JSX.Element {
               setQuery((prev) => {
                 const { visible: vprev } = prev;
                 const visible = vprev !== false ? false : undefined;
-                return new UsersQuery({ ...prev, visible, page: 0 });
+                return UsersQuery.parse({ ...prev, visible, page: 0 });
               });
             }}
             selected={query.visible === false}
@@ -71,7 +71,7 @@ function SearchBar({ query, setQuery, setOpen }: SearchBarProps): JSX.Element {
               checkmark
               onInteraction={() => {
                 const aspect = 'mentoring';
-                setQuery((p) => new UsersQuery({ ...p, aspect, page: 0 }));
+                setQuery((p) => UsersQuery.parse({ ...p, aspect, page: 0 }));
               }}
               selected={query.aspect === 'mentoring'}
             />
@@ -82,7 +82,7 @@ function SearchBar({ query, setQuery, setOpen }: SearchBarProps): JSX.Element {
               checkmark
               onInteraction={() => {
                 const aspect = 'tutoring';
-                setQuery((p) => new UsersQuery({ ...p, aspect, page: 0 }));
+                setQuery((p) => UsersQuery.parse({ ...p, aspect, page: 0 }));
               }}
               selected={query.aspect === 'tutoring'}
             />
@@ -99,7 +99,7 @@ function SearchBar({ query, setQuery, setOpen }: SearchBarProps): JSX.Element {
             const search = event.currentTarget.value;
             // TODO: Throttle the actual API requests but immediately show the
             // loading state (i.e. we can't just throttle `setQuery` updates).
-            setQuery((p) => new UsersQuery({ ...p, search, page: 0 }));
+            setQuery((p) => UsersQuery.parse({ ...p, search, page: 0 }));
           }}
         />
       </div>

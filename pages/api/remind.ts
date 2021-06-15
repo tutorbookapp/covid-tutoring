@@ -69,19 +69,19 @@ export default async function remind(req: Req, res: Res): Promise<void> {
         meetings1hrInPast,
       ] = await Promise.all([
         getMeetings(
-          new MeetingsQuery({
+          MeetingsQuery.parse({
             from: new Date(now.valueOf() + 1 * 60 * 60 * 1000),
             to: new Date(now.valueOf() + 2 * 60 * 60 * 1000 - 1),
           })
         ),
         getMeetings(
-          new MeetingsQuery({
+          MeetingsQuery.parse({
             from: new Date(now.valueOf() + 24 * 60 * 60 * 1000),
             to: new Date(now.valueOf() + 25 * 60 * 60 * 1000 - 1),
           })
         ),
         getMeetings(
-          new MeetingsQuery({
+          MeetingsQuery.parse({
             org: 'quarantunes', // TODO: Make this configured in org doc.
             from: new Date(now.valueOf() - 1 * 60 * 60 * 1000 + 1),
             to: now,

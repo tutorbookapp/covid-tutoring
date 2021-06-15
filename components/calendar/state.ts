@@ -25,7 +25,7 @@ export interface CalendarState {
 }
 
 export const CalendarStateContext = createContext<CalendarState>({
-  start: new MeetingsQuery().from,
+  start: MeetingsQuery.parse({}).from,
   editing: Meeting.parse({}),
   setEditing: (param: CallbackParam<Meeting>) => {},
   onEditStop: (evt?: FormEvent) => {},
