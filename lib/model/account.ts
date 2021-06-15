@@ -42,15 +42,15 @@ export type Social = z.infer<typeof Social>;
  * @property socials - An array of the account's social media links.
  */
 export const Account = Resource.extend({
-  id: z.string(),
-  name: z.string(),
-  photo: z.string().url(),
-  email: z.string().email(),
-  phone: z.string().regex(/^(\+\d{1,3})\d{10}$/),
-  bio: z.string(),
-  background: z.string().url(),
-  venue: z.string().url(),
-  socials: z.array(Social),
+  id: z.string().default(''),
+  name: z.string().default(''),
+  photo: z.string().url().default(''),
+  email: z.string().email().default(''),
+  phone: z.string().regex(/^(\+\d{1,3})\d{10}$/).default(''),
+  bio: z.string().default(''),
+  background: z.string().url().default(''),
+  venue: z.string().url().default(''),
+  socials: z.array(Social).default([]),
 });
 export type Account = z.infer<typeof Account>;
 export type AccountJSON = z.input<typeof Account>;

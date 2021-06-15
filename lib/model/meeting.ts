@@ -24,6 +24,7 @@ export const MeetingAction = z.union([
   z.literal('future'),
   z.literal('this'),
 ]);
+export type MeetingAction = z.infer<typeof MeetingAction>;
 
 /**
  * A meeting's status starts as `pending`, becomes `logged` once a tutor or
@@ -38,6 +39,7 @@ export const MeetingStatus = z.union([
   z.literal('logged'),
   z.literal('approved'),
 ]);
+export type MeetingStatus = z.infer<typeof MeetingStatus>;
 
 /**
  * A meeting is a past appointment logged for a match (e.g. John and Jane met
@@ -54,15 +56,15 @@ export const MeetingStatus = z.union([
  * @property [parentId] - The recurring parent meeting ID (if any).
  */
 export const Meeting = Resource.extend({
-  status: MeetingStatus,
-  creator: Person,
-  match: Match,
-  venue: Venue,
-  time: Timeslot,
-  description: z.string(),
-  tags: z.array(MeetingTag),
+  status: MeetingStatus.default('created'),
+  creator: Person.default(Person.parse({})),
+  match: Match.default(Match.parse({})),
+  venue: Venue.default(Venue.parse({})),
+  time: Timeslot.default(Timeslot.parse({})),
+  description: z.string().default(''),
+  tags: z.array(MeetingTag).default([]),
   parentId: z.string().optional(),
-  id: z.string(), 
+  id: z.string().default(''), 
 });
 export type Meeting = z.infer<typeof Meeting>;
 export type MeetingJSON = z.input<typeof Meeting>;

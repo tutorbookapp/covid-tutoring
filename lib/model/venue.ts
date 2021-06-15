@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import { z } from 'zod';
 
 import { Resource } from 'lib/model/resource';
@@ -10,7 +11,7 @@ import { Resource } from 'lib/model/resource';
  * thus have a definitive URL).
  */
 export const Venue = Resource.extend({
-  id: z.string(),
-  url: z.string().url(),
+  id: z.string().default(() => nanoid(10)),
+  url: z.string().url().default(() => `https://meet.jit.si/TB-${nanoid(10)}`),
 });
 export type Venue = z.infer<typeof Venue>;

@@ -17,13 +17,13 @@ export const MATCH_TAGS: z.infer<typeof MatchTag>[] = ['meeting'];
  * @property message - A more detailed description of this match or request.
  */
 export const Match = Resource.extend({
-  org: z.string(),
-  subjects: z.array(z.string()),
-  people: z.array(Person),
-  creator: Person,
-  message: z.string(),
-  tags: z.array(MatchTag),
-  id: z.string(),
+  org: z.string().default('default'),
+  subjects: z.array(z.string()).default([]),
+  people: z.array(Person).default([]),
+  creator: Person.default(Person.parse({})),
+  message: z.string().default(''),
+  tags: z.array(MatchTag).default([]),
+  id: z.string().default(''),
 });
 export type Match = z.infer<typeof Match>;
 export type MatchJSON = z.input<typeof Match>;

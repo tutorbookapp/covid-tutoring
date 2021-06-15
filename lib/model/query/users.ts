@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
+import { Option, Query } from 'lib/model/query/base';
 import { Aspect } from 'lib/model/aspect';
 import { Availability } from 'lib/model/availability';
-import { Option, Query } from 'lib/model/query/base';
 import { UserHitTag } from 'lib/model/user';
 
 /**
@@ -23,13 +23,13 @@ import { UserHitTag } from 'lib/model/user';
  * their visibility) which is why this property exists.
  */
 export const UsersQuery = Query.extend({
-  parents: z.array(z.string()),
-  orgs: z.array(z.string()),
-  tags: z.array(UserHitTag),
-  aspect: Aspect,
-  langs: z.array(Option),
-  subjects: z.array(Option),
-  availability: Availability,
+  parents: z.array(z.string()).default([]),
+  orgs: z.array(z.string()).default([]),
+  tags: z.array(UserHitTag).default([]),
+  aspect: Aspect.default('tutoring'),
+  langs: z.array(Option).default([]),
+  subjects: z.array(Option).default([]),
+  availability: Availability.default(Availability.parse([])),
   available: z.boolean().optional(),
   visible: z.boolean().optional(),
 });

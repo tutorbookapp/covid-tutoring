@@ -23,9 +23,9 @@ export type Role = z.infer<typeof Role>;
  * @property roles - The user's roles in this request or match (e.g. `tutor`).
  */
 export const Person = z.object({
-  id: z.string(), 
-  name: z.string().optional(), 
-  photo: z.string().url().optional(),
-  roles: z.array(Role), 
+  id: z.string().default(''), 
+  name: z.string().default(''), 
+  photo: z.string().url().default(''),
+  roles: z.array(Role).default([]), 
 });
 export type Person = z.infer<typeof Person>;

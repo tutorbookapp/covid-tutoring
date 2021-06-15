@@ -31,9 +31,9 @@ export type Check = z.infer<typeof Check>;
  * @property checks - An array of checks (@see {@link Check}) passed.
  */
 export const Verification = Resource.extend({
-  creator: z.string(),
-  org: z.string(),
-  notes: z.string(),
-  checks: z.array(Check),
+  creator: z.string().default(''),
+  org: z.string().default('default'),
+  notes: z.string().default(''),
+  checks: z.array(Check).default([]),
 });
 export type Verification = z.infer<typeof Verification>;

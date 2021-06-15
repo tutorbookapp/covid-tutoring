@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { date } from 'lib/model/timeslot';
+
 /**
  * The base interface for all of our data models.
  * @typedef {Object} Resource
@@ -7,6 +9,6 @@ import { z } from 'zod';
  * @property updated - The last time the resource was updated.
  */
 export const Resource = z.object({
-  created: z.date(),
-  updated: z.date(),
+  created: date.default(() => new Date()),
+  updated: date.default(() => new Date()),
 });

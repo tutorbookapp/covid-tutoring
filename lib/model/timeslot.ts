@@ -1,4 +1,7 @@
+import { nanoid } from 'nanoid';
 import { z } from 'zod';
+
+export const date = z.string().or(z.date()).refine((s) => !Number.isNaN(new Date(s).valueOf())).transform((s) => new Date(s));
 
 /**
  * A timeslot is a window of time and provides all the necessary scheduling data
@@ -14,12 +17,12 @@ import { z } from 'zod';
  * client-side; only used server-side for querying recurring timeslots.
  */
 export const Timeslot = z.object({
-  id: z.string(),
-  from: z.date(),
-  to: z.date(),
-  exdates: z.array(z.date()).optional(),
+  id: z.string().default(() => nanoid(5)),
+  from: date.default(() => new Date()),
+  to: date.default(() => new Date()),
+  exdates: z.array(date).optional(),
   recur: z.string().optional(),
-  last: z.date().optional(),
+  last: date.optional(),
 });
 export type Timeslot = z.infer<typeof Timeslot>;
 export type TimeslotJSON = z.input<typeof Timeslot>;
