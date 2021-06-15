@@ -26,6 +26,7 @@ export const Social = z.object({
   type: SocialType,
   url: z.string(),
 });
+export type Social = z.infer<typeof Social>;
 
 /**
  * An account object that both orgs and users extend.
@@ -51,3 +52,5 @@ export const Account = Resource.extend({
   venue: z.string().url(),
   socials: z.array(Social),
 });
+export type Account = z.infer<typeof Account>;
+export type AccountJSON = z.input<typeof Account>;

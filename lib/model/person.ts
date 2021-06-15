@@ -7,6 +7,7 @@ export const Role = z.union([
   z.literal('mentee'),
   z.literal('parent'),
 ]);
+export type Role = z.infer<typeof Role>;
 
 /**
  * Represents a person that is involved in a request or match. Here, roles are
@@ -27,3 +28,4 @@ export const Person = z.object({
   photo: z.string().url().optional(),
   roles: z.array(Role), 
 });
+export type Person = z.infer<typeof Person>;

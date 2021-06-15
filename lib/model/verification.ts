@@ -17,6 +17,7 @@ export const Check = z.union([
   z.literal('training'),
   z.literal('interview'),
 ]);
+export type Check = z.infer<typeof Check>;
 
 /**
  * A verification is run by a non-profit organization (the `org`) by a member of
@@ -35,3 +36,4 @@ export const Verification = Resource.extend({
   notes: z.string(),
   checks: z.array(Check),
 });
+export type Verification = z.infer<typeof Verification>;

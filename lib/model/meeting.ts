@@ -62,3 +62,5 @@ export const Meeting = Resource.extend({
   parentId: z.string().optional(),
   id: z.string(), 
 });
+export type Meeting = z.infer<typeof Meeting>;
+export type MeetingJSON = z.input<typeof Meeting>;

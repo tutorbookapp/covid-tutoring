@@ -17,32 +17,6 @@ const BookingConfig = z.object({}).catchall(z.object({
 }));
 
 /**
- * The only two Zoom OAuth scopes that we ever will request access to.
- * @see {@link https://github.com/tutorbookapp/tutorbook/issues/100}
- * @see {@link https://marketplace.zoom.us/docs/guides/auth/oauth/oauth-scopes}
- */
-export const ZoomScope = z.union([
-  z.literal('meeting:write:admin'),
-  z.literal('user:write:admin'),
-]);
-
-/**
- * An authentication config for a certain Zoom account. This enables us to call
- * Zoom APIs on behalf of a user or org (using OAuth patterns).
- * @typedef {Object} ZoomAccount
- * @property id - The Zoom account ID that has given us authorization.
- * @property token - The Zoom `refresh_token` we can use to access Zoom APIs.
- * @property scopes - The scopes that `refresh_token` gives us access to.
- * @see {@link https://github.com/tutorbookapp/tutorbook/issues/100}
- * @see {@link https://marketplace.zoom.us/docs/guides/auth/oauth}
- */
-export const ZoomAccount = z.object({
-  id: z.string(),
-  token: z.string(),
-  scopes: z.array(ZoomScope),
-});
-
-/**
  * An `Org` object represents a non-profit organization that is using Tutorbook
  * to manage their virtual tutoring programs.
  * @typedef {Object} Org
@@ -52,8 +26,6 @@ export const ZoomAccount = z.object({
  * @property domains - Array of valid email domains that can access this org's
  * data (e.g. `pausd.us` and `pausd.org`).
  * @property profiles - Array of required profile fields (e.g. `phone`).
- * @property [zoom] - This org's Zoom OAuth config. Used to create meetings and
- * (optionally) users.
  * @property signup - Configuration for the org's unique custom sign-up page.
  * @property home - Configuration for the org's unique custom landing homepage.
  * @property booking - Configuration for the org's user booking pages.
@@ -65,8 +37,9 @@ export const Org = Account.extend({
   domains: z.array(z.string()),
   profiles: z.array(z.string()),
   subjects: z.array(z.string()).optional(), 
-  zoom: ZoomAccount.optional(), 
   signup: SignupConfig,
   home: HomeConfig,
   booking: BookingConfig,
 });
+export type Org = z.infer<typeof Org>;
+export type OrgJSON = z.input<typeof Org>;

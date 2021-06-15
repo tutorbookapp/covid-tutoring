@@ -21,3 +21,5 @@ export const Timeslot = z.object({
   recur: z.string().optional(),
   last: z.date().optional(),
 });
+export type Timeslot = z.infer<typeof Timeslot>;
+export type TimeslotJSON = z.input<typeof Timeslot>;

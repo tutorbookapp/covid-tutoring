@@ -7,3 +7,4 @@ export const MatchesQuery = Query.extend({
   people: z.array(Option),
   subjects: z.array(Option),
 });
+export type MatchesQuery = z.infer<typeof MatchesQuery>;

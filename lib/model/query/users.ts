@@ -33,3 +33,4 @@ export const UsersQuery = Query.extend({
   available: z.boolean().optional(),
   visible: z.boolean().optional(),
 });
+export type UsersQuery = z.infer<typeof UsersQuery>;

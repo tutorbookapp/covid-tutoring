@@ -2,7 +2,6 @@ import { z } from 'zod';
 
 import { Person } from 'lib/model/person';
 import { Resource } from 'lib/model/resource';
-import { Aspect } from 'lib/model/aspect';
 
 export const MatchTag = z.literal('meeting'); // Match has at least one meeting.
 export const MatchHitTag = z.union([MatchTag, z.literal('not-meeting')]);
@@ -26,3 +25,5 @@ export const Match = Resource.extend({
   tags: z.array(MatchTag),
   id: z.string(),
 });
+export type Match = z.infer<typeof Match>;
+export type MatchJSON = z.input<typeof Match>;

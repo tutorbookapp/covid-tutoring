@@ -4,6 +4,7 @@ export const Option = z.object({
   label: z.string(),
   value: z.string(),
 });
+export type Option = z.infer<typeof Option>;
 
 /**
  * The base object just supports pagination, text-based search, and tag filters.
@@ -19,3 +20,4 @@ export const Query = z.object({
   hitsPerPage: z.number(),
   page: z.number(),
 });
+export type Query = z.infer<typeof Query>;

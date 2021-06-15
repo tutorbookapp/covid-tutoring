@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { Account } from 'lib/model/account';
 import { Aspect } from 'lib/model/aspect';
 import { Availability } from 'lib/model/availability';
-import { Person, Role } from 'lib/model/person';
+import { Role } from 'lib/model/person';
 import { Verification } from 'lib/model/verification';
 
 /**
@@ -44,6 +44,7 @@ export const Subjects = z.object({
   subjects: z.array(z.string()),
   searches: z.array(z.string()),
 });
+export type Subjects = z.infer<typeof Subjects>;
 
 /**
  * A user object (that is stored in their Firestore profile document by uID).
@@ -91,3 +92,5 @@ export const User = Account.extend({
   token: z.string().optional(),
   hash: z.string().optional(),
 });
+export type User = z.infer<typeof User>;
+export type UserJSON = z.input<typeof User>;

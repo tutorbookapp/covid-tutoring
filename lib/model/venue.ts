@@ -13,3 +13,4 @@ export const Venue = Resource.extend({
   id: z.string(),
   url: z.string().url(),
 });
+export type Venue = z.infer<typeof Venue>;
