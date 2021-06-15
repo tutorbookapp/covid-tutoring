@@ -50,10 +50,12 @@ create table public.users (
   "langs" text[] not null check(cardinality(langs) > 0),
   "visible" boolean not null,
   "featured" aspect[] not null,
-  "tags" user_tag[] not null,
   "reference" text not null,
   "timezone" text,
-  "age" integer
+  "age" integer,
+  "tags" user_tag[] not null,
+  "created" timestamptz not null,
+  "updated" timestamptz not null
 );
 
 create type profile_field as enum('name', 'photo', 'email', 'phone', 'bio', 'background', 'venue', 'availability', 'subjects', 'langs', 'reference'); 
@@ -76,19 +78,20 @@ create table public.orgs (
   "signup" jsonb not null,
   "home" jsonb not null,
   "booking" jsonb not null,
-  "matchURL" url
+  "created" timestamptz not null,
+  "updated" timestamptz not null
 );
 
 create type verification_check as enum('email', 'background-check', 'academic-email', 'training', 'interview');
 create table public.verifications (
   "id" bigint generated always as identity primary key,
-  "created" timestamptz not null,
-  "updated" timestamptz not null,
   "creator" bigint references public.users(id) not null,
   "user" bigint references public.users(id) not null,
   "org" text references public.orgs(id) not null,
   "checks" verification_check[] not null check(cardinality(checks) > 0),
-  "notes" text not null
+  "notes" text not null,
+  "created" timestamptz not null,
+  "updated" timestamptz not null
 );
 
 create type match_tag as enum('meeting');
@@ -98,7 +101,9 @@ create table public.matches (
   "creator" bigint references public.users(id) not null,
   "subjects" text[] not null check(cardinality(subjects) > 0),
   "message" text not null,
-  "tags" match_tag[] not null
+  "tags" match_tag[] not null,
+  "created" timestamptz not null,
+  "updated" timestamptz not null
 );
 
 create type meeting_tag as enum('recurring');
@@ -113,25 +118,30 @@ create table public.meetings (
   "venue" venue not null,
   "time" timeslot not null,
   "description" text not null,
-  "tags" meeting_tag[] not null
+  "tags" meeting_tag[] not null,
+  "created" timestamptz not null,
+  "updated" timestamptz not null
 );
 
 create table relation_parents (
   "user" bigint references public.users(id) not null,
-  "parent" bigint references public.users(id) not null
+  "parent" bigint references public.users(id) not null,
+  primary key ("user", "parent")
 );
 create table relation_orgs (
   "user" bigint references public.users(id) not null,
-  "org" text references public.orgs(id) not null
+  "org" text references public.orgs(id) not null,
+  primary key ("user", "org")
 );
 create table relation_members (
   "user" bigint references public.users(id) not null,
-  "org" text references public.orgs(id) not null
+  "org" text references public.orgs(id) not null,
+  primary key ("user", "org")
 );
 create table relation_people (
   "user" bigint references public.users(id) not null,
   "meeting" bigint references public.meetings(id),
   "match" bigint references public.matches(id),
   "roles" role[] not null check(cardinality(roles) > 0),
-  check(meeting is not null or match is not null)
+  check("meeting" is not null or "match" is not null)
 );

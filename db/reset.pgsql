@@ -31,7 +31,7 @@ drop type meeting_tag cascade;
 drop type meeting_status cascade;
 drop table public.meetings cascade;
 
-drop table relation_parent cascade;
-drop table relation_org cascade;
-drop table relation_member cascade;
+drop table relation_parents cascade;
+drop table relation_orgs cascade;
+drop table relation_members cascade;
 drop table relation_people cascade;
