@@ -7,6 +7,7 @@ import getMatch from 'lib/api/get/match';
 import getPeople from 'lib/api/get/people';
 import { handle } from 'lib/api/error';
 import logger from 'lib/api/logger';
+import { matchToSegment } from 'lib/model/match';
 import segment from 'lib/api/segment';
 import updatePeopleTags from 'lib/api/update/people-tags';
 import verifyAuth from 'lib/api/verify/auth';
@@ -41,7 +42,7 @@ export default async function deleteMatch(
     segment.track({
       userId: uid,
       event: 'Match Deleted',
-      properties: match.toSegment(),
+      properties: matchToSegment(match),
     });
 
     const people = await getPeople(match.people);

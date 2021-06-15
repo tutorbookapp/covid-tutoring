@@ -5,6 +5,7 @@ import getMatch from 'lib/api/get/match';
 import getTruncatedUser from 'lib/api/get/truncated-user';
 import getUser from 'lib/api/get/user';
 import { handle } from 'lib/api/error';
+import { matchToSegment } from 'lib/model/match';
 import segment from 'lib/api/segment';
 import verifyAuth from 'lib/api/verify/auth';
 import verifyQueryId from 'lib/api/verify/query-id';
@@ -42,7 +43,7 @@ export default async function fetchPeople(
     segment.track({
       userId: uid,
       event: 'Match People Fetched',
-      properties: match.toSegment(),
+      properties: matchToSegment(match),
     });
   } catch (e) {
     handle(e, res);

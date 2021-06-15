@@ -5,15 +5,14 @@ import to from 'await-to-js';
 
 import { APIError, handle } from 'lib/api/error';
 import { DecodedIdToken, auth } from 'lib/api/firebase';
+import { Social, accountToSegment } from 'lib/model/account';
 import {
   Subjects,
   User,
-  UserInterface,
   UserJSON,
   isUserJSON,
 } from 'lib/model/user';
 import { Availability } from 'lib/model/availability';
-import { SocialInterface } from 'lib/model/account';
 import { Timeslot } from 'lib/model/timeslot';
 import { Verification } from 'lib/model/verification';
 import clone from 'lib/utils/clone';
@@ -29,9 +28,9 @@ import verifyAuth from 'lib/api/verify/auth';
 import verifyBody from 'lib/api/verify/body';
 
 function mergeSocials(
-  overrides: SocialInterface[],
-  baseline: SocialInterface[]
-): SocialInterface[] {
+  overrides: Social[],
+  baseline: Social[]
+): Social[] {
   const socials = clone(overrides);
   baseline.forEach((s) => {
     if (!socials.some((sc) => sc.type === s.type)) socials.push(clone(s));
@@ -79,7 +78,7 @@ function mergeSubjects(overrides: Subjects, baseline: Subjects): Subjects {
  * from `overrides` and fallbacks to taking from `baseline`.
  */
 function mergeUsers(overrides: User, baseline: User): User {
-  const merged: UserInterface = {
+  const merged: User = {
     id: overrides.id || baseline.id,
     name: overrides.name || baseline.name,
 
@@ -178,7 +177,7 @@ async function updateAccount(req: Req, res: Res): Promise<void> {
   segment.track({
     userId: withAuthUpdate.id,
     event: 'Account Updated',
-    properties: withAuthUpdate.toSegment(),
+    properties: accountToSegment(withAuthUpdate),
   });
 }
 

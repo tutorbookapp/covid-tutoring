@@ -1,6 +1,7 @@
 import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 
 import { Org, OrgJSON, isOrgJSON } from 'lib/model/org';
+import { accountToSegment } from 'lib/model/account';
 import getOrg from 'lib/api/get/org';
 import { handle } from 'lib/api/error';
 import segment from 'lib/api/segment';
@@ -31,7 +32,7 @@ export default async function updateOrg(
     segment.track({
       userId: uid,
       event: 'Org Updated',
-      properties: org.toSegment(),
+      properties: accountToSegment(org),
     });
   } catch (e) {
     handle(e, res);

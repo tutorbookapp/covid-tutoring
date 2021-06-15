@@ -1,7 +1,7 @@
 import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 import { RRule } from 'rrule';
 
-import { Meeting, MeetingAction, MeetingJSON } from 'lib/model/meeting';
+import { Meeting, MeetingAction, MeetingJSON, meetingToSegment } from 'lib/model/meeting';
 import analytics from 'lib/api/analytics';
 import deleteMeetingDoc from 'lib/api/delete/meeting-doc';
 import deleteMeetingSearchObj from 'lib/api/delete/meeting-search-obj';
@@ -127,7 +127,7 @@ export default async function deleteMeeting(
     segment.track({
       userId: uid,
       event: 'Meeting Deleted',
-      properties: deleting.toSegment(),
+      properties: meetingToSegment(deleting),
     });
 
     // TODO: Ensure that this updates the org statistics as expected (e.g. we

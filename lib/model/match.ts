@@ -27,3 +27,11 @@ export const Match = Resource.extend({
 });
 export type Match = z.infer<typeof Match>;
 export type MatchJSON = z.input<typeof Match>;
+
+export function matchToSegment(match: Match): Record<string, unknown> {
+  return { 
+    id: match.id, 
+    message: match.message, 
+    subjects: match.subjects, 
+  };
+}

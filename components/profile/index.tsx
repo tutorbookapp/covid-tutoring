@@ -13,6 +13,7 @@ import VenueInput from 'components/venue-input';
 
 import { User, UserJSON } from 'lib/model/user';
 import { Availability } from 'lib/model/availability';
+import { accountToSegment } from 'lib/model/account';
 import useAnalytics from 'lib/hooks/analytics';
 import useContinuous from 'lib/hooks/continuous';
 import useSocialProps from 'lib/hooks/social-props';
@@ -30,7 +31,7 @@ export default function Profile(): JSX.Element {
     async (updated: User) => {
       const url = `/api/users/${updated.id}`;
       const { data } = await axios.put<UserJSON>(url, updated.toJSON());
-      track('Profile Updated', updated.toSegment());
+      track('Profile Updated', accountToSegment(updated));
       return User.parse(data);
     },
     [track]
@@ -48,7 +49,7 @@ export default function Profile(): JSX.Element {
 
   useAnalytics(
     'Profile Errored',
-    () => error && { ...user.toSegment(), error }
+    () => error && { ...accountToSegment(user), error }
   );
 
   // TODO: Add URL verifications to ensure that the social links and esp. the

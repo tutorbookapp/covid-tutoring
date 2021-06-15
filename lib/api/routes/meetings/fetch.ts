@@ -4,6 +4,7 @@ import { MeetingJSON } from 'lib/model/meeting';
 import getMatch from 'lib/api/get/match';
 import getMatchMeetings from 'lib/api/get/match-meetings';
 import { handle } from 'lib/api/error';
+import { matchToSegment } from 'lib/model/match';
 import segment from 'lib/api/segment';
 import verifyAuth from 'lib/api/verify/auth';
 import verifyQueryId from 'lib/api/verify/query-id';
@@ -31,7 +32,7 @@ export default async function fetchMeetings(
     segment.track({
       userId: uid,
       event: 'Match Meetings Fetched',
-      properties: match.toSegment(),
+      properties: matchToSegment(match),
     });
   } catch (e) {
     handle(e, res);

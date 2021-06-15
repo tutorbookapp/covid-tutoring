@@ -3,6 +3,7 @@ import { SegmentAnalytics } from '@segment/analytics.js-core';
 import { dequal } from 'dequal/lite';
 
 import Intercom from 'lib/intercom';
+import { accountToSegment } from 'lib/model/account';
 import { useOrg } from 'lib/context/org';
 import { useUser } from 'lib/context/user';
 
@@ -22,7 +23,7 @@ export default function Segment({ intercom }: SegmentProps): null {
 
   const prevIdentity = useRef<Record<string, unknown>>();
   useEffect(() => {
-    const identity = user.toSegment();
+    const identity = accountToSegment(user);
     if (dequal(prevIdentity.current, identity)) return;
     if (user.id) window.analytics?.alias(user.id);
     window.analytics?.identify(user.id, identity);
@@ -38,7 +39,7 @@ export default function Segment({ intercom }: SegmentProps): null {
 
   const prevGroup = useRef<Record<string, unknown>>();
   useEffect(() => {
-    const group = org?.toSegment();
+    const group = org ? accountToSegment(org) : undefined;
     if (!org || !group || dequal(prevGroup.current, group)) return;
     // The `orgId` prop is required for Segment to create Mixpanel groups.
     // @see {@link https://bit.ly/3kWrJPw}

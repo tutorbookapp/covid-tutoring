@@ -8,7 +8,7 @@ import { Callback } from 'lib/model/callback';
 import { Query } from 'lib/model/query/base';
 
 interface Constructor<T extends Query> {
-  fromURLParams: (params: any) => T;
+  parse: (params: unknown) => T;
 }
 
 // Syncs the initial query state in URL parameters. This gives users a sharable
@@ -25,7 +25,7 @@ export default function useURLParamSync<T extends Query>(
     setQuery((prev) => {
       if (typeof window === 'undefined') return prev;
       const params = new URLSearchParams(window.location.search);
-      const updated = Model.fromURLParams({
+      const updated = Model.parse({
         ...prev.getURLParams(),
         ...Object.fromEntries(params.entries()),
       });

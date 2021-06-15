@@ -10,6 +10,7 @@ import { Theme, ThemeContext } from 'lib/context/theme';
 import { UpdateOrgParam, UpdateUserParam, UserContext } from 'lib/context/user';
 import { User, UserJSON } from 'lib/model/user';
 import { APIError } from 'lib/api/error';
+import { accountToSegment } from 'lib/model/account';
 import { fetcher } from 'lib/fetch';
 import useTrack from 'lib/hooks/track';
 
@@ -77,7 +78,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   const prevLoggedIn = useRef<boolean | undefined>(loggedIn);
   useEffect(() => {
     if (loggedIn === true && prevLoggedIn.current === false) {
-      track('User Signed In', user.toSegment());
+      track('User Signed In', accountToSegment(user));
     } else if (loggedIn === false && prevLoggedIn.current === true) {
       track('User Signed Out');
     }

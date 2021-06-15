@@ -18,6 +18,7 @@ import { ListUsersRes } from 'lib/api/routes/users/list';
 import { OrgContext } from 'lib/context/org';
 import { User } from 'lib/model/user';
 import { UsersQuery } from 'lib/model/query/users';
+import { accountToSegment } from 'lib/model/account';
 import clone from 'lib/utils/clone';
 import { prefetch } from 'lib/fetch';
 import supabase from 'lib/api/supabase';
@@ -137,7 +138,7 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
       track(
         'User List Filtered',
         {
-          org: org ? Org.parse(org).toSegment() : undefined,
+          org: org ? accountToSegment(Org.parse(org)) : undefined,
           subjects: updated.subjects.map((o) => o.value).join(' AND '),
           langs: updated.langs.map((o) => o.value).join(' AND '),
           aspect: updated.aspect,
@@ -159,12 +160,12 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
     'User List Loaded',
     () =>
       !searching && {
-        org: org ? Org.parse(org).toSegment() : undefined,
+        org: org ? accountToSegment(Org.parse(org)) : undefined,
         subjects: query.subjects.map((o) => o.value).join(' AND '),
         langs: query.langs.map((o) => o.value).join(' AND '),
         aspect: query.aspect,
         users: results.map((res, idx) => ({
-          ...User.parse(res).toSegment(),
+          ...accountToSegment(User.parse(res)),
           position: idx,
           url: `${url}/${org?.id || 'default'}/search/${res.id}`,
           subjects: res[query.aspect].subjects,

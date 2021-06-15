@@ -6,6 +6,7 @@ import {
   MeetingAction,
   MeetingJSON,
   isMeetingJSON,
+  meetingToSegment
 } from 'lib/model/meeting';
 import { Timeslot } from 'lib/model/timeslot';
 import analytics from 'lib/api/analytics';
@@ -131,7 +132,7 @@ export default async function updateMeeting(
         segment.track({
           userId: uid,
           event: 'Meeting Updated',
-          properties: body.toSegment(),
+          properties: meetingToSegment(body),
         });
 
         await Promise.all([
@@ -187,7 +188,7 @@ export default async function updateMeeting(
         segment.track({
           userId: uid,
           event: 'Meeting Updated',
-          properties: newMeeting.toSegment(),
+          properties: meetingToSegment(newMeeting),
         });
 
         await Promise.all([
@@ -238,7 +239,7 @@ export default async function updateMeeting(
         segment.track({
           userId: uid,
           event: 'Meeting Updated',
-          properties: newRecurringMeeting.toSegment(),
+          properties: meetingToSegment(newRecurringMeeting),
         });
 
         await Promise.all([
@@ -271,7 +272,7 @@ export default async function updateMeeting(
       segment.track({
         userId: uid,
         event: 'Meeting Updated',
-        properties: meeting.toSegment(),
+        properties: meetingToSegment(meeting),
       });
 
       // TODO: Should we also track the match update?

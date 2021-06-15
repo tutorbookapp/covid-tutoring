@@ -3,6 +3,7 @@ import Analytics from 'analytics-node';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { User } from 'lib/model/user';
+import { accountToSegment } from 'lib/model/account';
 import send from 'lib/mail/send';
 import supabase from 'lib/api/supabase';
 
@@ -15,7 +16,7 @@ export default async function quarantunes(req: Req, res: Res): Promise<void> {
   const baseURL = 'https://tutorbook.org';
   await Promise.all(
     users.map(async (user: User) => {
-      analytics.identify({ userId: user.id, traits: user.toSegment() });
+      analytics.identify({ userId: user.id, traits: accountToSegment(user) });
       analytics.track({ userId: user.id, event: 'QuaranTunes Email II Sent' });
       const link =
         `${baseURL}/profile?` +

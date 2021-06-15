@@ -44,13 +44,25 @@ export type Social = z.infer<typeof Social>;
 export const Account = Resource.extend({
   id: z.string().default(''),
   name: z.string().default(''),
-  photo: z.string().url().default(''),
-  email: z.string().email().default(''),
-  phone: z.string().regex(/^(\+\d{1,3})\d{10}$/).default(''),
+  photo: z.string().url().nullable().default(null).transform((s) => s || ''),
+  email: z.string().email().nullable().default(null).transform((s) => s || ''),
+  phone: z.string().regex(/^(\+\d{1,3})\d{10}$/).nullable().default(null).transform((s) => s || ''),
   bio: z.string().default(''),
-  background: z.string().url().default(''),
-  venue: z.string().url().default(''),
+  background: z.string().url().nullable().default(null).transform((s) => s || ''),
+  venue: z.string().url().nullable().default(null).transform((s) => s || ''),
   socials: z.array(Social).default([]),
 });
 export type Account = z.infer<typeof Account>;
 export type AccountJSON = z.input<typeof Account>;
+
+export function accountToSegment(account: Account): Record<string, unknown> {
+  return {
+    id: account.id,
+    name: account.name,
+    email: account.email,
+    phone: account.phone,
+    avatar: account.photo,
+    description: account.bio,
+    website: account.socials.find((s) => s.type === 'website')?.url || '',
+  };
+}

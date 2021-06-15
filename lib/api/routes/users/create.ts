@@ -1,6 +1,7 @@
 import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 
 import { User, UserJSON, isUserJSON } from 'lib/model/user';
+import { accountToSegment } from 'lib/model/account';
 import analytics from 'lib/api/analytics';
 import createAuthUser from 'lib/api/create/auth-user';
 import createCustomToken from 'lib/api/create/custom-token';
@@ -71,11 +72,11 @@ export default async function createUser(
 
     // TODO: Sometimes parents or admins are creating users that aren't
     // themselves. We should account for that in these analytics calls.
-    segment.identify({ userId: user.id, traits: user.toSegment() });
+    segment.identify({ userId: user.id, traits: accountToSegment(user) });
     segment.track({
       userId: user.id,
       event: 'User Created',
-      properties: user.toSegment(),
+      properties: accountToSegment(user),
     });
 
     await analytics(user, 'created');

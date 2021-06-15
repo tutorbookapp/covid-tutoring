@@ -1,6 +1,7 @@
 import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 
 import { User, UserJSON, isUserJSON } from 'lib/model/user';
+import { accountToSegment } from 'lib/model/account';
 import analytics from 'lib/api/analytics';
 import { handle } from 'lib/api/error';
 import logger from 'lib/api/logger';
@@ -49,11 +50,11 @@ export default async function updateUser(
 
     logger.info(`Updated ${user.toString()}.`);
 
-    segment.identify({ userId: user.id, traits: user.toSegment() });
+    segment.identify({ userId: user.id, traits: accountToSegment(user) });
     segment.track({
       userId: uid,
       event: 'User Updated',
-      properties: user.toSegment(),
+      properties: accountToSegment(user),
     });
 
     await analytics(user, 'updated', User.fromFirestoreDoc(originalDoc));

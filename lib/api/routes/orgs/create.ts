@@ -1,6 +1,7 @@
 import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 
 import { Org, OrgJSON, isOrgJSON } from 'lib/model/org';
+import { accountToSegment } from 'lib/model/account';
 import createOrgDoc from 'lib/api/create/org-doc';
 import { handle } from 'lib/api/error';
 import segment from 'lib/api/segment';
@@ -26,7 +27,7 @@ export default async function createOrg(
     segment.track({
       userId: uid,
       event: 'Org Created',
-      properties: org.toSegment(),
+      properties: accountToSegment(org),
     });
   } catch (e) {
     handle(e, res);

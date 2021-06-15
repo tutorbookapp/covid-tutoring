@@ -2,8 +2,8 @@ import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 import to from 'await-to-js';
 
 import { APIError, handle } from 'lib/api/error';
-import { Meeting, MeetingJSON, isMeetingJSON } from 'lib/model/meeting';
-import { Match } from 'lib/model/match';
+import { Meeting, MeetingJSON, meetingToSegment, isMeetingJSON } from 'lib/model/meeting';
+import { Match, matchToSegment } from 'lib/model/match';
 import analytics from 'lib/api/analytics';
 import createMatchDoc from 'lib/api/create/match-doc';
 import createMatchSearchObj from 'lib/api/create/match-search-obj';
@@ -85,7 +85,7 @@ export default async function createMeeting(
       segment.track({
         userId: creator.id,
         event: 'Match Created',
-        properties: body.match.toSegment(),
+        properties: matchToSegment(body.match),
       });
 
       await Promise.all([
@@ -124,7 +124,7 @@ export default async function createMeeting(
     segment.track({
       userId: creator.id,
       event: 'Meeting Created',
-      properties: meeting.toSegment(),
+      properties: meetingToSegment(meeting),
     });
 
     await Promise.all([

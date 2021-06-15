@@ -10,6 +10,7 @@ import getPerson from 'lib/api/get/person';
 import getStudents from 'lib/api/get/students';
 import { handle } from 'lib/api/error';
 import logger from 'lib/api/logger';
+import { matchToSegment } from 'lib/model/match';
 import segment from 'lib/api/segment';
 import updateMatchTags from 'lib/api/update/match-tags';
 import updatePeopleTags from 'lib/api/update/people-tags';
@@ -64,7 +65,7 @@ export default async function createMatch(
     segment.track({
       userId: creator.id,
       event: 'Match Created',
-      properties: match.toSegment(),
+      properties: matchToSegment(match),
     });
 
     await Promise.all([

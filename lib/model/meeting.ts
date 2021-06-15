@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { Match } from 'lib/model/match';
+import { Match, matchToSegment } from 'lib/model/match';
 import { Person } from 'lib/model/person';
 import { Resource } from 'lib/model/resource';
 import { Timeslot } from 'lib/model/timeslot';
@@ -68,3 +68,13 @@ export const Meeting = Resource.extend({
 });
 export type Meeting = z.infer<typeof Meeting>;
 export type MeetingJSON = z.input<typeof Meeting>;
+
+export function meetingToSegment(meeting: Meeting): Record<string, unknown> {
+  return {
+    id: meeting.id,
+    description: meeting.description,
+    start: meeting.time.from,
+    end: meeting.time.to,
+    match: matchToSegment(meeting.match),
+  };
+}

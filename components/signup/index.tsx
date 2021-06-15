@@ -18,6 +18,7 @@ import { User, UserJSON } from 'lib/model/user';
 import { Aspect } from 'lib/model/aspect';
 import { Availability } from 'lib/model/availability';
 import { ValidationsContext } from 'lib/context/validations';
+import { accountToSegment } from 'lib/model/account';
 import { login } from 'lib/firebase/login';
 import useAnalytics from 'lib/hooks/analytics';
 import { useOrg } from 'lib/context/org';
@@ -38,14 +39,14 @@ export default function Signup({ aspect }: SignupProps): JSX.Element {
   const updateRemote = useCallback(
     async (updated: User) => {
       if (!updated.id) {
-        track('User Signup Started', { ...updated.toSegment(), aspect });
+        track('User Signup Started', { ...accountToSegment(updated), aspect });
         const created = await login(updated);
-        track('User Signed Up', { ...created.toSegment(), aspect });
+        track('User Signed Up', { ...accountToSegment(created), aspect });
         return created;
       }
       const url = `/api/users/${updated.id}`;
       const { data } = await axios.put<UserJSON>(url, updated.toJSON());
-      track('User Updated', { ...updated.toSegment(), aspect });
+      track('User Updated', { ...accountToSegment(updated), aspect });
       return User.parse(data);
     },
     [track, aspect]
@@ -67,7 +68,7 @@ export default function Signup({ aspect }: SignupProps): JSX.Element {
 
   useAnalytics(
     'User Signup Errored',
-    () => error && { ...user.toSegment(), error, aspect }
+    () => error && { ...accountToSegment(user), error, aspect }
   );
 
   const getSocialProps = useSocialProps(
@@ -165,9 +166,7 @@ export default function Signup({ aspect }: SignupProps): JSX.Element {
     (availability: Availability) => {
       // TODO: Fix the `useContinuous` hook that the `AvailabilitySelect` uses
       // to skip this callback when the component is initially mounted.
-      track('User Availability Updated', {
-        availability: availability.toSegment(),
-      });
+      track('User Availability Updated', { availability });
       setUser((prev) => User.parse({ ...prev, availability }));
     },
     [track, setUser]
