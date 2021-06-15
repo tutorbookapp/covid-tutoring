@@ -186,3 +186,34 @@ export const Meeting = Resource.extend({
   parentId: z.string().optional(),
   id: z.string(), 
 });
+
+export const Option = z.object({
+  label: z.string(),
+  value: z.string(),
+});
+export const Query = z.object({
+  search: z.string(),
+  hitsPerPage: z.number(),
+  page: z.number(),
+});
+export const MatchesQuery = Query.extend({
+  org: z.string().optional(),
+  people: z.array(Option),
+  subjects: z.array(Option),
+});
+export const MeetingsQueryInterface = MatchesQuery.extend({
+  tags: z.array(MeetingHitTag),
+  from: z.date(),
+  to: z.date(),
+});
+export const UsersQuery = Query.extend({
+  parents: z.array(z.string()),
+  orgs: z.array(z.string()),
+  tags: z.array(UserHitTag),
+  aspect: Aspect,
+  langs: z.array(Option),
+  subjects: z.array(Option),
+  availability: Availability,
+  available: z.boolean().optional(),
+  visible: z.boolean().optional(),
+});

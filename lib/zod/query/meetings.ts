@@ -8,4 +8,3 @@ export const MeetingsQueryInterface = MatchesQuery.extend({
   from: z.date(),
   to: z.date(),
 });
-
