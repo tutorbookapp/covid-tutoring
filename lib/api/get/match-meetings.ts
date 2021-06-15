@@ -1,10 +1,9 @@
 import { Meeting } from 'lib/model/meeting';
-import { db } from 'lib/api/firebase';
+import supabase from 'lib/api/supabase';
 
 export default async function getMatchMeetings(
   matchId: string
 ): Promise<Meeting[]> {
-  return (
-    await db.collection('meetings').where('match.id', '==', matchId).get()
-  ).docs.map((m) => Meeting.fromFirestoreDoc(m));
+  const { data } = await supabase.from<Meeting>('meetings').eq('match', matchId);
+  return (data || []).map((d) => new Meeting(d));
 }

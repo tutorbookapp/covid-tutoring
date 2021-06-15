@@ -3,18 +3,14 @@ import Analytics from 'analytics-node';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { User } from 'lib/model/user';
-import { db } from 'lib/api/firebase';
 import send from 'lib/mail/send';
+import supabase from 'lib/api/supabase';
 
 import QuaranTunesTemplate from './template';
 
 export default async function quarantunes(req: Req, res: Res): Promise<void> {
-  const users = (
-    await db
-      .collection('users')
-      .where('orgs', 'array-contains', 'quarantunes')
-      .get()
-  ).docs.map((d) => User.fromFirestoreDoc(d));
+  const { data } = await supabase.from('relation_orgs').select('user:(*)').eq('org', 'quarantunes');
+  const users = (data || []).map((d) => new User(d));
   const analytics = new Analytics(process.env.SEGMENT_WRITE_KEY as string);
   const baseURL = 'https://tutorbook.org';
   await Promise.all(

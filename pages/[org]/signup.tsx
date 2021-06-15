@@ -13,7 +13,7 @@ import { Aspect, isAspect } from 'lib/model/aspect';
 import { Org, OrgJSON } from 'lib/model/org';
 import { PageProps, getPageProps } from 'lib/page';
 import { OrgContext } from 'lib/context/org';
-import { db } from 'lib/api/firebase';
+import supabase from 'lib/api/supabase';
 import usePage from 'lib/hooks/page';
 import { withI18n } from 'lib/intl';
 
@@ -69,16 +69,16 @@ export const getStaticProps: GetStaticProps<
   SignupPageQuery
 > = async (ctx: GetStaticPropsContext<SignupPageQuery>) => {
   if (!ctx.params) throw new Error('Cannot fetch org w/out params.');
-  const doc = await db.collection('orgs').doc(ctx.params.org).get();
-  if (!doc.exists) return { notFound: true };
-  const org = Org.fromFirestoreDoc(doc);
+  const { data } = await supabase.from<Org>('orgs').select().eq('id', ctx.params.org);
+  if (!data || !data[0]) return { notFound: true };
+  const org = new Org(data[0]);
   const { props } = await getPageProps();
   return { props: { org: org.toJSON(), ...props }, revalidate: 1 };
 };
 
 export const getStaticPaths: GetStaticPaths<SignupPageQuery> = async () => {
-  const orgs = (await db.collection('orgs').get()).docs;
-  const paths = orgs.map((org) => ({ params: { org: org.id } }));
+  const { data } = await supabase.from<Org>('orgs').select();
+  const paths = (data || []).map((org) => ({ params: { org: org.id } }));
   return { paths, fallback: true };
 };
 

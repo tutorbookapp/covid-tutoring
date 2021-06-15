@@ -3,6 +3,8 @@ import { dequal } from 'dequal/lite';
 import { serialize } from 'cookie';
 import to from 'await-to-js';
 
+import { APIError, handle } from 'lib/api/error';
+import { DecodedIdToken, auth } from 'lib/api/firebase';
 import {
   Subjects,
   User,
@@ -10,15 +12,12 @@ import {
   UserJSON,
   isUserJSON,
 } from 'lib/model/user';
-import { DecodedIdToken, auth } from 'lib/api/firebase';
-import { APIError } from 'lib/api/error';
 import { Availability } from 'lib/model/availability';
 import { SocialInterface } from 'lib/model/account';
 import { Timeslot } from 'lib/model/timeslot';
 import { Verification } from 'lib/model/verification';
 import clone from 'lib/utils/clone';
 import getUser from 'lib/api/get/user';
-import { handle } from 'lib/api/error';
 import segment from 'lib/api/segment';
 import updateAuthUser from 'lib/api/update/auth-user';
 import updatePhoto from 'lib/api/update/photo';

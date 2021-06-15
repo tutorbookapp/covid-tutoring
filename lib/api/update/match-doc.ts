@@ -1,8 +1,6 @@
-import to from 'await-to-js';
-
 import { APIError } from 'lib/api/error';
 import { Match } from 'lib/model/match';
-import { db } from 'lib/api/firebase';
+import supabase from 'lib/api/supabase';
 
 /**
  * Updates the Firestore database document for the given match.
@@ -13,10 +11,9 @@ import { db } from 'lib/api/firebase';
  * `DocumentReference#set` method in order to remove data. Should we error?
  */
 export default async function updateMatchDoc(match: Match): Promise<void> {
-  const ref = db.collection('matches').doc(match.id);
-  const [err] = await to(ref.set(match.toFirestore()));
-  if (err) {
-    const msg = `${err.name} updating match (${match.toString()}) in database`;
-    throw new APIError(`${msg}: ${err.message}`, 500);
+  const { error } = await supabase.from('matches').update(match).eq('id', match.id);
+  if (error) {
+    const msg = `Error updating match (${match.toString()}) in database`;
+    throw new APIError(`${msg}: ${error.message}`, 500);
   }
 }

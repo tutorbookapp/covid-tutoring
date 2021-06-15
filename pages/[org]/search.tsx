@@ -19,8 +19,8 @@ import { OrgContext } from 'lib/context/org';
 import { User } from 'lib/model/user';
 import { UsersQuery } from 'lib/model/query/users';
 import clone from 'lib/utils/clone';
-import { db } from 'lib/api/firebase';
 import { prefetch } from 'lib/fetch';
+import supabase from 'lib/api/supabase';
 import useAnalytics from 'lib/hooks/analytics';
 import usePage from 'lib/hooks/page';
 import useTrack from 'lib/hooks/track';
@@ -210,18 +210,18 @@ export const getStaticProps: GetStaticProps<
   SearchPageQuery
 > = async (ctx: GetStaticPropsContext<SearchPageQuery>) => {
   if (!ctx.params) throw new Error('Cannot fetch org w/out params.');
-  const doc = await db.collection('orgs').doc(ctx.params.org).get();
-  if (!doc.exists) return { notFound: true };
+  const { data } = await supabase.from<Org>('orgs').select().eq('id', ctx.params.org);
+  if (!data || !data[0]) return { notFound: true };
   const { props } = await getPageProps();
   return {
-    props: { org: Org.fromFirestoreDoc(doc).toJSON(), ...props },
+    props: { org: new Org(data[0]).toJSON(), ...props },
     revalidate: 1,
   };
 };
 
 export const getStaticPaths: GetStaticPaths<SearchPageQuery> = async () => {
-  const orgs = (await db.collection('orgs').get()).docs;
-  const paths = orgs.map((org) => ({ params: { org: org.id } }));
+  const { data } = await supabase.from<Org>('orgs').select();
+  const paths = (data || []).map((org) => ({ params: { org: org.id } }));
   return { paths, fallback: true };
 };
 
