@@ -18,6 +18,16 @@ function email(email, required = false) {
   throw new Error(`Invalid email: ${email}`);
 }
 
+function date(t) {
+  if (new Date(t).toString() !== 'Invalid Date') return new Date(t).toJSON();
+  if (typeof t._seconds !== 'number' || typeof t._nanoseconds !== 'number') {
+    logger.warn(`Invalid timestamp: ${JSON.stringify(t, null, 2)}`);
+    debugger;
+    return new Date().toJSON();
+  }
+  return new Date(t._seconds * 1e3 + t._nanoseconds / 1e6).toJSON();
+}
+
 function url(url, required = false) {
   if (!required && url === null) return null;
   if (/^https?:\/\/\S+$/.test(url)) return url;
@@ -83,7 +93,8 @@ async function fetchOrgs() {
     signup: d.signup,
     home: d.home,
     booking: d.booking,
-    matchURL: url(d.matchURL || null),
+    created: d.created.toDate(),
+    updated: d.updated.toDate(),
   }));
 }
 
@@ -113,10 +124,12 @@ async function fetchUsers() {
     langs: d.langs.length ? d.langs : ['en'],
     visible: d.visible || false,
     featured: d.featured || [],
-    tags: d.tags || [],
     reference: d.reference || '',
     timezone: d.timezone || null,
     age: d.age ? Math.floor(d.age) : null,
+    tags: d.tags || [],
+    created: d.created.toDate(),
+    updated: d.updated.toDate(),
   }));
 }
 
@@ -128,7 +141,40 @@ async function fetchMatches() {
     subjects: d.subjects,
     message: d.message,
     tags: d.tags || [],
+    created: d.created.toDate(),
+    updated: d.updated.toDate(),
   }));
+}
+
+function buildVerifications() {
+  const userIds = require(path.resolve(__dirname, './ids-users.json'));
+  const orgIds = require(path.resolve(__dirname, './ids-orgs.json'));
+  const users = require(path.resolve(__dirname, './orig-users.json'));
+  logger.info(`Parsing ${users.length} users' verifications...`);
+  const verifications = users.map((u) => u.verifications.map((v) => {
+    if (v.user === 'wxFMAbyEuHUkVeORImH3iSMdlL93')
+      v.user = '1j0tRKGtpjSX33gLsLnalxvd1Tl2';
+    if (!userIds[v.user]) {
+      logger.error(`No user (${v.user}): ${JSON.stringify(v, null, 2)}`);
+      debugger;
+    }
+    if (!userIds[u.id]) {
+      logger.error(`No user (${u.id}): ${JSON.stringify(u, null, 2)}`);
+      debugger;
+    }
+    return {
+      creator: userIds[v.user],
+      user: userIds[v.user],
+      org: orgIds[v.org] || orgIds[u.orgs[0]],
+      checks: v.checks || [],
+      notes: v.notes || '',
+      created: date(v.created),
+      updated: date(v.updated),
+    };
+  })).flat();
+  const verificationsPath = path.resolve(__dirname, './verifications.json');
+  logger.info(`Saving parsed verifications to ${verificationsPath}...`);
+  fs.writeFileSync(verificationsPath, JSON.stringify(verifications, null, 2));
 }
 
 function buildRelationPeople() {
@@ -266,7 +312,6 @@ async function insert(table, debug = false) {
       });
     }
     fs.writeFileSync(rowIdsPath, JSON.stringify(rowIds, null, 2));
-    debugger;
   }
 }
 
@@ -282,6 +327,8 @@ async function migrate() {
   await insert('relation_members');
   buildRelationOrgs();
   await insert('relation_orgs');
+  buildVerifications();
+  await insert('verifications');
 
   await fetchMatches();
   await insert('matches');
