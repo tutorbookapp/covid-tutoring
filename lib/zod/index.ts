@@ -3,6 +3,12 @@ import { z } from 'zod';
 
 const date = z.string().or(z.date()).refine((d) => !Number.isNaN(new Date(d).valueOf())).transform((d) => new Date(d)).default(() => new Date());
 
+export type CallbackParam<T> = T | ((prev: T) => T);
+export type TCallback<T> = (param: T) => void;
+export type FCallback<T> = (param: (prev: T) => T) => void;
+export type Callback<T> = (param: CallbackParam<T>) => void;
+export interface Position { x: number; y: number }
+
 export const Resource = z.object({
   created: date,
   updated: date,
@@ -20,6 +26,7 @@ export const SocialType = z.union([
   z.literal('github'),
   z.literal('indiehackers'),
 ]);
+export type Social = z.infer<typeof Social>;
 export const Social = z.object({
   type: SocialType,
   url: z.string(),
@@ -54,6 +61,8 @@ export const OrgHomeConfig = z.object({}).catchall(z.object({
 export const OrgBookingConfig = z.object({}).catchall(z.object({
   message: z.string(),
 }));
+export type OrgJSON = z.input<typeof Org>;
+export type Org = z.infer<typeof Org>;
 export const Org = Account.extend({
   members: z.array(z.string()).default([]),
   aspects: z.array(Aspect).nonempty().default(['tutoring']),
@@ -114,6 +123,8 @@ export const Org = Account.extend({
   }),
 });
 
+export type TimeslotJSON = z.input<typeof Timeslot>;
+export type Timeslot = z.infer<typeof Timeslot>;
 export const Timeslot = z.object({
   id: z.string().default(() => nanoid(5)),
   from: date,
@@ -122,6 +133,8 @@ export const Timeslot = z.object({
   recur: z.string().regex(/^RRULE:FREQ=(WEEKLY|DAILY);?(INTERVAL=2;?)?(UNTIL=(\d{4})(\d{2})(\d{2})(T(\d{2})(\d{2})(\d{2})Z?)?)?$/).optional(),
   last: date.optional(),
 });
+export type AvailabilityJSON = z.input<typeof Availability>;
+export type Availability = z.infer<typeof Availability>;
 export const Availability = z.array(Timeslot);
 
 export const Role = z.union([
@@ -179,10 +192,13 @@ export const USER_TAGS: z.infer<typeof UserTag>[] = [
   'matched',
   'meeting',
 ];
+export type Subjects = z.infer<typeof Subjects>;
 export const Subjects = z.object({ 
   subjects: z.array(z.string()).default([]),
   searches: z.array(z.string()).default([]),
 });
+export type UserJSON = z.input<typeof User>;
+export type User = z.infer<typeof User>;
 export const User = Account.extend({
   age: z.number().optional(),
   orgs: z.array(z.string()).default([]),
