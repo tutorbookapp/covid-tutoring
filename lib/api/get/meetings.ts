@@ -59,7 +59,7 @@ export default async function getMeetings(
         ...meeting,
         id: nanoid(),
         parentId: meeting.id,
-        time: new Timeslot({ ...meeting.time, to, from: startTime }),
+        time: Timeslot.parse({ ...meeting.time, to, from: startTime }),
       });
     });
   });

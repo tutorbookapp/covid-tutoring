@@ -93,7 +93,7 @@ function AvailabilitySelect({
   useEffect(() => {
     setAvailability((prev) => {
       const updated = Availability.parse(
-        ...value.map((t) => new Timeslot({ ...t, id: t.id || nanoid() }))
+        ...value.map((t) => Timeslot.parse({ ...t, id: t.id || nanoid() }))
       );
       if (dequal(prev, updated)) return prev;
       return updated;
@@ -144,7 +144,7 @@ function AvailabilitySelect({
         if (last.to.valueOf() >= updated.from.valueOf())
           return Availability.parse(
             ...avail.slice(0, idx - 1),
-            new Timeslot({ ...last, to: updated.to }),
+            Timeslot.parse({ ...last, to: updated.to }),
             ...avail.slice(idx + 1)
           );
       }
@@ -154,7 +154,7 @@ function AvailabilitySelect({
         if (next.from.valueOf() <= updated.to.valueOf())
           return Availability.parse(
             ...avail.slice(0, idx),
-            new Timeslot({ ...next, from: updated.from }),
+            Timeslot.parse({ ...next, from: updated.from }),
             ...avail.slice(idx + 2)
           );
       }
@@ -167,7 +167,7 @@ function AvailabilitySelect({
   const onClick = useCallback(
     (event: MouseEvent) => {
       const position = { x: event.clientX - x, y: event.clientY - y };
-      const original = new Timeslot({ id: nanoid() });
+      const original = Timeslot.parse({ id: nanoid() });
       updateTimeslot(-1, getTimeslot(48, position, original));
     },
     [x, y, updateTimeslot]

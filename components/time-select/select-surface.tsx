@@ -96,7 +96,7 @@ function SelectSurface({
     const full = Availability.parse({});
     const days = Array(7).fill(null);
     days.forEach((_, day) => {
-      full.push(new Timeslot({ from: getDate(day, 0), to: getDate(day, 24) }));
+      full.push(Timeslot.parse({ from: getDate(day, 0), to: getDate(day, 24) }));
     });
     return getMonthsTimeslots(full, month, year);
   }, [month, year]);

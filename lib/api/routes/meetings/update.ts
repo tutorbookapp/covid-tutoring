@@ -103,7 +103,7 @@ export default async function updateMeeting(
         const change = body.time.from.valueOf() - beforeUpdateStart.valueOf();
         const from = new Date(original.time.from.valueOf() + change);
         const to = new Date(from.valueOf() + body.time.duration);
-        const time = new Timeslot({ ...body.time, from, to });
+        const time = Timeslot.parse({ ...body.time, from, to });
 
         time.recur = verifyRecurIncludesTime(time);
         time.last = getLastTime(time);

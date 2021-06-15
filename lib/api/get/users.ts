@@ -51,7 +51,7 @@ function getFilterString(query: UsersQuery): string {
   const full = Availability.parse({});
   const days = Array(7).fill(null);
   days.forEach((_, day) => {
-    full.push(new Timeslot({ from: getDate(day, 0), to: getDate(day, 24) }));
+    full.push(Timeslot.parse({ from: getDate(day, 0), to: getDate(day, 24) }));
   });
   const fallback = query.available ? full : Availability.parse({});
   const baseline = query.availability.length ? query.availability : fallback;

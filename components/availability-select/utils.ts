@@ -44,5 +44,5 @@ export function getTimeslot(
   const start = getDate(weekday, hours, mins, 0, 0, reference);
   const end = new Date(start.valueOf() + minsDuration * 60000);
 
-  return new Timeslot({ ...original, from: start, to: end });
+  return Timeslot.parse({ ...original, from: start, to: end });
 }
