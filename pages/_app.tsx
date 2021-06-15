@@ -95,8 +95,8 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
       const idx = orgs.findIndex((org: Org) => org.id === id);
       if (idx < 0) throw new Error(`Org (${id}) not found in local data.`);
       let updatedOrg: Org = orgs[idx];
-      if (typeof param === 'object') updatedOrg = new Org(param);
-      if (typeof param === 'function') updatedOrg = new Org(param(updatedOrg));
+      if (typeof param === 'object') updatedOrg = Org.parse(param);
+      if (typeof param === 'function') updatedOrg = Org.parse(param(updatedOrg));
       const updated = [
         ...orgs.map((org: Org) => org.toJSON()).slice(0, idx),
         updatedOrg.toJSON(),

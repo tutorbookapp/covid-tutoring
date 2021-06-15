@@ -15,7 +15,7 @@ export default function Home(): JSX.Element {
 
   const onPhotoChange = useCallback(
     (background: string) => {
-      setOrg((prev) => new Org({ ...prev, background }));
+      setOrg((prev) => Org.parse({ ...prev, background }));
     },
     [setOrg]
   );
@@ -27,7 +27,7 @@ export default function Home(): JSX.Element {
           ...prev.home,
           [locale]: { ...prev.home[locale], header },
         };
-        return new Org({ ...prev, home });
+        return Org.parse({ ...prev, home });
       });
     },
     [locale, setOrg]
@@ -37,7 +37,7 @@ export default function Home(): JSX.Element {
       const body = evt.currentTarget.value;
       setOrg((prev) => {
         const home = { ...prev.home, [locale]: { ...prev.home[locale], body } };
-        return new Org({ ...prev, home });
+        return Org.parse({ ...prev, home });
       });
     },
     [locale, setOrg]

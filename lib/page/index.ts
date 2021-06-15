@@ -14,7 +14,7 @@ export interface PageProps {
 
 export async function getPageProps(): Promise<{ props: PageProps }> {
   const { data } = await supabase.from('orgs').select();
-  const orgs = (data || []).map((d) => new Org(d).toJSON());
+  const orgs = (data || []).map((d) => Org.parse(d).toJSON());
   return { props: { orgs } };
 }
 

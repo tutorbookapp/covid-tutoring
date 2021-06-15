@@ -41,7 +41,7 @@ export default function Settings({
   }, []);
 
   const initialData = useMemo(
-    () => orgs.find((o) => o.id === orgId) || new Org(),
+    () => orgs.find((o) => o.id === orgId) || Org.parse({}),
     [orgId, orgs]
   );
   const {

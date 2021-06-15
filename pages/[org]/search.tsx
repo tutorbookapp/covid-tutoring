@@ -214,7 +214,7 @@ export const getStaticProps: GetStaticProps<
   if (!data || !data[0]) return { notFound: true };
   const { props } = await getPageProps();
   return {
-    props: { org: new Org(data[0]).toJSON(), ...props },
+    props: { org: Org.parse(data[0]).toJSON(), ...props },
     revalidate: 1,
   };
 };

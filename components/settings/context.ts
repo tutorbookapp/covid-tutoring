@@ -9,7 +9,7 @@ export interface SettingsContextValue {
 }
 
 export const SettingsContext = createContext<SettingsContextValue>({
-  org: new Org(),
+  org: Org.parse({}),
   setOrg: (org: CallbackParam<Org>) => {},
 });
 

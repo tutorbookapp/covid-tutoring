@@ -8,5 +8,5 @@ export default async function createOrgDoc(org: Org): Promise<Org> {
     const msg = `Error saving org (${org.toString()}) in database`;
     throw new APIError(`${msg}: ${error.message}`, 500);
   }
-  return new Org(data);
+  return Org.parse(data);
 }

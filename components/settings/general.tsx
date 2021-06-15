@@ -18,40 +18,40 @@ export default function General(): JSX.Element {
   const onNameChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const name = evt.currentTarget.value;
-      setOrg((prev: Org) => new Org({ ...prev, name }));
+      setOrg((prev: Org) => Org.parse({ ...prev, name }));
     },
     [setOrg]
   );
   const onEmailChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const email = evt.currentTarget.value;
-      setOrg((prev: Org) => new Org({ ...prev, email }));
+      setOrg((prev: Org) => Org.parse({ ...prev, email }));
     },
     [setOrg]
   );
   const onPhoneChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const phone = evt.currentTarget.value;
-      setOrg((prev: Org) => new Org({ ...prev, phone }));
+      setOrg((prev: Org) => Org.parse({ ...prev, phone }));
     },
     [setOrg]
   );
   const onPhotoChange = useCallback(
     (photo: string) => {
-      setOrg((prev: Org) => new Org({ ...prev, photo }));
+      setOrg((prev: Org) => Org.parse({ ...prev, photo }));
     },
     [setOrg]
   );
   const onVenueChange = useCallback(
     (venue: string) => {
-      setOrg((prev) => new Org({ ...prev, venue }));
+      setOrg((prev) => Org.parse({ ...prev, venue }));
     },
     [setOrg]
   );
   const onBioChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const bio = evt.currentTarget.value;
-      setOrg((prev: Org) => new Org({ ...prev, bio }));
+      setOrg((prev: Org) => Org.parse({ ...prev, bio }));
     },
     [setOrg]
   );

@@ -71,7 +71,7 @@ export const getStaticProps: GetStaticProps<
   if (!ctx.params) throw new Error('Cannot fetch org w/out params.');
   const { data } = await supabase.from<Org>('orgs').select().eq('id', ctx.params.org);
   if (!data || !data[0]) return { notFound: true };
-  const org = new Org(data[0]);
+  const org = Org.parse(data[0]);
   const { props } = await getPageProps();
   return { props: { org: org.toJSON(), ...props }, revalidate: 1 };
 };
