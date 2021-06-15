@@ -28,7 +28,7 @@ export default function UserCarousel({ query, onClick }: Props): JSX.Element {
       {data && (
         <Carousel>
           {data.users
-            .map((u: UserJSON) => User.fromJSON(u))
+            .map((u: UserJSON) => User.parse(u))
             .map((user: User) => (
               <UserCard
                 key={user.id}

@@ -55,7 +55,7 @@ export default function RequestForm({
   });
   useEffect(() => {
     setOptions((prev) => {
-      const kids = children?.users.map((u) => User.fromJSON(u)) || [];
+      const kids = children?.users.map((u) => User.parse(u)) || [];
       const updated = {
         'Me': user,
         'My child': child,
@@ -132,7 +132,7 @@ export default function RequestForm({
           return;
         }
         if (res) {
-          updatedUser = User.fromJSON(res.data);
+          updatedUser = User.parse(res.data);
           await updateUser(updatedUser);
         }
       }

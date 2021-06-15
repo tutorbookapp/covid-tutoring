@@ -82,7 +82,7 @@ export default function Search({
           results.map((res) => (
             <Result
               key={res.id}
-              user={User.fromJSON(res)}
+              user={User.parse(res)}
               href={`/${org?.id || 'default'}/users/${res.id}?aspect=${
                 query.aspect
               }`}

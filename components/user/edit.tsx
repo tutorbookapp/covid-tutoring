@@ -37,11 +37,11 @@ export default function UserEdit({
     if (updated.id.startsWith('temp')) {
       const json = { ...updated.toJSON(), id: '' };
       const { data } = await axios.post<UserJSON>('/api/users', json);
-      return User.fromJSON(data);
+      return User.parse(data);
     }
     const url = `/api/users/${updated.id}`;
     const { data } = await axios.put<UserJSON>(url, updated.toJSON());
-    return User.fromJSON(data);
+    return User.parse(data);
   }, []);
 
   // TODO: Prevent revalidations of `initialData` when local data has been

@@ -45,14 +45,14 @@ function UserVetPage({
   });
 
   return (
-    <OrgContext.Provider value={{ org: org ? Org.fromJSON(org) : undefined }}>
+    <OrgContext.Provider value={{ org: org ? Org.parse(org) : undefined }}>
       <Page
         title={`${data?.name || 'Loading'} - Vet - Tutorbook`}
         formWidth
         {...props}
       >
         <EmptyHeader formWidth />
-        <UserVet user={data ? User.fromJSON(data) : undefined} />
+        <UserVet user={data ? User.parse(data) : undefined} />
       </Page>
     </OrgContext.Provider>
   );

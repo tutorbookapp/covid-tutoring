@@ -43,7 +43,7 @@ function SignupPage({ org, ...props }: SignupPageProps): JSX.Element {
   }, [org, query]);
 
   return (
-    <OrgContext.Provider value={{ org: org ? Org.fromJSON(org) : undefined }}>
+    <OrgContext.Provider value={{ org: org ? Org.parse(org) : undefined }}>
       <Page
         title={`${org?.name || 'Loading'} - Signup - Tutorbook`}
         description={org ? org.signup[locale][aspect]?.body : undefined}

@@ -9,7 +9,7 @@ export default function usePeople(match: Match): User[] {
     match.id ? `/api/matches/${match.id}/people` : null
   );
   const people = useMemo(() => {
-    if (data) return data.map((u) => User.fromJSON(u));
+    if (data) return data.map((u) => User.parse(u));
     return match.people.map((p) => {
       const user = User.parse(p);
       if (p.roles.includes('tutor')) {

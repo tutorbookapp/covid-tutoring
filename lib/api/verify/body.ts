@@ -1,7 +1,7 @@
 import { APIError } from 'lib/api/error';
 
 interface ModelConstructor<Model, ModelJSON> {
-  fromJSON: (json: ModelJSON) => Model;
+  parse: (json: ModelJSON) => Model;
 }
 
 /**
@@ -11,7 +11,7 @@ interface ModelConstructor<Model, ModelJSON> {
  * @param isModelJSON - Custom typeguard that checks if the body is valid JSON.
  * @param Model - Constructor for the model class (`M`).
  * @return A new instance of the model class (`M`) initialized using the given
- * JSON body (i.e. the result of `M.fromJSON(body)`).
+ * JSON body (i.e. the result of `M.parse(body)`).
  * @example
  * const match = await verifyBody(req.body, isMatchJSON, Match);
  * @example
@@ -23,5 +23,5 @@ export default function verifyBody<
   MC extends ModelConstructor<M, MJ> = ModelConstructor<M, MJ>
 >(body: unknown, isModelJSON: (body: unknown) => body is MJ, Model: MC): M {
   if (!isModelJSON(body)) throw new APIError('Invalid request body', 400);
-  return Model.fromJSON(body);
+  return Model.parse(body);
 }

@@ -32,7 +32,7 @@ function HomePage({ org: initialData, ...props }: HomePageProps): JSX.Element {
   usePage({ name: 'Org Home', org: org?.id });
 
   return (
-    <OrgContext.Provider value={{ org: org ? Org.fromJSON(org) : undefined }}>
+    <OrgContext.Provider value={{ org: org ? Org.parse(org) : undefined }}>
       <Page
         title={`${org?.name || 'Loading'} - Tutorbook`}
         description={org?.bio}
@@ -41,7 +41,7 @@ function HomePage({ org: initialData, ...props }: HomePageProps): JSX.Element {
         {...props}
       >
         <EmptyHeader formWidth />
-        <Home org={org ? Org.fromJSON(org) : undefined} />
+        <Home org={org ? Org.parse(org) : undefined} />
       </Page>
     </OrgContext.Provider>
   );

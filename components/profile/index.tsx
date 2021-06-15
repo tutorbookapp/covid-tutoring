@@ -31,7 +31,7 @@ export default function Profile(): JSX.Element {
       const url = `/api/users/${updated.id}`;
       const { data } = await axios.put<UserJSON>(url, updated.toJSON());
       track('Profile Updated', updated.toSegment());
-      return User.fromJSON(data);
+      return User.parse(data);
     },
     [track]
   );

@@ -67,7 +67,7 @@ export default function Calendar({
     }
   );
   const meetings = useMemo(
-    () => data?.meetings.map((m) => Meeting.fromJSON(m)) || [],
+    () => data?.meetings.map((m) => Meeting.parse(m)) || [],
     [data?.meetings]
   );
 
@@ -143,14 +143,14 @@ export default function Calendar({
           '/api/meetings',
           updated.toJSON()
         );
-        return Meeting.fromJSON(createdMeeting);
+        return Meeting.parse(createdMeeting);
       }
       const url = `/api/meetings/${updated.id}`;
       const { data: updatedMeeting } = await axios.put<MeetingJSON>(url, {
         ...updated.toJSON(),
         options: { action, original: original.current.toJSON() },
       });
-      return Meeting.fromJSON(updatedMeeting);
+      return Meeting.parse(updatedMeeting);
     },
     [action]
   );

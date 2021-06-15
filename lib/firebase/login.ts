@@ -25,7 +25,7 @@ export async function login(user: User): Promise<User> {
   await auth.signInWithCustomToken(data.token as string);
   await mutate('/api/account', data, false);
 
-  return User.fromJSON(data);
+  return User.parse(data);
 }
 
 export async function loginWithGoogle(
@@ -72,5 +72,5 @@ export async function loginWithGoogle(
   const { data } = res as AxiosResponse<UserJSON>;
   await mutate('/api/account', data, false);
 
-  return User.fromJSON(data);
+  return User.parse(data);
 }

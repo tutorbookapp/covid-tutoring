@@ -137,7 +137,7 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
       track(
         'User List Filtered',
         {
-          org: org ? Org.fromJSON(org).toSegment() : undefined,
+          org: org ? Org.parse(org).toSegment() : undefined,
           subjects: updated.subjects.map((o) => o.value).join(' AND '),
           langs: updated.langs.map((o) => o.value).join(' AND '),
           aspect: updated.aspect,
@@ -159,12 +159,12 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
     'User List Loaded',
     () =>
       !searching && {
-        org: org ? Org.fromJSON(org).toSegment() : undefined,
+        org: org ? Org.parse(org).toSegment() : undefined,
         subjects: query.subjects.map((o) => o.value).join(' AND '),
         langs: query.langs.map((o) => o.value).join(' AND '),
         aspect: query.aspect,
         users: results.map((res, idx) => ({
-          ...User.fromJSON(res).toSegment(),
+          ...User.parse(res).toSegment(),
           position: idx,
           url: `${url}/${org?.id || 'default'}/search/${res.id}`,
           subjects: res[query.aspect].subjects,
@@ -173,7 +173,7 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
   );
 
   return (
-    <OrgContext.Provider value={{ org: org ? Org.fromJSON(org) : undefined }}>
+    <OrgContext.Provider value={{ org: org ? Org.parse(org) : undefined }}>
       <Page
         title={`${org?.name || 'Loading'} - Search - Tutorbook`}
         description={t('search:description', {

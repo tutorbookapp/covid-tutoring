@@ -45,14 +45,14 @@ function UserEditPage({
   });
 
   return (
-    <OrgContext.Provider value={{ org: org ? Org.fromJSON(org) : undefined }}>
+    <OrgContext.Provider value={{ org: org ? Org.parse(org) : undefined }}>
       <Page
         title={`${data?.name || 'Loading'} - Edit - Tutorbook`}
         formWidth
         {...props}
       >
         <EmptyHeader formWidth />
-        <UserEdit user={data ? User.fromJSON(data) : undefined} />
+        <UserEdit user={data ? User.parse(data) : undefined} />
       </Page>
     </OrgContext.Provider>
   );

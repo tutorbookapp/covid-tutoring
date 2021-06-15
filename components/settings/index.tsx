@@ -37,7 +37,7 @@ export default function Settings({
   const updateRemote = useCallback(async (updated: Org) => {
     const url = `/api/orgs/${updated.id}`;
     const { data } = await axios.put<OrgJSON>(url, updated.toJSON());
-    return Org.fromJSON(data);
+    return Org.parse(data);
   }, []);
 
   const initialData = useMemo(

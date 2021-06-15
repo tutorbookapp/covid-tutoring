@@ -69,7 +69,7 @@ export default memo(function ResultsList({
         (data?.users || []).map((user: UserJSON) => (
           <Result
             href={`/${org?.id || ''}/users/${user.id}`}
-            user={User.fromJSON(user)}
+            user={User.parse(user)}
             className={styles.item}
             key={user.id}
             newTab

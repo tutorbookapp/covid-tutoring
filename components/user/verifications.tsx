@@ -46,7 +46,7 @@ export default function VerificationsTable({
   const updateRemote = useCallback(async (updated: User) => {
     const url = `/api/users/${updated.id}`;
     const { data } = await axios.put<UserJSON>(url, updated.toJSON());
-    return User.fromJSON(data);
+    return User.parse(data);
   }, []);
   const updateLocal = useCallback(async (updated: User) => {
     await mutate(`/api/users/${updated.id}`, updated.toJSON(), false);

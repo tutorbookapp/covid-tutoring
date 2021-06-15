@@ -57,14 +57,14 @@ function MatchDisplayPage(props: PageProps): JSX.Element {
   });
 
   return (
-    <OrgContext.Provider value={{ org: org ? Org.fromJSON(org) : undefined }}>
+    <OrgContext.Provider value={{ org: org ? Org.parse(org) : undefined }}>
       <Page title='Match - Tutorbook' {...props}>
         <EmptyHeader />
         <MatchDisplay
-          match={match ? Match.fromJSON(match) : undefined}
-          people={people ? people.map((p) => User.fromJSON(p)) : undefined}
+          match={match ? Match.parse(match) : undefined}
+          people={people ? people.map((p) => User.parse(p)) : undefined}
           meetings={
-            meetings ? meetings.map((m) => Meeting.fromJSON(m)) : undefined
+            meetings ? meetings.map((m) => Meeting.parse(m)) : undefined
           }
         />
       </Page>

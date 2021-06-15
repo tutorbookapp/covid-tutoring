@@ -44,7 +44,7 @@ export default async function deleteMeeting(
       deleting: meeting.toJSON(),
       action: 'future',
     });
-    const deleting = Meeting.fromJSON(options.deleting);
+    const deleting = Meeting.parse(options.deleting);
 
     const { uid } = await verifyAuth(req.headers, {
       userIds: meeting.match.people.map((p) => p.id),

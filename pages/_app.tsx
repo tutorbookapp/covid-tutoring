@@ -25,7 +25,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   const user = useMemo(
     () =>
       data
-        ? User.fromJSON(data)
+        ? User.parse(data)
         : User.parse({
             langs: ['en'],
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -87,7 +87,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   // Consumers can update local app-wide org data (proxy to SWR's mutate FN).
   const { data: orgsData } = useSWR<OrgJSON[], APIError>('/api/orgs', fetcher);
   const orgs = useMemo(
-    () => (orgsData ? orgsData.map((o) => Org.fromJSON(o)) : []),
+    () => (orgsData ? orgsData.map((o) => Org.parse(o)) : []),
     [orgsData]
   );
   const updateOrg = useCallback(

@@ -159,8 +159,8 @@ function MatchSelect({
           (data?.matches || []).map((match) => (
             <MatchResult
               key={match.id}
-              match={Match.fromJSON(match)}
-              onClick={() => onChange(Match.fromJSON(match))}
+              match={Match.parse(match)}
+              onClick={() => onChange(Match.parse(match))}
             />
           ))}
         {searching && loadingResults}
