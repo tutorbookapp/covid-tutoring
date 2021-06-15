@@ -121,7 +121,7 @@ function mergeUsers(overrides: User, baseline: User): User {
     created: baseline.created || overrides.created,
     updated: overrides.updated || baseline.updated,
   };
-  return new User(merged);
+  return User.parse(merged);
 }
 
 async function updateAccount(req: Req, res: Res): Promise<void> {
@@ -132,7 +132,7 @@ async function updateAccount(req: Req, res: Res): Promise<void> {
 
   // Merge the two users giving priority to the request body (but preventing any
   // loss of data; `mergeUsers` won't allow falsy values or empty arrays).
-  const merged = mergeUsers(body, original || new User());
+  const merged = mergeUsers(body, original || User.parse({}));
 
   // Either:
   // 1. Verify the user's authentication cookie (that this API endpoint sets).

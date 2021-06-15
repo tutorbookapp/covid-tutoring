@@ -145,7 +145,7 @@ export function notTags<T extends string>(tags: T[], TAGS: T[]): T[] {
  * @return A `User` object that contains all data combined.
  */
 export function addRoles(user: User, roles: Role[]): User {
-  return new User(clone({ ...user, roles }));
+  return User.parse(clone({ ...user, roles }));
 }
 
 /**

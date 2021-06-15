@@ -57,45 +57,45 @@ export default function Profile(): JSX.Element {
   const onNameChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const name = evt.currentTarget.value;
-      setUser((prev) => new User({ ...prev, name }));
+      setUser((prev) => User.parse({ ...prev, name }));
     },
     [setUser]
   );
   const onPhoneChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const phone = evt.currentTarget.value;
-      setUser((prev) => new User({ ...prev, phone }));
+      setUser((prev) => User.parse({ ...prev, phone }));
     },
     [setUser]
   );
   const onPhotoChange = useCallback(
     (photo: string) => {
-      setUser((prev) => new User({ ...prev, photo }));
+      setUser((prev) => User.parse({ ...prev, photo }));
     },
     [setUser]
   );
   const onBackgroundChange = useCallback(
     (background: string) => {
-      setUser((prev) => new User({ ...prev, background }));
+      setUser((prev) => User.parse({ ...prev, background }));
     },
     [setUser]
   );
   const onVenueChange = useCallback(
     (venue: string) => {
-      setUser((prev) => new User({ ...prev, venue }));
+      setUser((prev) => User.parse({ ...prev, venue }));
     },
     [setUser]
   );
   const onBioChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const bio = evt.currentTarget.value;
-      setUser((prev) => new User({ ...prev, bio }));
+      setUser((prev) => User.parse({ ...prev, bio }));
     },
     [setUser]
   );
   const onAvailabilityChange = useCallback(
     (availability: Availability) => {
-      setUser((prev) => new User({ ...prev, availability }));
+      setUser((prev) => User.parse({ ...prev, availability }));
     },
     [setUser]
   );
@@ -103,7 +103,7 @@ export default function Profile(): JSX.Element {
     (subjects: string[]) => {
       setUser(
         (prev) =>
-          new User({ ...prev, mentoring: { ...prev.mentoring, subjects } })
+          User.parse({ ...prev, mentoring: { ...prev.mentoring, subjects } })
       );
     },
     [setUser]
@@ -112,14 +112,14 @@ export default function Profile(): JSX.Element {
     (subjects: string[]) => {
       setUser(
         (prev) =>
-          new User({ ...prev, tutoring: { ...prev.tutoring, subjects } })
+          User.parse({ ...prev, tutoring: { ...prev.tutoring, subjects } })
       );
     },
     [setUser]
   );
   const onLangsChange = useCallback(
     (langs: string[]) => {
-      setUser((prev) => new User({ ...prev, langs }));
+      setUser((prev) => User.parse({ ...prev, langs }));
     },
     [setUser]
   );

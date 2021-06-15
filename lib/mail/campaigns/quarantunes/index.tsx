@@ -10,7 +10,7 @@ import QuaranTunesTemplate from './template';
 
 export default async function quarantunes(req: Req, res: Res): Promise<void> {
   const { data } = await supabase.from('relation_orgs').select('user:(*)').eq('org', 'quarantunes');
-  const users = (data || []).map((d) => new User(d));
+  const users = (data || []).map((d) => User.parse(d));
   const analytics = new Analytics(process.env.SEGMENT_WRITE_KEY as string);
   const baseURL = 'https://tutorbook.org';
   await Promise.all(

@@ -82,7 +82,7 @@ export default function MatchDisplay({
   const creator = useMemo(() => {
     if (loading || !match || !people) return;
     const idx = people.findIndex((p) => p.id === match.creator.id);
-    return idx < 0 ? new User(match.creator) : people[idx];
+    return idx < 0 ? User.parse(match.creator) : people[idx];
   }, [loading, people, match]);
 
   return (

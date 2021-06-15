@@ -94,7 +94,7 @@ export default function VerificationsTable({
         } else if (idx >= 0 && !enabled) {
           verifications.splice(idx, 1);
         }
-        return new User({ ...prev, verifications });
+        return User.parse({ ...prev, verifications });
       });
     },
     [currentUser.id, org, setUser]
@@ -113,7 +113,7 @@ export default function VerificationsTable({
     (evt: FormEvent<HTMLInputElement>) => {
       const enabled = evt.currentTarget.checked;
       return setUser((prev) => {
-        if (!enabled) return new User({ ...prev, verifications: [] });
+        if (!enabled) return User.parse({ ...prev, verifications: [] });
         const verifications = clone(prev.verifications).map(
           (v) => new Verification(v)
         );
@@ -134,7 +134,7 @@ export default function VerificationsTable({
             })
           )
         );
-        return new User({ ...prev, verifications });
+        return User.parse({ ...prev, verifications });
       });
     },
     [currentUser.id, org, setUser]
@@ -171,7 +171,7 @@ export default function VerificationsTable({
           verifications[idx].notes = notes;
           verifications[idx].updated = new Date();
         }
-        return new User({ ...prev, verifications });
+        return User.parse({ ...prev, verifications });
       });
     },
     [currentUser.id, org, setUser]
@@ -180,7 +180,7 @@ export default function VerificationsTable({
   const onVisibilityChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const visible = evt.currentTarget.checked;
-      return setUser((prev) => new User({ ...prev, visible }));
+      return setUser((prev) => User.parse({ ...prev, visible }));
     },
     [setUser]
   );
@@ -190,10 +190,10 @@ export default function VerificationsTable({
       const isFeatured = evt.currentTarget.checked;
       return setUser((prev) => {
         const featured: Aspect[] = [];
-        if (!isFeatured) return new User({ ...prev, featured });
+        if (!isFeatured) return User.parse({ ...prev, featured });
         if (prev.tutoring.subjects.length) featured.push('tutoring');
         if (prev.mentoring.subjects.length) featured.push('mentoring');
-        return new User({ ...prev, featured });
+        return User.parse({ ...prev, featured });
       });
     },
     [setUser]

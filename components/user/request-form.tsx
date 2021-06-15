@@ -47,7 +47,7 @@ export default function RequestForm({
   const { t, lang: locale } = useTranslation();
   const { data: children } = useSWR<ListUsersRes>(user.id ? new UsersQuery({ parents: [user.id] }).endpoint : null);
     
-  const [child, setChild] = useState<User>(new User());
+  const [child, setChild] = useState<User>(User.parse({}));
   const [student, setStudent] = useState<string>('Me');
   const [options, setOptions] = useState<Record<string, User>>({
     'Me': user, 
@@ -107,7 +107,7 @@ export default function RequestForm({
       event.preventDefault();
       setError('');
       setLoading(true);
-      let updatedUser = new User({ ...user, phone, reference });
+      let updatedUser = User.parse({ ...user, phone, reference });
       if (!user.id) {
         const [err, signedUpUser] = await to(loginWithGoogle(updatedUser));
         if (err) {
@@ -271,7 +271,7 @@ export default function RequestForm({
               value={child.name}
               onChange={(evt) => {
                 const name = evt.currentTarget.value;
-                setChild((prev) => new User({ ...prev, name }));
+                setChild((prev) => User.parse({ ...prev, name }));
               }}
               className={styles.field}
               outlined
@@ -282,7 +282,7 @@ export default function RequestForm({
               value={child.age}
               onChange={(evt) => {
                 const age = Number(evt.currentTarget.value);
-                setChild((prev) => new User({ ...prev, age }));
+                setChild((prev) => User.parse({ ...prev, age }));
               }}
               className={styles.field}
               type='number'

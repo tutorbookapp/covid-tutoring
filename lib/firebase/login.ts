@@ -54,7 +54,7 @@ export async function loginWithGoogle(
     email: cred.user.email as string,
     phone: cred.user.phoneNumber as string,
   };
-  const signedInUser = new User({ ...user, ...firebaseUser });
+  const signedInUser = User.parse({ ...user, ...firebaseUser });
 
   // Create the Firestore profile document (we cannot call the `POST /api/users`
   // endpoint because the Firebase Authentication account already exists). This

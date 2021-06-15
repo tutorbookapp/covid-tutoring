@@ -19,7 +19,7 @@ export function onlyFirstNameAndLastInitial(name: string): string {
  * included in `users`.
  */
 export default function getTruncatedUser(user: User): User {
-  return new User({
+  return User.parse({
     name: onlyFirstNameAndLastInitial(user.name),
     photo: user.photo,
     background: user.background,

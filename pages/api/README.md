@@ -42,7 +42,7 @@ const { data } = await axios({
   url: `/api/users/${firebase.auth.currentUser.uid}`,
   headers: { Authorization: `Bearer ${token}` },
 });
-const user: User = new User(data);
+const user: User = User.parse(data);
 ```
 
 ### `/api/users`

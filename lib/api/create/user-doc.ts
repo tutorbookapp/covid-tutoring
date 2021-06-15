@@ -8,5 +8,5 @@ export default async function createUserDoc(user: User): Promise<User> {
     const msg = `Error saving user (${user.toString()}) in database`;
     throw new APIError(`${msg}: ${error.message}`, 500);
   }
-  return new User(data);
+  return User.parse(data);
 }

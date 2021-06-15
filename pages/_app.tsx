@@ -26,7 +26,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
     () =>
       data
         ? User.fromJSON(data)
-        : new User({
+        : User.parse({
             langs: ['en'],
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
           }),
@@ -47,8 +47,8 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   const updateUser = useCallback(
     async (param: UpdateUserParam) => {
       let updated: User = user;
-      if (typeof param === 'object') updated = new User(param);
-      if (typeof param === 'function') updated = new User(param(user));
+      if (typeof param === 'object') updated = User.parse(param);
+      if (typeof param === 'function') updated = User.parse(param(user));
       // Re-validate if we haven't gotten any account data yet. This fixes
       // an issue where the profile view would locally update to an empty
       // `User()` *before* our `/api/account` endpoint could respond. SWR
@@ -66,7 +66,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
     void updateUser((prev) => {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       if (prev.timezone === timezone || !prev.id) return prev;
-      const updated = new User({ ...prev, timezone });
+      const updated = User.parse({ ...prev, timezone });
       void axios.put<UserJSON>('/api/account', updated.toJSON());
       return updated;
     });

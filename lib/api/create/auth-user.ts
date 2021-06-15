@@ -39,12 +39,12 @@ export default async function createAuthUser(user: User): Promise<User> {
         'auth/phone-number-already-exists',
       ].includes(err.code)
     )
-      return new User(clone({ ...user, id: user.id || uuid() }));
+      return User.parse(clone({ ...user, id: user.id || uuid() }));
     const msg = `${err.name} (${err.code}) creating auth account`;
     throw new APIError(`${msg} for ${user.toString()}: ${err.message}`, 500);
   }
   const record = userRecord as UserRecord;
-  const createdUser = new User(
+  const createdUser = User.parse(
     clone({
       ...user,
       email: record.email,
