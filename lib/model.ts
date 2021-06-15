@@ -1,8 +1,10 @@
 import { z } from 'zod';
 
+const date = z.string().refine((d) => !Number.isNaN(Date.parse(d))).transform((d) => new Date(d));
+
 export const Resource = z.object({
-  created: z.date(),
-  updated: z.date(),
+  created: date,
+  updated: date,
 });
 export const Aspect = z.union([
   z.literal('mentoring'),
@@ -57,11 +59,11 @@ export const Org = Account.extend({
 
 export const Timeslot = z.object({
   id: z.string(),
-  from: z.date(),
-  to: z.date(),
-  exdates: z.array(z.date()).optional(),
-  recur: z.string().optional(),
-  last: z.date().optional(),
+  from: date,
+  to: date,
+  exdates: z.array(date).optional(),
+  recur: z.string().regex(/^RRULE:FREQ=(WEEKLY|DAILY);?(INTERVAL=2;?)?(UNTIL=(\d{4})(\d{2})(\d{2})(T(\d{2})(\d{2})(\d{2})Z?)?)?$/).optional(),
+  last: date.optional(),
 });
 export const Availability = z.array(Timeslot);
 
@@ -203,8 +205,8 @@ export const MatchesQuery = Query.extend({
 });
 export const MeetingsQueryInterface = MatchesQuery.extend({
   tags: z.array(MeetingHitTag),
-  from: z.date(),
-  to: z.date(),
+  from: date,
+  to: date,
 });
 export const UsersQuery = Query.extend({
   parents: z.array(z.string()),
