@@ -8,5 +8,5 @@ export default async function createMatchDoc(match: Match): Promise<Match> {
     const msg = `Error saving match (${match.toString()}) to database`;
     throw new APIError(`${msg}: ${error.message}`, 500);
   }
-  return new Match(data);
+  return Match.parse(data);
 }

@@ -51,7 +51,7 @@ export default function EditPage({
         (prev) =>
           Meeting.parse({
             ...prev,
-            match: new Match({ ...prev.match, subjects }),
+            match: Match.parse({ ...prev.match, subjects }),
           })
       );
     },

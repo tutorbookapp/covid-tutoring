@@ -50,7 +50,7 @@ export default function CreatePage({
       if (match) {
         setEditing((prev) => Meeting.parse({ ...prev, match }));
       } else {
-        setEditing((prev) => Meeting.parse({ ...prev, match: new Match() }));
+        setEditing((prev) => Meeting.parse({ ...prev, match: Match.parse({}) }));
       }
     },
     [setEditing]
@@ -58,7 +58,7 @@ export default function CreatePage({
   const onSubjectsChange = useCallback(
     (subjects: string[]) => {
       setEditing((prev) => {
-        const match = new Match({ ...prev.match, subjects });
+        const match = Match.parse({ ...prev.match, subjects });
         return Meeting.parse({ ...prev, match });
       });
     },

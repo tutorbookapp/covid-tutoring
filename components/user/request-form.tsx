@@ -199,7 +199,7 @@ export default function RequestForm({
       const meeting = Meeting.parse({
         time,
         creator,
-        match: new Match({
+        match: Match.parse({
           creator,
           people,
           message,
