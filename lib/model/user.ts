@@ -29,7 +29,7 @@ export const UserHitTag = z.union([
   z.literal('not-matched'),
   z.literal('not-meeting'),
 ]);
-export const USER_TAGS: z.infer<typeof UserTag>[] = [
+export const USER_TAGS: UserTag[] = [
   'tutor',
   'tutee',
   'mentor',
@@ -39,6 +39,8 @@ export const USER_TAGS: z.infer<typeof UserTag>[] = [
   'matched',
   'meeting',
 ];
+export type UserTag = z.infer<typeof UserTag>;
+export type UserHitTag = z.infer<typeof UserHitTag>;
 
 export const Subjects = z.object({ 
   subjects: z.array(z.string()),

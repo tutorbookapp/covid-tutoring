@@ -11,7 +11,7 @@ import { Option } from 'lib/model/query/base';
 import { UsersQuery } from 'lib/model/query/users';
 import { useUser } from 'lib/context/user';
 
-export interface UserOption extends Option<string> {
+export interface UserOption extends Option {
   photo?: string;
 }
 
@@ -30,7 +30,7 @@ export default function UserSelect({
   selected,
   onSelectedChange,
   ...props
-}: SelectControllerProps<string, UserOption>): JSX.Element {
+}: SelectControllerProps<UserOption>): JSX.Element {
   // Only show users that are either:
   // a) Within one of the orgs that the current user is an admin of.
   // b) A child of the current user.

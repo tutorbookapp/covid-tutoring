@@ -21,7 +21,7 @@ type LangHit = ObjectWithObjectID & {
 export async function langsToOptions(
   langs: string[],
   locale = 'en'
-): Promise<Option<string>[]> {
+): Promise<Option[]> {
   if (!langs.length) return [];
   const res: SearchResponse<LangHit> = await searchIndex.search('', {
     filters: langs.map((lang: string) => `objectID:${lang}`).join(' OR '),
@@ -40,7 +40,7 @@ export async function langsToOptions(
 export async function subjectsToOptions(
   subjects: string[],
   locale = 'en'
-): Promise<Option<string>[]> {
+): Promise<Option[]> {
   return subjects.map((subject) => ({ label: subject, value: subject }));
 }
 

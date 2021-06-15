@@ -17,8 +17,8 @@ import { ResizeObserver as polyfill } from '@juggle/resize-observer';
 import useMeasure from 'react-use-measure';
 import useTranslation from 'next-translate/useTranslation';
 
+import { availabilityToString, Availability } from 'lib/model/availability';
 import { getDateWithDay, getDateWithTime } from 'lib/utils/time';
-import { Availability } from 'lib/model/availability';
 import { TCallback } from 'lib/model/callback';
 import { Timeslot } from 'lib/model/timeslot';
 import { useUser } from 'lib/context/user';
@@ -297,7 +297,7 @@ function AvailabilitySelect({
         readOnly
         textarea={false}
         inputRef={inputRef}
-        value={availability.toString(locale, user.timezone)}
+        value={availabilityToString(availability, locale, user.timezone)}
         className={styles.textField}
         onFocus={() => {
           if (onFocused) onFocused();

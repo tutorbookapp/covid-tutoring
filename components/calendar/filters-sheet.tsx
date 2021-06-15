@@ -28,13 +28,13 @@ function FiltersSheet({
   const props = useSpring({ config, width: filtersOpen ? width : 0 });
 
   const onSubjectsChange = useCallback(
-    (subjects: Option<string>[]) => {
+    (subjects: Option[]) => {
       setQuery((prev) => new MeetingsQuery({ ...prev, subjects, page: 0 }));
     },
     [setQuery]
   );
   const onPeopleChange = useCallback(
-    (people: Option<string>[]) => {
+    (people: Option[]) => {
       setQuery((prev) => new MeetingsQuery({ ...prev, people, page: 0 }));
     },
     [setQuery]

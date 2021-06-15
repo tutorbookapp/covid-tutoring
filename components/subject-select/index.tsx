@@ -22,7 +22,7 @@ interface SubjectHit extends ObjectWithObjectID {
   name: string;
 }
 
-export interface SubjectOption extends Option<string> {
+export interface SubjectOption extends Option {
   aspect?: Aspect;
 }
 
@@ -32,7 +32,7 @@ interface UniqueSubjectSelectProps {
   aspect?: Aspect;
 }
 
-export type SubjectSelectProps = SelectControllerProps<string, SubjectOption> &
+export type SubjectSelectProps = SelectControllerProps<SubjectOption> &
   UniqueSubjectSelectProps;
 
 /**

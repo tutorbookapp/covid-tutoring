@@ -32,7 +32,7 @@ function FiltersSheet({
   const props = useSpring({ config, width: open ? width : 0 });
 
   const onSubjectsChange = useCallback(
-    (subjects: Option<string>[]) => {
+    (subjects: Option[]) => {
       setQuery((prev) => new UsersQuery({ ...prev, subjects, page: 0 }));
     },
     [setQuery]
@@ -44,7 +44,7 @@ function FiltersSheet({
     [setQuery]
   );
   const onLangsChange = useCallback(
-    (langs: Option<string>[]) => {
+    (langs: Option[]) => {
       setQuery((prev) => new UsersQuery({ ...prev, langs, page: 0 }));
     },
     [setQuery]

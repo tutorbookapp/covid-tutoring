@@ -24,7 +24,7 @@ export default function SearchForm(): JSX.Element {
     void Router.prefetch(query.getURL(`/${user.orgs[0] || 'default'}/search`));
   }, [query, user.orgs]);
 
-  const onSubjectsChange = useCallback((subjects: Option<string>[]) => {
+  const onSubjectsChange = useCallback((subjects: Option[]) => {
     setQuery((prev: UsersQuery) => new UsersQuery({ ...prev, subjects }));
   }, []);
 

@@ -8,7 +8,9 @@ import { Venue } from 'lib/model/venue';
 
 export const MeetingTag = z.literal('recurring'); // Meeting is recurring (has rrule).
 export const MeetingHitTag = z.union([MeetingTag, z.literal('not-recurring')]);
-export const MEETING_TAGS: z.infer<typeof MeetingTag>[] = ['recurring'];
+export const MEETING_TAGS: MeetingTag[] = ['recurring'];
+export type MeetingTag = z.infer<typeof MeetingTag>;
+export type MeetingHitTag = z.infer<typeof MeetingHitTag>;
 
 /**
  * @typedef MeetingAction
