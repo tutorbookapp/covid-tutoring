@@ -17568,6 +17568,7 @@ resolve@^2.0.0-next.3:
     vanilla-tilt: ^1.7.0
     webpack-bundle-analyzer: ^4.3.0
     winston: ^3.3.3
+    zod: ^3.2.0
   languageName: unknown
   linkType: soft
 
@@ -18680,5 +18681,12 @@ typescript@^4.2.3:
     compress-commons: ^4.1.0
     readable-stream: ^3.6.0
   checksum: a2338731e721d05f37989d2284d7850a3923072c5836cfc71bdedb168afa0ecd020b45b4ca09b48ae8bc489a20e5ca46cd9e0928235a8a6fda181d5ed2876919
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "zod@npm:3.2.0"
+  checksum: 6a1bd281ddf19fa73c8a578672c9300d2702f7cee63ddb5f855f776e3ae64ba5250925fb04a008245fa18c06248521bc613f9c280ba393bf286bf4d64c6550dc
   languageName: node
   linkType: hard
