@@ -102,8 +102,8 @@ function SelectSurface({
   }, [month, year]);
   const availability = useMemo(() => {
     // TODO: Shouldn't I make this empty by default? Not filled?
-    const base = data ? Availability.fromJSON(data) : full;
-    return Availability.parse(...base.filter((t) => t.from > now));
+    const base = data ? Availability.parse(data) : full;
+    return Availability.parse(base.filter((t) => t.from > now));
   }, [data, month, year, now, full]);
   const availabilityOnSelected = useMemo(() => availability.onDate(selected), [
     selected,

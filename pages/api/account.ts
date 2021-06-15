@@ -61,7 +61,7 @@ function mergeAvailability(
   overrides: Availability,
   baseline: Availability
 ): Availability {
-  return Availability.parse(...mergeArrays(overrides, baseline, Timeslot));
+  return Availability.parse(mergeArrays(overrides, baseline, Timeslot));
 }
 
 function mergeSubjects(overrides: Subjects, baseline: Subjects): Subjects {
