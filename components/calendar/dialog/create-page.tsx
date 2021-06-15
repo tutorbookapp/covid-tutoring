@@ -48,9 +48,9 @@ export default function CreatePage({
   const onMatchChange = useCallback(
     (match?: Match) => {
       if (match) {
-        setEditing((prev) => new Meeting({ ...prev, match }));
+        setEditing((prev) => Meeting.parse({ ...prev, match }));
       } else {
-        setEditing((prev) => new Meeting({ ...prev, match: new Match() }));
+        setEditing((prev) => Meeting.parse({ ...prev, match: new Match() }));
       }
     },
     [setEditing]
@@ -59,14 +59,14 @@ export default function CreatePage({
     (subjects: string[]) => {
       setEditing((prev) => {
         const match = new Match({ ...prev.match, subjects });
-        return new Meeting({ ...prev, match });
+        return Meeting.parse({ ...prev, match });
       });
     },
     [setEditing]
   );
   const onTimeChange = useCallback(
     (time: Timeslot) => {
-      setEditing((prev) => new Meeting({ ...prev, time }));
+      setEditing((prev) => Meeting.parse({ ...prev, time }));
     },
     [setEditing]
   );
@@ -74,7 +74,7 @@ export default function CreatePage({
     (recur?: string) => {
       setEditing((prev) => {
         const time = new Timeslot({ ...prev.time, recur });
-        return new Meeting({ ...prev, time });
+        return Meeting.parse({ ...prev, time });
       });
     },
     [setEditing]
@@ -82,7 +82,7 @@ export default function CreatePage({
   const onDescriptionChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const description = evt.currentTarget.value;
-      setEditing((prev) => new Meeting({ ...prev, description }));
+      setEditing((prev) => Meeting.parse({ ...prev, description }));
     },
     [setEditing]
   );
@@ -91,7 +91,7 @@ export default function CreatePage({
     if (editing.match.message)
       setEditing((prev) => {
         if (prev.description) return prev;
-        return new Meeting({ ...prev, description: editing.match.message });
+        return Meeting.parse({ ...prev, description: editing.match.message });
       });
   }, [setEditing, editing.match.message]);
 

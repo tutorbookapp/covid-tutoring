@@ -6,5 +6,5 @@ export default async function getMeeting(id: string): Promise<Meeting> {
   const { data } = await supabase.from<Meeting>('meetings').select().eq('id', id);
   if (!data || !data[0])
     throw new APIError(`Meeting (${id}) does not exist in database`);
-  return new Meeting(data[0]);
+  return Meeting.parse(data[0]);
 }

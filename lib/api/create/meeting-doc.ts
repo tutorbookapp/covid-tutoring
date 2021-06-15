@@ -10,5 +10,5 @@ export default async function createMeetingDoc(
     const msg = `Error saving meeting (${meeting.toString()}) to database`;
     throw new APIError(`${msg}: ${error.message}`, 500);
   }
-  return new Meeting(data);
+  return Meeting.parse(data);
 }

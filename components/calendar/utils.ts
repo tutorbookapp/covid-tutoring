@@ -11,7 +11,7 @@ export function getMeeting(
   reference: Date = new Date(0)
 ): Meeting {
   const time = getTimeslot(height, position, meeting.time, width, reference);
-  return new Meeting({ ...meeting, time });
+  return Meeting.parse({ ...meeting, time });
 }
 
 export { getHeight, getPosition } from 'components/availability-select/utils';

@@ -55,7 +55,7 @@ export default async function getMeetings(
     return startTimes.map((startTime) => {
       if (startTime.valueOf() === meeting.time.from.valueOf()) return meeting;
       const to = new Date(startTime.valueOf() + meeting.time.duration);
-      return new Meeting({
+      return Meeting.parse({
         ...meeting,
         id: nanoid(),
         parentId: meeting.id,

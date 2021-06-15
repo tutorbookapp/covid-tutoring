@@ -108,7 +108,7 @@ export default async function updateMeeting(
         time.recur = verifyRecurIncludesTime(time);
         time.last = getLastTime(time);
 
-        const updatedOriginal = new Meeting({ ...body, time });
+        const updatedOriginal = Meeting.parse({ ...body, time });
 
         updatedOriginal.id = original.id;
         updatedOriginal.parentId = undefined;

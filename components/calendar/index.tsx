@@ -38,7 +38,7 @@ import SearchBar from './search-bar';
 import WeeklyDisplay from './weekly-display';
 import styles from './calendar.module.scss';
 
-const initialEditData = new Meeting();
+const initialEditData = Meeting.parse({});
 
 export interface CalendarProps {
   org?: boolean;

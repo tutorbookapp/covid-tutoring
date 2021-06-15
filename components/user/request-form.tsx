@@ -196,7 +196,7 @@ export default function RequestForm({
           roles: studentRoles,
         });
       }
-      const meeting = new Meeting({
+      const meeting = Meeting.parse({
         time,
         creator,
         match: new Match({

@@ -5,5 +5,5 @@ export default async function getMatchMeetings(
   matchId: string
 ): Promise<Meeting[]> {
   const { data } = await supabase.from<Meeting>('meetings').eq('match', matchId);
-  return (data || []).map((d) => new Meeting(d));
+  return (data || []).map((d) => Meeting.parse(d));
 }

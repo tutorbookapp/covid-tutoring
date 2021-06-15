@@ -111,7 +111,7 @@ function WeeklyDisplay({
     (event: MouseEvent) => {
       if (dragging) return;
       const pos = { x: event.clientX - offset.x, y: event.clientY - offset.y };
-      const creating = new Meeting({
+      const creating = Meeting.parse({
         id: `temp-${nanoid()}`,
         creator: user.toPerson(),
       });
