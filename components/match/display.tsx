@@ -12,9 +12,9 @@ import EmailIcon from 'components/icons/email';
 import EventNoteIcon from 'components/icons/event-note';
 import LoadingDots from 'components/loading-dots';
 
-import { Match } from 'lib/model';
-import { Meeting } from 'lib/model';
-import { User } from 'lib/model';
+import { Match } from 'lib/model/match';
+import { Meeting } from 'lib/model/meeting';
+import { User } from 'lib/model/user';
 import { join, period } from 'lib/utils';
 import { useOrg } from 'lib/context/org';
 

@@ -11,7 +11,7 @@ import OpenInNewIcon from 'components/icons/open-in-new';
 import { useNav } from 'components/dialog/context';
 
 import { getRecurString, join } from 'lib/utils';
-import { User } from 'lib/model';
+import { User } from 'lib/model/user';
 
 import { DialogPage, useCalendarState } from '../state';
 

@@ -7,8 +7,8 @@ import useTranslation from 'next-translate/useTranslation';
 import FilterListIcon from 'components/icons/filter-list';
 import DownloadIcon from 'components/icons/download';
 
-import { Callback } from 'lib/model';
-import { UsersQuery } from 'lib/model';
+import { Callback } from 'lib/model/callback';
+import { UsersQuery } from 'lib/model/query/users';
 import { useOrg } from 'lib/context/org';
 
 import styles from './search-bar.module.scss';

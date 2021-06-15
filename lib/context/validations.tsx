@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { Callback, CallbackParam } from 'lib/model';
+import { Callback, CallbackParam } from 'lib/model/callback';
 
 export type Validations = Record<string, () => boolean>;
 export interface ValidationsContextType {

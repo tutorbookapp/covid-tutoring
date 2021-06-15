@@ -3,9 +3,9 @@ import useTranslation from 'next-translate/useTranslation';
 
 import SearchSelect, { SearchSelectProps } from 'components/search-select';
 
-import { MatchHitTag, MatchTag } from 'lib/model';
-import { MeetingHitTag, MeetingTag } from 'lib/model';
-import { UserHitTag, UserTag } from 'lib/model';
+import { MatchHitTag, MatchTag } from 'lib/model/match';
+import { MeetingHitTag, MeetingTag } from 'lib/model/meeting';
+import { UserHitTag, UserTag } from 'lib/model/user';
 
 export type TagSelectProps<
   HitTag extends UserHitTag | MatchHitTag | MeetingHitTag,

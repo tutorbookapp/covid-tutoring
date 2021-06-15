@@ -5,7 +5,7 @@ import useTranslation from 'next-translate/useTranslation';
 import PhotoInput from 'components/photo-input';
 import VenueInput from 'components/venue-input';
 
-import { Org } from 'lib/model';
+import { Org } from 'lib/model/org';
 import useSocialProps from 'lib/hooks/social-props';
 
 import styles from './settings.module.scss';

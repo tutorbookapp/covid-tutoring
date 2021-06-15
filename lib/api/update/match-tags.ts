@@ -1,4 +1,4 @@
-import { Match, MatchTag } from 'lib/model';
+import { Match, MatchTag } from 'lib/model/match';
 import clone from 'lib/utils/clone';
 
 // TODO: Make this operation async and actually check if this match has any

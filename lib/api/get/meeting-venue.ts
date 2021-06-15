@@ -1,8 +1,8 @@
-import { Meeting } from 'lib/model';
-import { Org } from 'lib/model';
-import { Role } from 'lib/model';
-import { User } from 'lib/model';
-import { Venue } from 'lib/model';
+import { Meeting } from 'lib/model/meeting';
+import { Org } from 'lib/model/org';
+import { Role } from 'lib/model/person';
+import { User } from 'lib/model/user';
+import { Venue } from 'lib/model/venue';
 
 /**
  * Get the meeting venue:

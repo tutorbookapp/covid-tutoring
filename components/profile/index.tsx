@@ -11,8 +11,8 @@ import PhotoInput from 'components/photo-input';
 import SubjectSelect from 'components/subject-select';
 import VenueInput from 'components/venue-input';
 
-import { User, UserJSON } from 'lib/model';
-import { Availability } from 'lib/model';
+import { User, UserJSON } from 'lib/model/user';
+import { Availability } from 'lib/model/availability';
 import useAnalytics from 'lib/hooks/analytics';
 import useContinuous from 'lib/hooks/continuous';
 import useSocialProps from 'lib/hooks/social-props';

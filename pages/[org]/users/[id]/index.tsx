@@ -10,10 +10,10 @@ import { EmptyHeader } from 'components/navigation';
 import Page from 'components/page';
 import UserDisplay from 'components/user/display';
 
-import { Aspect, isAspect } from 'lib/model';
-import { Org, OrgJSON } from 'lib/model';
+import { Aspect, isAspect } from 'lib/model/aspect';
+import { Org, OrgJSON } from 'lib/model/org';
 import { PageProps, getPageProps } from 'lib/page';
-import { User, UserJSON } from 'lib/model';
+import { User, UserJSON } from 'lib/model/user';
 import { getLangLabels, getSubjectLabels } from 'lib/intl/utils';
 import { OrgContext } from 'lib/context/org';
 import getOrg from 'lib/api/get/org';

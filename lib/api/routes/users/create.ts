@@ -1,6 +1,6 @@
 import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 
-import { User, UserJSON, isUserJSON } from 'lib/model';
+import { User, UserJSON, isUserJSON } from 'lib/model/user';
 import analytics from 'lib/api/analytics';
 import createAuthUser from 'lib/api/create/auth-user';
 import createCustomToken from 'lib/api/create/custom-token';

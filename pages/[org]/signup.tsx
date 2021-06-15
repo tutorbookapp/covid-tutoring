@@ -9,8 +9,8 @@ import { AspectHeader, EmptyHeader } from 'components/navigation';
 import Page from 'components/page';
 import Signup from 'components/signup';
 
-import { Aspect, isAspect } from 'lib/model';
-import { Org, OrgJSON } from 'lib/model';
+import { Aspect, isAspect } from 'lib/model/aspect';
+import { Org, OrgJSON } from 'lib/model/org';
 import { PageProps, getPageProps } from 'lib/page';
 import { OrgContext } from 'lib/context/org';
 import supabase from 'lib/api/supabase';

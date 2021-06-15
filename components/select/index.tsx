@@ -17,8 +17,8 @@ import to from 'await-to-js';
 
 import CloseIcon from 'components/icons/close';
 
-import { Option } from 'lib/model';
-import { TCallback } from 'lib/model';
+import { Option } from 'lib/model/query/base';
+import { TCallback } from 'lib/model/callback';
 import { useClickContext } from 'lib/hooks/click-outside';
 import usePrevious from 'lib/hooks/previous';
 

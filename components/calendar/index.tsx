@@ -14,12 +14,12 @@ import to from 'await-to-js';
 
 import DialogContent from 'components/dialog';
 
-import { Meeting, MeetingAction, MeetingJSON } from 'lib/model';
+import { Meeting, MeetingAction, MeetingJSON } from 'lib/model/meeting';
 import useClickOutside, { ClickContext } from 'lib/hooks/click-outside';
 import { APIErrorJSON } from 'lib/api/error';
 import { ListMeetingsRes } from 'lib/api/routes/meetings/list';
-import { MeetingsQuery } from 'lib/model';
-import { Position } from 'lib/model';
+import { MeetingsQuery } from 'lib/model/query/meetings';
+import { Position } from 'lib/model/position';
 import { useOrg } from 'lib/context/org';
 import usePeople from 'lib/hooks/people';
 import useSingle from 'lib/hooks/single';

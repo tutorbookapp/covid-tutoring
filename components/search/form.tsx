@@ -3,8 +3,8 @@ import cn from 'classnames';
 
 import FilterForm from 'components/filter-form';
 
-import { Callback } from 'lib/model';
-import { UsersQuery } from 'lib/model';
+import { Callback } from 'lib/model/callback';
+import { UsersQuery } from 'lib/model/query/users';
 
 import styles from './form.module.scss';
 

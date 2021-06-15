@@ -7,11 +7,11 @@ import LangSelect from 'components/lang-select';
 import SubjectSelect from 'components/subject-select';
 import TagSelect from 'components/tag-select';
 
-import { USER_TAGS, UserHitTag } from 'lib/model';
-import { Availability } from 'lib/model';
-import { Callback } from 'lib/model';
-import { Option } from 'lib/model';
-import { UsersQuery } from 'lib/model';
+import { USER_TAGS, UserHitTag } from 'lib/model/user';
+import { Availability } from 'lib/model/availability';
+import { Callback } from 'lib/model/callback';
+import { Option } from 'lib/model/query/base';
+import { UsersQuery } from 'lib/model/query/users';
 
 import { config, width } from './spring-animation';
 import styles from './filters-sheet.module.scss';

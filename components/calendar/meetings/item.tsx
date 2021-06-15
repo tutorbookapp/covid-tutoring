@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react';
 import cn from 'classnames';
 
-import { Meeting } from 'lib/model';
-import { Position } from 'lib/model';
-import { TCallback } from 'lib/model';
+import { Meeting } from 'lib/model/meeting';
+import { Position } from 'lib/model/position';
+import { TCallback } from 'lib/model/callback';
 import { useClickContext } from 'lib/hooks/click-outside';
 
 import { DialogPage, useCalendarState } from '../state';

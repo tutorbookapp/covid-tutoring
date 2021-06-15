@@ -8,9 +8,9 @@ import { EmptyHeader } from 'components/navigation';
 import Page from 'components/page';
 import UserVet from 'components/user/vet';
 
-import { Org, OrgJSON } from 'lib/model';
+import { Org, OrgJSON } from 'lib/model/org';
 import { PageProps, getPageProps } from 'lib/page';
-import { User, UserJSON } from 'lib/model';
+import { User, UserJSON } from 'lib/model/user';
 import { OrgContext } from 'lib/context/org';
 import getOrg from 'lib/api/get/org';
 import getUser from 'lib/api/get/user';

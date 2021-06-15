@@ -16,9 +16,9 @@ import axios from 'axios';
 import { mutate } from 'swr';
 import useTranslation from 'next-translate/useTranslation';
 
-import { Check, Verification } from 'lib/model';
-import { User, UserJSON } from 'lib/model';
-import { Aspect } from 'lib/model';
+import { Check, Verification } from 'lib/model/verification';
+import { User, UserJSON } from 'lib/model/user';
+import { Aspect } from 'lib/model/aspect';
 import clone from 'lib/utils/clone';
 import useContinuous from 'lib/hooks/continuous';
 import { useUser } from 'lib/context/user';

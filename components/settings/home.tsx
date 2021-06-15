@@ -4,7 +4,7 @@ import useTranslation from 'next-translate/useTranslation';
 
 import PhotoInput from 'components/photo-input';
 
-import { Org } from 'lib/model';
+import { Org } from 'lib/model/org';
 
 import { useSettings } from './context';
 import styles from './settings.module.scss';

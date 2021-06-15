@@ -2,8 +2,8 @@ import { FormEvent, Fragment, useCallback } from 'react';
 import { TextField } from '@rmwc/textfield';
 import useTranslation from 'next-translate/useTranslation';
 
-import { Aspect } from 'lib/model';
-import { Org } from 'lib/model';
+import { Aspect } from 'lib/model/aspect';
+import { Org } from 'lib/model/org';
 
 import styles from './settings.module.scss';
 import { useSettings } from './context';

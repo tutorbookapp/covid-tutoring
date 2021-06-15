@@ -2,10 +2,10 @@ import { CSSProperties, createContext, useContext } from 'react';
 import { RRule } from 'rrule';
 
 import { caps, getEmailLink, getPhoneLink, join } from 'lib/utils';
-import { Meeting } from 'lib/model';
-import { Org } from 'lib/model';
-import { Role } from 'lib/model';
-import { User } from 'lib/model';
+import { Meeting } from 'lib/model/meeting';
+import { Org } from 'lib/model/org';
+import { Role } from 'lib/model/person';
+import { User } from 'lib/model/user';
 
 const fontFamily = [
   '-apple-system',

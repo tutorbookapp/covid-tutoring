@@ -1,6 +1,6 @@
 import algoliasearch from 'algoliasearch';
 
-import { Option, Query } from 'lib/model';
+import { Option, Query } from 'lib/model/query/base';
 import { APIError } from 'lib/api/error';
 
 const prefix = process.env.ALGOLIA_PREFIX || (process.env.APP_ENV as string);

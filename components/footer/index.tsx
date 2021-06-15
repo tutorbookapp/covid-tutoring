@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import useTranslation from 'next-translate/useTranslation';
 
-import { OrgJSON } from 'lib/model';
+import { OrgJSON } from 'lib/model/org';
 import { useUser } from 'lib/context/user';
 
 import Group from './group';

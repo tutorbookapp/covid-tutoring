@@ -1,5 +1,5 @@
-import { Availability } from 'lib/model';
-import { Timeslot } from 'lib/model';
+import { Availability } from 'lib/model/availability';
+import { Timeslot } from 'lib/model/timeslot';
 
 /**
  * Checks if two dates are a certain number of months apart.

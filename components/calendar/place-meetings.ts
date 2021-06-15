@@ -1,4 +1,4 @@
-import { Meeting } from 'lib/model';
+import { Meeting } from 'lib/model/meeting';
 
 // Expands events at the far right to use up any remaining
 // space. Returns the number of columns the event can

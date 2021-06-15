@@ -6,7 +6,7 @@ import useTranslation from 'next-translate/useTranslation';
 
 import Select, { SelectControllerProps } from 'components/select';
 
-import { Option } from 'lib/model';
+import { Option } from 'lib/model/query/base';
 
 const algoliaId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID as string;
 const algoliaKey = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY as string;

@@ -11,11 +11,11 @@ import {
   UserInterface,
   UserJSON,
   isUserJSON,
-} from 'lib/model';
-import { Availability } from 'lib/model';
-import { SocialInterface } from 'lib/model';
-import { Timeslot } from 'lib/model';
-import { Verification } from 'lib/model';
+} from 'lib/model/user';
+import { Availability } from 'lib/model/availability';
+import { SocialInterface } from 'lib/model/account';
+import { Timeslot } from 'lib/model/timeslot';
+import { Verification } from 'lib/model/verification';
 import clone from 'lib/utils/clone';
 import getUser from 'lib/api/get/user';
 import segment from 'lib/api/segment';

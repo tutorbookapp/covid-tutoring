@@ -5,10 +5,10 @@ import {
   list,
 } from 'lib/api/search';
 import { getDate, sliceAvailability } from 'lib/utils/time';
-import { Availability } from 'lib/model';
-import { Timeslot } from 'lib/model';
-import { User } from 'lib/model';
-import { UsersQuery } from 'lib/model';
+import { Availability } from 'lib/model/availability';
+import { Timeslot } from 'lib/model/timeslot';
+import { User } from 'lib/model/user';
+import { UsersQuery } from 'lib/model/query/users';
 
 /**
  * Creates and returns the filter string to search our Algolia index based on

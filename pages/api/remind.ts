@@ -3,7 +3,7 @@ import { IncomingHttpHeaders } from 'http';
 import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 
 import { APIError, handle } from 'lib/api/error';
-import { MeetingsQuery } from 'lib/model';
+import { MeetingsQuery } from 'lib/model/query/meetings';
 import getMeetings from 'lib/api/get/meetings';
 import getPeople from 'lib/api/get/people';
 import logger from 'lib/api/logger';

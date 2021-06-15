@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { Timeslot } from 'lib/model';
+import { Timeslot } from 'lib/model/timeslot';
 
 import { WIDTH, getHeight, getPosition } from './utils';
 import styles from './option-rnd.module.scss';

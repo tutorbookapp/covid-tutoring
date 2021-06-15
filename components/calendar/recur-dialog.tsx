@@ -9,8 +9,8 @@ import {
 import { FormEvent, useCallback } from 'react';
 import { Radio } from '@rmwc/radio';
 
-import { Callback } from 'lib/model';
-import { MeetingAction } from 'lib/model';
+import { Callback } from 'lib/model/callback';
+import { MeetingAction } from 'lib/model/meeting';
 import { useClickContext } from 'lib/hooks/click-outside';
 
 import styles from './recur-dialog.module.scss';

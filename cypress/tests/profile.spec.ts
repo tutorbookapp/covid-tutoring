@@ -1,4 +1,4 @@
-import { TimeslotJSON } from 'lib/model';
+import { TimeslotJSON } from 'lib/model/timeslot';
 
 import volunteer from 'cypress/fixtures/users/volunteer.json';
 

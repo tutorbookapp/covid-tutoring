@@ -1,8 +1,8 @@
 import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 import to from 'await-to-js';
 
-import { User, UserJSON } from 'lib/model';
-import { UsersQuery, UsersQueryURL, isUsersQueryURL } from 'lib/model';
+import { User, UserJSON } from 'lib/model/user';
+import { UsersQuery, UsersQueryURL, isUsersQueryURL } from 'lib/model/query/users';
 import getOrgsByAdminId from 'lib/api/get/orgs-by-admin-id';
 import getTruncatedUser from 'lib/api/get/truncated-user';
 import getUsers from 'lib/api/get/users';

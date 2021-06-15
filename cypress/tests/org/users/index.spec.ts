@@ -1,4 +1,4 @@
-import { Aspect } from 'lib/model';
+import { Aspect } from 'lib/model/aspect';
 
 import admin from 'cypress/fixtures/users/admin.json';
 import school from 'cypress/fixtures/orgs/school.json';

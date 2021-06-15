@@ -5,7 +5,7 @@ import { nanoid } from 'nanoid';
 import to from 'await-to-js';
 
 import { APIErrorJSON } from 'lib/api/error';
-import { Callback } from 'lib/model';
+import { Callback } from 'lib/model/callback';
 
 interface ContinuousProps<T> {
   data: T;

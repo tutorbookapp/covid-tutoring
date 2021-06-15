@@ -13,7 +13,7 @@ import Placeholder from 'components/placeholder';
 import RequestForm from 'components/user/request-form';
 
 import { getEmailLink, getPhoneLink, join } from 'lib/utils';
-import { User } from 'lib/model';
+import { User } from 'lib/model/user';
 import { useOrg } from 'lib/context/org';
 import useTrack from 'lib/hooks/track';
 import { useUser } from 'lib/context/user';

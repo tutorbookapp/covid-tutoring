@@ -16,9 +16,9 @@ import useMeasure from 'react-use-measure';
 
 import LoadingDots from 'components/loading-dots';
 
-import { Callback } from 'lib/model';
-import { Meeting } from 'lib/model';
-import { Position } from 'lib/model';
+import { Callback } from 'lib/model/callback';
+import { Meeting } from 'lib/model/meeting';
+import { Position } from 'lib/model/position';
 import { getDateWithDay } from 'lib/utils/time';
 import { useClickContext } from 'lib/hooks/click-outside';
 import { useUser } from 'lib/context/user';

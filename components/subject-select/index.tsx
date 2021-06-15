@@ -6,9 +6,9 @@ import useTranslation from 'next-translate/useTranslation';
 
 import Select, { SelectControllerProps } from 'components/select';
 
-import { Aspect } from 'lib/model';
-import { GradeAlias } from 'lib/model';
-import { Option } from 'lib/model';
+import { Aspect } from 'lib/model/aspect';
+import { GradeAlias } from 'lib/model/user';
+import { Option } from 'lib/model/query/base';
 import { intersection } from 'lib/utils';
 import { useOrg } from 'lib/context/org';
 import usePrevious from 'lib/hooks/previous';

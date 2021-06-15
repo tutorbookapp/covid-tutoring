@@ -4,7 +4,7 @@ import {
   UsersQuery,
   UsersQueryURL,
   isUsersQueryURL,
-} from 'lib/model';
+} from 'lib/model/query/users';
 import csv from 'lib/api/csv';
 import getUsers from 'lib/api/get/users';
 import { handle } from 'lib/api/error';

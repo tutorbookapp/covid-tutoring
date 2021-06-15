@@ -1,4 +1,4 @@
-import { UserJSON } from 'lib/model';
+import { UserJSON } from 'lib/model/user';
 import { onlyFirstNameAndLastInitial } from 'lib/api/get/truncated-user';
 
 import admin from 'cypress/fixtures/users/admin.json';

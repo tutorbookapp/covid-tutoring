@@ -6,7 +6,7 @@ import useTranslation from 'next-translate/useTranslation';
 import AddIcon from 'components/icons/add';
 import Intercom from 'lib/intercom';
 
-import { Org } from 'lib/model';
+import { Org } from 'lib/model/org';
 import { useUser } from 'lib/context/user';
 
 import { PopOverAccountLink, PopOverButton } from './pop-over';

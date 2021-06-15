@@ -1,4 +1,4 @@
-import { User, UserTag } from 'lib/model';
+import { User, UserTag } from 'lib/model/user';
 import clone from 'lib/utils/clone';
 
 export default function updateUserTags(

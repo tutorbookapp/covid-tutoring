@@ -3,7 +3,7 @@ import { MouseEvent, memo } from 'react';
 import { Checkbox } from '@rmwc/checkbox';
 import { dequal } from 'dequal/lite';
 
-import { Option } from 'lib/model';
+import { Option } from 'lib/model/query/base';
 
 import styles from './select.module.scss';
 

@@ -20,7 +20,7 @@ import useTranslation from 'next-translate/useTranslation';
 import ChevronLeftIcon from 'components/icons/chevron-left';
 import ChevronRightIcon from 'components/icons/chevron-right';
 
-import { Availability, AvailabilityJSON } from 'lib/model';
+import { Availability, AvailabilityJSON } from 'lib/model/availability';
 import {
   getDate,
   getDaysInMonth,
@@ -28,8 +28,8 @@ import {
   getMonthsTimeslots,
   getWeekdayOfFirst,
 } from 'lib/utils/time';
-import { TCallback } from 'lib/model';
-import { Timeslot } from 'lib/model';
+import { TCallback } from 'lib/model/callback';
+import { Timeslot } from 'lib/model/timeslot';
 
 import styles from './time-select.module.scss';
 
