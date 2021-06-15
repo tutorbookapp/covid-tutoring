@@ -1,6 +1,7 @@
+import { nanoid } from 'nanoid';
 import { z } from 'zod';
 
-const date = z.string().refine((d) => !Number.isNaN(Date.parse(d))).transform((d) => new Date(d));
+const date = z.string().or(z.date()).refine((d) => !Number.isNaN(new Date(d).valueOf())).transform((d) => new Date(d)).default(() => new Date());
 
 export const Resource = z.object({
   created: date,
@@ -24,20 +25,27 @@ export const Social = z.object({
   url: z.string(),
 });
 export const Account = Resource.extend({
-  id: z.string(),
-  name: z.string(),
-  photo: z.string().url(),
-  email: z.string().email(),
-  phone: z.string().regex(/^(\+\d{1,3})\d{10}$/),
-  bio: z.string(),
-  background: z.string().url(),
-  venue: z.string().url(),
-  socials: z.array(Social),
+  id: z.string().default(''),
+  name: z.string().default(''),
+  photo: z.string().url().default(''),
+  email: z.string().email().default(''),
+  phone: z.string().regex(/^(\+\d{1,3})\d{10}$/).default(''),
+  bio: z.string().default(''),
+  background: z.string().url().default(''),
+  venue: z.string().url().default(''),
+  socials: z.array(Social).default([]),
 });
 export const OrgSignupConfig = z.object({}).catchall(z.object({
-  header: z.string(),
-  body: z.string(),
-  bio: z.string(),
+  mentoring: z.object({
+    header: z.string(),
+    body: z.string(),
+    bio: z.string(),
+  }),
+  tutoring: z.object({
+    header: z.string(),
+    body: z.string(),
+    bio: z.string(),
+  }),
 }));
 export const OrgHomeConfig = z.object({}).catchall(z.object({
   header: z.string(),
@@ -47,18 +55,67 @@ export const OrgBookingConfig = z.object({}).catchall(z.object({
   message: z.string(),
 }));
 export const Org = Account.extend({
-  members: z.array(z.string()).nonempty(),
-  aspects: z.array(Aspect).nonempty(),
-  domains: z.array(z.string()),
-  profiles: z.array(z.string()),
+  members: z.array(z.string()).default([]),
+  aspects: z.array(Aspect).nonempty().default(['tutoring']),
+  domains: z.array(z.string()).default([]),
+  profiles: z.array(z.string()).default(['name', 'email', 'bio', 'subjects', 'langs', 'availability']),
   subjects: z.array(z.string()).optional(), 
-  signup: OrgSignupConfig,
-  home: OrgHomeConfig,
-  booking: OrgBookingConfig,
+  signup: OrgSignupConfig.default({
+    en: {
+      mentoring: {
+        header: 'Guide the next generation',
+        body: 
+          'Help us redefine mentorship. We’re connecting high performing and ' +
+          'underserved 9-12 students with experts (like you) to collaborate ' +
+          'on meaningful projects that you’re both passionate about. ' +
+          'Complete the form below to create your profile and sign-up as a ' +
+          'mentor.',
+        bio:
+          'Ex: Founder of "The Church Co", Drummer, IndieHacker.  I’m ' +
+          'currently working on "The Church Co" ($30k MRR) where we create ' +
+          'high quality, low cost websites for churches and nonprofits. I’d ' +
+          'love to have a student shadow my work and help build some church ' +
+          'websites.',
+      },
+      tutoring: {
+        header: 'Support students throughout COVID',
+        body:
+          'Help us support the millions of K-12 students who no longer have ' +
+          'individualized instruction due to COVID-19. We’re making sure ' +
+          'that no one loses out on education in these difficult times by ' +
+          'connecting students with free, volunteer tutors like you.',
+        bio:
+          'Ex: I’m currently an electrical engineering Ph.D. student at ' +
+          'Stanford University who has been volunteering with AmeriCorps ' +
+          '(tutoring local high schoolers) for over five years now. I’m ' +
+          'passionate about teaching and would love to help you in any way ' +
+          'that I can!',
+      },
+    },
+  }),
+  home: OrgHomeConfig.default({
+    en: {
+      header: 'How it works',
+      body:
+        'First, new volunteers register using the sign-up form linked to the ' +
+        'right. Organization admins then vet those volunteers (to ensure ' +
+        'they are who they say they are) before adding them to the search ' +
+        'view for students to find. Finally, students and parents use the ' +
+        'search view (linked to the right) to find and request those ' +
+        'volunteers. Recurring meetings (e.g. on Zoom or Google Meet) are ' +
+        'then set up via email.',
+    },
+  }),
+  booking: OrgBookingConfig.default({
+    en: {
+      message:
+        'Ex: {{person}} could really use your help with a {{subject}} project.',
+    },
+  }),
 });
 
 export const Timeslot = z.object({
-  id: z.string(),
+  id: z.string().default(() => nanoid(5)),
   from: date,
   to: date,
   exdates: z.array(date).optional(),
@@ -75,10 +132,10 @@ export const Role = z.union([
   z.literal('parent'),
 ]);
 export const Person = z.object({
-  id: z.string(), 
-  name: z.string().optional(), 
-  photo: z.string().url().optional(),
-  roles: z.array(Role), 
+  id: z.string().default(''), 
+  name: z.string().default(''), 
+  photo: z.string().url().default(''),
+  roles: z.array(Role).default([]), 
 });
 
 export const Check = z.union([
@@ -89,10 +146,10 @@ export const Check = z.union([
   z.literal('interview'),
 ]);
 export const Verification = Resource.extend({
-  creator: z.string(),
-  org: z.string(),
-  notes: z.string(),
-  checks: z.array(Check),
+  creator: z.string().default(''),
+  org: z.string().default('default'),
+  notes: z.string().default(''),
+  checks: z.array(Check).default([]),
 });
 
 export const UserTag = z.union([
@@ -123,24 +180,24 @@ export const USER_TAGS: z.infer<typeof UserTag>[] = [
   'meeting',
 ];
 export const Subjects = z.object({ 
-  subjects: z.array(z.string()),
-  searches: z.array(z.string()),
+  subjects: z.array(z.string()).default([]),
+  searches: z.array(z.string()).default([]),
 });
 export const User = Account.extend({
   age: z.number().optional(),
-  orgs: z.array(z.string()),
-  availability: Availability,
-  mentoring: Subjects,
-  tutoring: Subjects,
-  langs: z.array(z.string()),
-  parents: z.array(z.string()),
-  verifications: z.array(Verification),
-  visible: z.boolean(),
-  featured: z.array(Aspect),
-  roles: z.array(Role),
-  tags: z.array(UserTag),
-  reference: z.string(),
-  timezone: z.string(),
+  orgs: z.array(z.string()).default([]),
+  availability: Availability.default([]),
+  mentoring: Subjects.default(Subjects.parse({})),
+  tutoring: Subjects.default(Subjects.parse({})),
+  langs: z.array(z.string()).default(['en']),
+  parents: z.array(z.string()).default([]),
+  verifications: z.array(Verification).default([]),
+  visible: z.boolean().default(false),
+  featured: z.array(Aspect).default([]),
+  roles: z.array(Role).default([]),
+  tags: z.array(UserTag).default([]),
+  reference: z.string().default(''),
+  timezone: z.string().default('America/Los_Angeles'),
   token: z.string().optional(),
   hash: z.string().optional(),
 });
@@ -149,18 +206,18 @@ export const MatchTag = z.literal('meeting'); // Match has at least one meeting.
 export const MatchHitTag = z.union([MatchTag, z.literal('not-meeting')]);
 export const MATCH_TAGS: z.infer<typeof MatchTag>[] = ['meeting'];
 export const Match = Resource.extend({
-  org: z.string(),
-  subjects: z.array(z.string()),
-  people: z.array(Person),
-  creator: Person,
-  message: z.string(),
-  tags: z.array(MatchTag),
-  id: z.string(),
+  org: z.string().default('default'),
+  subjects: z.array(z.string()).default([]),
+  people: z.array(Person).default([]),
+  creator: Person.default(Person.parse({})),
+  message: z.string().default(''),
+  tags: z.array(MatchTag).default([]),
+  id: z.string().default(''),
 });
 
 export const Venue = Resource.extend({
-  id: z.string(),
-  url: z.string().url(),
+  id: z.string().default(() => nanoid(10)),
+  url: z.string().url().default(() => `https://meet.jit.si/TB-${nanoid(10)}`),
 });
 
 export const MeetingTag = z.literal('recurring'); // Meeting is recurring (has rrule).
@@ -178,15 +235,15 @@ export const MeetingStatus = z.union([
   z.literal('approved'),
 ]);
 export const Meeting = Resource.extend({
-  status: MeetingStatus,
-  creator: Person,
-  match: Match,
-  venue: Venue,
-  time: Timeslot,
-  description: z.string(),
-  tags: z.array(MeetingTag),
+  status: MeetingStatus.default('created'),
+  creator: Person.default(Person.parse({})),
+  match: Match.default(Match.parse({})),
+  venue: Venue.default(Venue.parse({})),
+  time: Timeslot.default(Timeslot.parse({})),
+  description: z.string().default(''),
+  tags: z.array(MeetingTag).default([]),
   parentId: z.string().optional(),
-  id: z.string(), 
+  id: z.string().default(''), 
 });
 
 export const Option = z.object({
