@@ -23,7 +23,7 @@ export default async function updateAvailability(user: User): Promise<void> {
     from: new Date(),
   });
   const meetings = (await getMeetings(query)).results;
-  const booked = new Availability(...meetings.map((m) => m.time));
+  const booked = Availability.parse(...meetings.map((m) => m.time));
 
   const availability = getAlgoliaAvailability(
     user.availability,

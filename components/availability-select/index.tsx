@@ -92,7 +92,7 @@ function AvailabilitySelect({
   // Sync with controlled data and ensure all timeslots have valid React keys.
   useEffect(() => {
     setAvailability((prev) => {
-      const updated = new Availability(
+      const updated = Availability.parse(
         ...value.map((t) => new Timeslot({ ...t, id: t.id || nanoid() }))
       );
       if (dequal(prev, updated)) return prev;
@@ -117,15 +117,15 @@ function AvailabilitySelect({
   const updateTimeslot = useCallback((origIdx: number, updated?: Timeslot) => {
     setAvailability((prev) => {
       if (!updated)
-        return new Availability(
+        return Availability.parse(
           ...prev.slice(0, origIdx),
           ...prev.slice(origIdx + 1)
         );
       let avail: Availability;
       if (origIdx < 0) {
-        avail = new Availability(...prev, updated).sort();
+        avail = Availability.parse(...prev, updated).sort();
       } else {
-        avail = new Availability(
+        avail = Availability.parse(
           ...prev.slice(0, origIdx),
           updated,
           ...prev.slice(origIdx + 1)
@@ -136,13 +136,13 @@ function AvailabilitySelect({
       if (last && last.from.getDay() === updated.from.getDay()) {
         // Contained within another timeslot.
         if (last.to.valueOf() >= updated.to.valueOf())
-          return new Availability(
+          return Availability.parse(
             ...avail.slice(0, idx),
             ...avail.slice(idx + 1)
           );
         // Overlapping with end of another timeslot.
         if (last.to.valueOf() >= updated.from.valueOf())
-          return new Availability(
+          return Availability.parse(
             ...avail.slice(0, idx - 1),
             new Timeslot({ ...last, to: updated.to }),
             ...avail.slice(idx + 1)
@@ -152,7 +152,7 @@ function AvailabilitySelect({
       if (next && next.from.getDay() === updated.from.getDay()) {
         // Overlapping with start of another timeslot.
         if (next.from.valueOf() <= updated.to.valueOf())
-          return new Availability(
+          return Availability.parse(
             ...avail.slice(0, idx),
             new Timeslot({ ...next, from: updated.from }),
             ...avail.slice(idx + 2)

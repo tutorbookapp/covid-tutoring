@@ -165,7 +165,7 @@ export function getTimeslots(
   duration = 30,
   interval = 15
 ): Availability {
-  const timeslots = new Availability();
+  const timeslots = Availability.parse({});
   let from = roundStartTime(start, interval);
   while (from.valueOf() <= end.valueOf() - duration * 6e4) {
     const to = new Date(from.valueOf() + duration * 6e4);
@@ -200,7 +200,7 @@ export function getMonthsTimeslots(
   from: Date = new Date(),
   to: Date = new Date(8640000000000000)
 ): Availability {
-  const timeslots = new Availability();
+  const timeslots = Availability.parse({});
 
   // If month or year is before `from`, we know there are no timeslots.
   if (year < from.getFullYear()) return timeslots;
@@ -253,7 +253,7 @@ export function sliceAvailability(
   interval: number = 15,
   duration: number = 60
 ): Availability {
-  const sliced = new Availability();
+  const sliced = Availability.parse({});
   const minsToMillis = 60 * 1000;
   availability.sort().forEach((timeslot) => {
     let from = roundStartTime(timeslot.from, interval);

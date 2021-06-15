@@ -48,12 +48,12 @@ function getFilterString(query: UsersQuery): string {
   //      at 11 AM from the volunteer's availability).
   // 2. At search time, filter by results that contain any of the hour-long
   //    timeslot start times within the student's requested availability.
-  const full = new Availability();
+  const full = Availability.parse({});
   const days = Array(7).fill(null);
   days.forEach((_, day) => {
     full.push(new Timeslot({ from: getDate(day, 0), to: getDate(day, 24) }));
   });
-  const fallback = query.available ? full : new Availability();
+  const fallback = query.available ? full : Availability.parse({});
   const baseline = query.availability.length ? query.availability : fallback;
   const filtering = sliceAvailability(baseline).map((t) => t.from.valueOf());
   return addArrayFilter(str, filtering, '_availability', 'OR');
