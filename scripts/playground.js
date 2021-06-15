@@ -1,8 +1,8 @@
 // Playground script to test the Supabase Node.js client.
 
-const supabase = require('../../lib/supabase');
-const firebase = require('../../lib/firebase');
-const logger = require('../../lib/logger');
+const supabase = require('./lib/supabase');
+const firebase = require('./lib/firebase');
+const logger = require('./lib/logger');
 
 async function playground() {
   const { data, error } = await supabase
