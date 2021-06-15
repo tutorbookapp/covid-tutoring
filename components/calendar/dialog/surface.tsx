@@ -14,7 +14,7 @@ import useMeasure from 'react-use-measure';
 
 import { NavContext } from 'components/dialog/context';
 
-import { Position } from 'lib/model/position';
+import { Position } from 'lib/model';
 import { useClickContext } from 'lib/hooks/click-outside';
 
 import { PREVIEW_MARGIN, RND_MARGIN } from '../config';

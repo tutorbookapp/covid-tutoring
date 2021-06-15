@@ -18,9 +18,9 @@ import useMeasure from 'react-use-measure';
 import useTranslation from 'next-translate/useTranslation';
 
 import { getDateWithDay, getDateWithTime } from 'lib/utils/time';
-import { Availability } from 'lib/model/availability';
-import { TCallback } from 'lib/model/callback';
-import { Timeslot } from 'lib/model/timeslot';
+import { Availability } from 'lib/model';
+import { TCallback } from 'lib/model';
+import { Timeslot } from 'lib/model';
 import { useUser } from 'lib/context/user';
 
 import TimeslotRnd from './timeslot-rnd';

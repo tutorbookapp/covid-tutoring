@@ -11,9 +11,9 @@ import Avatar from 'components/avatar';
 import ContactSupportIcon from 'components/icons/contact-support';
 import Intercom from 'lib/intercom';
 
-import { AccountInterface } from 'lib/model/account';
-import { Org } from 'lib/model/org';
-import { User } from 'lib/model/user';
+import { AccountInterface } from 'lib/model';
+import { Org } from 'lib/model';
+import { User } from 'lib/model';
 import Link from 'lib/intl/link';
 import { useTheme } from 'lib/context/theme';
 import { useUser } from 'lib/context/user';

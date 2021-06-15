@@ -7,10 +7,10 @@ import AvailabilitySelect from 'components/availability-select';
 import LangSelect from 'components/lang-select';
 import SubjectSelect from 'components/subject-select';
 
-import { Availability } from 'lib/model/availability';
-import { Callback } from 'lib/model/callback';
-import { Option } from 'lib/model/query/base';
-import { UsersQuery } from 'lib/model/query/users';
+import { Availability } from 'lib/model';
+import { Callback } from 'lib/model';
+import { Option } from 'lib/model';
+import { UsersQuery } from 'lib/model';
 
 import styles from './filter-form.module.scss';
 

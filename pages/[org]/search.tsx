@@ -11,13 +11,13 @@ import Page from 'components/page';
 import { QueryHeader } from 'components/navigation';
 import Search from 'components/search';
 
-import { Org, OrgJSON } from 'lib/model/org';
+import { Org, OrgJSON } from 'lib/model';
 import { PageProps, getPageProps } from 'lib/page';
-import { CallbackParam } from 'lib/model/callback';
+import { CallbackParam } from 'lib/model';
 import { ListUsersRes } from 'lib/api/routes/users/list';
 import { OrgContext } from 'lib/context/org';
-import { User } from 'lib/model/user';
-import { UsersQuery } from 'lib/model/query/users';
+import { User } from 'lib/model';
+import { UsersQuery } from 'lib/model';
 import clone from 'lib/utils/clone';
 import { prefetch } from 'lib/fetch';
 import supabase from 'lib/api/supabase';

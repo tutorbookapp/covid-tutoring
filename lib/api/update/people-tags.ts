@@ -1,6 +1,6 @@
 import { dequal } from 'dequal/lite';
 
-import { User, UserTag } from 'lib/model/user';
+import { User, UserTag } from 'lib/model';
 import analytics from 'lib/api/analytics';
 import updateUserDoc from 'lib/api/update/user-doc';
 import updateUserSearchObj from 'lib/api/update/user-search-obj';

@@ -10,7 +10,7 @@ import Notification from 'components/notification';
 import Page from 'components/page';
 
 import { PageProps, getPageProps } from 'lib/page';
-import { User, UserJSON } from 'lib/model/user';
+import { User, UserJSON } from 'lib/model';
 import { APIErrorJSON } from 'lib/api/error';
 import useLoginPage from 'lib/hooks/login-page';
 import { withI18n } from 'lib/intl';

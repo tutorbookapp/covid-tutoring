@@ -2,9 +2,9 @@ import { FormEvent, useCallback } from 'react';
 import { TextFieldHTMLProps, TextFieldProps } from '@rmwc/textfield';
 import useTranslation from 'next-translate/useTranslation';
 
-import { Account, SocialInterface, SocialTypeAlias } from 'lib/model/account';
-import { Callback } from 'lib/model/callback';
-import { Constructor } from 'lib/model/resource';
+import { Account, SocialInterface, SocialTypeAlias } from 'lib/model';
+import { Callback } from 'lib/model';
+import { Constructor } from 'lib/model';
 
 function getPlaceholder(type: SocialTypeAlias, username: string): string {
   switch (type) {

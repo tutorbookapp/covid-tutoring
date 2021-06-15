@@ -7,7 +7,7 @@ import useTranslation from 'next-translate/useTranslation';
 
 import Header from 'components/header';
 
-import { Org, OrgJSON } from 'lib/model/org';
+import { Org, OrgJSON } from 'lib/model';
 import useContinuous from 'lib/hooks/continuous';
 import { useUser } from 'lib/context/user';
 

@@ -1,7 +1,7 @@
 import { TextField, TextFieldHTMLProps, TextFieldProps } from '@rmwc/textfield';
 import useTranslation from 'next-translate/useTranslation';
 
-import { TCallback } from 'lib/model/callback';
+import { TCallback } from 'lib/model';
 
 type TextFieldPropOverrides = 'helpText' | 'placeholder';
 

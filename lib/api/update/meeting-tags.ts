@@ -1,4 +1,4 @@
-import { Meeting, MeetingTag } from 'lib/model/meeting';
+import { Meeting, MeetingTag } from 'lib/model';
 import clone from 'lib/utils/clone';
 
 export default function updateMeetingTags(meeting: Meeting): Meeting {

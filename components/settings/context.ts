@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 
-import { Callback, CallbackParam } from 'lib/model/callback';
-import { Org } from 'lib/model/org';
+import { Callback, CallbackParam } from 'lib/model';
+import { Org } from 'lib/model';
 
 export interface SettingsContextValue {
   org: Org;

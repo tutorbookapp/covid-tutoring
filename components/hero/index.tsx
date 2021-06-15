@@ -4,7 +4,7 @@ import useTranslation from 'next-translate/useTranslation';
 import Carousel from 'components/carousel';
 import Title from 'components/title';
 
-import { UsersQuery } from 'lib/model/query/users';
+import { UsersQuery } from 'lib/model';
 
 import SearchForm from './search-form';
 import styles from './hero.module.scss';

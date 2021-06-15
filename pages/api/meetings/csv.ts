@@ -4,7 +4,7 @@ import {
   MeetingsQuery,
   MeetingsQueryURL,
   isMeetingsQueryURL,
-} from 'lib/model/query/meetings';
+} from 'lib/model';
 import csv from 'lib/api/csv';
 import getMeetings from 'lib/api/get/meetings';
 import { handle } from 'lib/api/error';

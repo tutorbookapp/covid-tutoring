@@ -13,8 +13,8 @@ import Result from 'components/search/result';
 import SubjectSelect from 'components/subject-select';
 import VenueInput from 'components/venue-input';
 
-import { User, UserJSON } from 'lib/model/user';
-import { Availability } from 'lib/model/availability';
+import { User, UserJSON } from 'lib/model';
+import { Availability } from 'lib/model';
 import { useOrg } from 'lib/context/org';
 import useContinuous from 'lib/hooks/continuous';
 import useSocialProps from 'lib/hooks/social-props';

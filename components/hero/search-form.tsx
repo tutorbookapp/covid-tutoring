@@ -5,8 +5,8 @@ import useTranslation from 'next-translate/useTranslation';
 import Button from 'components/button';
 import SubjectSelect from 'components/subject-select';
 
-import { Option } from 'lib/model/query/base';
-import { UsersQuery } from 'lib/model/query/users';
+import { Option } from 'lib/model';
+import { UsersQuery } from 'lib/model';
 import { useUser } from 'lib/context/user';
 
 import styles from './search-form.module.scss';

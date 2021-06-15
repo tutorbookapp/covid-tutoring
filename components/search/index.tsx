@@ -6,9 +6,9 @@ import useTranslation from 'next-translate/useTranslation';
 import Pagination from 'components/pagination';
 import Placeholder from 'components/placeholder';
 
-import { User, UserJSON } from 'lib/model/user';
-import { Callback } from 'lib/model/callback';
-import { UsersQuery } from 'lib/model/query/users';
+import { User, UserJSON } from 'lib/model';
+import { Callback } from 'lib/model';
+import { UsersQuery } from 'lib/model';
 import { useOrg } from 'lib/context/org';
 
 import Form from './form';

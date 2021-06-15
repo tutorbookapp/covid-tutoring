@@ -6,8 +6,8 @@ import {
   MeetingAction,
   MeetingJSON,
   isMeetingJSON,
-} from 'lib/model/meeting';
-import { Timeslot } from 'lib/model/timeslot';
+} from 'lib/model';
+import { Timeslot } from 'lib/model';
 import analytics from 'lib/api/analytics';
 import createMeetingDoc from 'lib/api/create/meeting-doc';
 import createMeetingSearchObj from 'lib/api/create/meeting-search-obj';

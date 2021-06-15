@@ -8,7 +8,7 @@ import { EmptyHeader } from 'components/navigation';
 import Home from 'components/home';
 import Page from 'components/page';
 
-import { Org, OrgJSON } from 'lib/model/org';
+import { Org, OrgJSON } from 'lib/model';
 import { PageProps, getPageProps } from 'lib/page';
 import { OrgContext } from 'lib/context/org';
 import supabase from 'lib/api/supabase';

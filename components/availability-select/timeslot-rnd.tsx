@@ -14,8 +14,8 @@ import useTranslation from 'next-translate/useTranslation';
 
 import CloseIcon from 'components/icons/close';
 
-import { TCallback } from 'lib/model/callback';
-import { Timeslot } from 'lib/model/timeslot';
+import { TCallback } from 'lib/model';
+import { Timeslot } from 'lib/model';
 
 import { WIDTH, getHeight, getPosition, getTimeslot } from './utils';
 import styles from './timeslot-rnd.module.scss';

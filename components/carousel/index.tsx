@@ -2,8 +2,8 @@ import useSWR, { mutate } from 'swr';
 import { nanoid } from 'nanoid';
 import { useEffect } from 'react';
 
-import { User, UserJSON } from 'lib/model/user';
-import { UsersQuery } from 'lib/model/query/users';
+import { User, UserJSON } from 'lib/model';
+import { UsersQuery } from 'lib/model';
 import { ListUsersRes } from 'lib/api/routes/users/list';
 import { useOrg } from 'lib/context/org';
 

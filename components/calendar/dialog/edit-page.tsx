@@ -10,11 +10,11 @@ import RecurSelect from 'components/recur-select';
 import SubjectSelect from 'components/subject-select';
 import TimeSelect from 'components/time-select';
 
-import { Match } from 'lib/model/match';
-import { Meeting } from 'lib/model/meeting';
-import { Timeslot } from 'lib/model/timeslot';
-import { User } from 'lib/model/user';
-import { Venue } from 'lib/model/venue';
+import { Match } from 'lib/model';
+import { Meeting } from 'lib/model';
+import { Timeslot } from 'lib/model';
+import { User } from 'lib/model';
+import { Venue } from 'lib/model';
 import { join } from 'lib/utils';
 import usePrevious from 'lib/hooks/previous';
 

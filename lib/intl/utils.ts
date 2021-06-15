@@ -1,7 +1,7 @@
 import { ObjectWithObjectID, SearchResponse } from '@algolia/client-search';
 import algoliasearch from 'algoliasearch/lite';
 
-import { Option } from 'lib/model/query/base';
+import { Option } from 'lib/model';
 
 const algoliaId = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID as string;
 const algoliaKey = process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY as string;

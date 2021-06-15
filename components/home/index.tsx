@@ -8,7 +8,7 @@ import Button from 'components/button';
 
 import { getEmailLink, join } from 'lib/utils';
 import Link from 'lib/intl/link';
-import { Org } from 'lib/model/org';
+import { Org } from 'lib/model';
 
 import styles from './home.module.scss';
 

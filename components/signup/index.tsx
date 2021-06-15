@@ -14,9 +14,9 @@ import SubjectSelect from 'components/subject-select';
 import Title from 'components/title';
 import VenueInput from 'components/venue-input';
 
-import { User, UserJSON } from 'lib/model/user';
-import { Aspect } from 'lib/model/aspect';
-import { Availability } from 'lib/model/availability';
+import { User, UserJSON } from 'lib/model';
+import { Aspect } from 'lib/model';
+import { Availability } from 'lib/model';
 import { ValidationsContext } from 'lib/context/validations';
 import { login } from 'lib/firebase/login';
 import useAnalytics from 'lib/hooks/analytics';

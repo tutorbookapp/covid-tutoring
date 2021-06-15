@@ -19,8 +19,8 @@ import Header from 'components/header';
 import Pagination from 'components/pagination';
 import Placeholder from 'components/placeholder';
 
-import { CallbackParam } from 'lib/model/callback';
-import { MatchesQuery } from 'lib/model/query/matches';
+import { CallbackParam } from 'lib/model';
+import { MatchesQuery } from 'lib/model';
 import Intercom from 'lib/intercom';
 import { ListMatchesRes } from 'lib/api/routes/matches/list';
 import { useOrg } from 'lib/context/org';

@@ -7,7 +7,7 @@ import Button from 'components/button';
 import Loader from 'components/loader';
 
 import { join, period } from 'lib/utils';
-import { User } from 'lib/model/user';
+import { User } from 'lib/model';
 import { loginWithGoogle } from 'lib/firebase/login';
 import { useOrg } from 'lib/context/org';
 import useTrack from 'lib/hooks/track';

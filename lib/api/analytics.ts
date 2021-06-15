@@ -1,8 +1,8 @@
-import { Analytics, TagTotals } from 'lib/model/analytics';
-import { Match, MatchTag } from 'lib/model/match';
-import { Meeting, MeetingTag } from 'lib/model/meeting';
-import { Role, isRole } from 'lib/model/person';
-import { User, UserTag } from 'lib/model/user';
+import { Analytics, TagTotals } from 'lib/model';
+import { Match, MatchTag } from 'lib/model';
+import { Meeting, MeetingTag } from 'lib/model';
+import { Role, isRole } from 'lib/model';
+import { User, UserTag } from 'lib/model';
 import { APIError } from 'lib/api/error';
 import { db } from 'lib/api/firebase';
 

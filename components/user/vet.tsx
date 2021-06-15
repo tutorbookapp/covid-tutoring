@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Result from 'components/search/result';
 import VerificationsTable from 'components/user/verifications';
 
-import { User } from 'lib/model/user';
+import { User } from 'lib/model';
 import { useOrg } from 'lib/context/org';
 
 import styles from './vet.module.scss';

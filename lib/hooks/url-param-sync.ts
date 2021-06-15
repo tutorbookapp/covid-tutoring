@@ -4,8 +4,8 @@ import Router from 'next/router';
 import { dequal } from 'dequal';
 import { useEffect } from 'react';
 
-import { Callback } from 'lib/model/callback';
-import { Query } from 'lib/model/query/base';
+import { Callback } from 'lib/model';
+import { Query } from 'lib/model';
 
 interface Constructor<T extends Query> {
   fromURLParams: (params: any) => T;

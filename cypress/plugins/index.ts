@@ -10,10 +10,10 @@ import firebase from 'firebase-admin';
 import { percyHealthCheck } from '@percy/cypress/task';
 
 import { IntercomGlobal } from 'lib/intercom';
-import { MatchJSON } from 'lib/model/match';
-import { MeetingJSON } from 'lib/model/meeting';
-import { OrgJSON } from 'lib/model/org';
-import { UserJSON } from 'lib/model/user';
+import { MatchJSON } from 'lib/model';
+import { MeetingJSON } from 'lib/model';
+import { OrgJSON } from 'lib/model';
+import { UserJSON } from 'lib/model';
 
 import admin from 'cypress/fixtures/users/admin.json';
 import match from 'cypress/fixtures/match.json';

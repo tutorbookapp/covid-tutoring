@@ -1,4 +1,4 @@
-import { isJSON, isNumberJSON } from 'lib/model/json';
+import { isJSON, isNumberJSON } from 'lib/model';
 import { APIError } from 'lib/api/error';
 
 interface AvailabilityQuery {

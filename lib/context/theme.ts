@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { Callback, CallbackParam } from 'lib/model/callback';
+import { Callback, CallbackParam } from 'lib/model';
 
 export type Theme = 'system' | 'dark' | 'light';
 export interface ThemeContextType {

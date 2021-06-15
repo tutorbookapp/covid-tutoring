@@ -1,7 +1,7 @@
 import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 
 import { APIError, handle } from 'lib/api/error';
-import { Analytics } from 'lib/model/analytics';
+import { Analytics } from 'lib/model';
 import { db } from 'lib/api/firebase';
 import segment from 'lib/api/segment';
 import verifyAuth from 'lib/api/verify/auth';

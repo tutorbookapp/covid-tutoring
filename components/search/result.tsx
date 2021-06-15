@@ -5,8 +5,8 @@ import cn from 'classnames';
 
 import Avatar from 'components/avatar';
 
-import { TCallback } from 'lib/model/callback';
-import { User } from 'lib/model/user';
+import { TCallback } from 'lib/model';
+import { User } from 'lib/model';
 
 import styles from './result.module.scss';
 

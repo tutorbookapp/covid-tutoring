@@ -1,7 +1,7 @@
 import { FormEvent, useCallback, useMemo } from 'react';
 import { Select, SelectHTMLProps, SelectProps } from '@rmwc/select';
 
-import { TCallback } from 'lib/model/callback';
+import { TCallback } from 'lib/model';
 import { getRecurString } from 'lib/utils';
 
 // TODO: If the given value has an `until` property, render it as another

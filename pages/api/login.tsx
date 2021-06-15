@@ -5,7 +5,7 @@ import to from 'await-to-js';
 import { APIError, handle } from 'lib/api/error';
 import { FirebaseError, auth } from 'lib/api/firebase';
 import LoginEmail from 'lib/mail/login';
-import { isJSON } from 'lib/model/json';
+import { isJSON } from 'lib/model';
 import send from 'lib/mail/send';
 
 async function sendLoginLink(req: Req, res: Res<void>): Promise<void> {

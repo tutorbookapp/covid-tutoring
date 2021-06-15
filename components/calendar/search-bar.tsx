@@ -6,8 +6,8 @@ import { dequal } from 'dequal/lite';
 import DownloadIcon from 'components/icons/download';
 import FilterListIcon from 'components/icons/filter-list';
 
-import { Callback } from 'lib/model/callback';
-import { MeetingsQuery } from 'lib/model/query/meetings';
+import { Callback } from 'lib/model';
+import { MeetingsQuery } from 'lib/model';
 
 import styles from './search-bar.module.scss';
 

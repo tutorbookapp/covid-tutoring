@@ -2,9 +2,9 @@ import to from 'await-to-js';
 
 import { client, prefix } from 'lib/api/algolia';
 import { APIError } from 'lib/api/error';
-import { Availability } from 'lib/model/availability';
-import { MeetingsQuery } from 'lib/model/query/meetings';
-import { User } from 'lib/model/user';
+import { Availability } from 'lib/model';
+import { MeetingsQuery } from 'lib/model';
+import { User } from 'lib/model';
 import { getAlgoliaAvailability } from 'lib/utils/time';
 import getMeetings from 'lib/api/get/meetings';
 

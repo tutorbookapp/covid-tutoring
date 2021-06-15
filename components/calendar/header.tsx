@@ -4,8 +4,8 @@ import useTranslation from 'next-translate/useTranslation';
 
 import Header from 'components/header';
 
-import { Callback } from 'lib/model/callback';
-import { MeetingsQuery } from 'lib/model/query/meetings';
+import { Callback } from 'lib/model';
+import { MeetingsQuery } from 'lib/model';
 import { useOrg } from 'lib/context/org';
 
 export interface CalendarHeaderProps {

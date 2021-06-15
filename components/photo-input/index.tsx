@@ -4,7 +4,7 @@ import cn from 'classnames';
 import { nanoid } from 'nanoid';
 import { v4 as uuid } from 'uuid';
 
-import { TCallback } from 'lib/model/callback';
+import { TCallback } from 'lib/model';
 import clone from 'lib/utils/clone';
 import { useValidations } from 'lib/context/validations';
 

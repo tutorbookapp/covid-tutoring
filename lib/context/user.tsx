@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 
-import { Org, OrgInterface } from 'lib/model/org';
-import { User, UserInterface } from 'lib/model/user';
+import { Org, OrgInterface } from 'lib/model';
+import { User, UserInterface } from 'lib/model';
 
 export type UpdateUserParam = UserInterface | ((prev: User) => UserInterface);
 export type UpdateOrgParam = OrgInterface | ((prev: Org) => OrgInterface);

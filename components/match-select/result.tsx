@@ -5,8 +5,8 @@ import { useMemo } from 'react';
 
 import Avatar from 'components/avatar';
 
-import { Match } from 'lib/model/match';
-import { Person } from 'lib/model/person';
+import { Match } from 'lib/model';
+import { Person } from 'lib/model';
 import { join } from 'lib/utils';
 
 import styles from './result.module.scss';

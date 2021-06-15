@@ -1,5 +1,5 @@
-import { Role } from 'lib/model/person';
-import { User } from 'lib/model/user';
+import { Role } from 'lib/model';
+import { User } from 'lib/model';
 import clone from 'lib/utils/clone';
 
 /**

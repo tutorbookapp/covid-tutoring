@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { mutate } from 'swr';
 import to from 'await-to-js';
 
-import { User, UserInterface, UserJSON } from 'lib/model/user';
+import { User, UserInterface, UserJSON } from 'lib/model';
 import { APIErrorJSON } from 'lib/api/error';
 
 // TODO: This is very insecure; it allows anyone to create an account for and be

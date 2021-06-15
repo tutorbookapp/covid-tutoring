@@ -1,8 +1,8 @@
 import { FormEvent, createContext, useContext } from 'react';
 
-import { Callback, CallbackParam } from 'lib/model/callback';
-import { Meeting } from 'lib/model/meeting';
-import { MeetingsQuery } from 'lib/model/query/meetings';
+import { Callback, CallbackParam } from 'lib/model';
+import { Meeting } from 'lib/model';
+import { MeetingsQuery } from 'lib/model';
 
 export enum DialogPage {
   Display = 0,

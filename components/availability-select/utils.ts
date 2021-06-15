@@ -1,5 +1,5 @@
-import { Position } from 'lib/model/position';
-import { Timeslot } from 'lib/model/timeslot';
+import { Position } from 'lib/model';
+import { Timeslot } from 'lib/model';
 import { getDate } from 'lib/utils/time';
 
 export const WIDTH = 100;

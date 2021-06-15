@@ -5,7 +5,7 @@ import to from 'await-to-js';
 import useTranslation from 'next-translate/useTranslation';
 
 import { APIError, APIErrorJSON } from 'lib/api/error';
-import { Callback } from 'lib/model/callback';
+import { Callback } from 'lib/model';
 import { period } from 'lib/utils';
 
 export async function fetcher<T>(url: string): Promise<T> {

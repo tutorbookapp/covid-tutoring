@@ -3,8 +3,8 @@ import { dequal } from 'dequal/lite';
 
 import Pagination from 'components/pagination';
 
-import { CallbackParam } from 'lib/model/callback';
-import { UsersQuery } from 'lib/model/query/users';
+import { CallbackParam } from 'lib/model';
+import { UsersQuery } from 'lib/model';
 import { useOrg } from 'lib/context/org';
 import useURLParamSync from 'lib/hooks/url-param-sync';
 

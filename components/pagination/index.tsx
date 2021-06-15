@@ -6,8 +6,8 @@ import useTranslation from 'next-translate/useTranslation';
 import ChevronLeftIcon from 'components/icons/chevron-left';
 import ChevronRightIcon from 'components/icons/chevron-right';
 
-import { Callback } from 'lib/model/callback';
-import { Query } from 'lib/model/query';
+import { Callback } from 'lib/model';
+import { Query } from 'lib/model';
 
 import styles from './pagination.module.scss';
 

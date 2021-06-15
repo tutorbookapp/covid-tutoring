@@ -4,7 +4,7 @@ import { dequal } from 'dequal/lite';
 import to from 'await-to-js';
 
 import { APIErrorJSON } from 'lib/api/error';
-import { Callback } from 'lib/model/callback';
+import { Callback } from 'lib/model';
 import { Validations } from 'lib/context/validations';
 
 interface SingleProps<T> {
