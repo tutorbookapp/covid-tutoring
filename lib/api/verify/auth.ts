@@ -31,14 +31,14 @@ export default async function verifyAuth(
   options?: { userId?: string; userIds?: string[]; orgIds?: string[] }
 ): Promise<{ adminOf?: string[]; uid: string }> {
   if (typeof headers.cookie !== 'string')
-    throw new APIError('You must provide a valid authorization cookie', 401);
-
+    throw new APIError('You must be logged in', 401);
   const { session } = parse(headers.cookie);
-  debugger;
+  if (typeof session !== 'string') 
+    throw new APIError('You must be logged in', 401);
   const [err, token] = await to<DecodedIdToken>(
     auth.verifySessionCookie(session, true)
   );
-  if (err) throw new APIError(`Your cookie is invalid: ${err.message}`, 401);
+  if (err) throw new APIError(`Your login is invalid: ${err.message}`, 401);
 
   // Check if JWT belongs to `userId` OR an admin to any one of the `orgIds`
   const { uid } = token as DecodedIdToken;
