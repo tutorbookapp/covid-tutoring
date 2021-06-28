@@ -35,7 +35,7 @@ export default async function fetchPeople(
     );
     const people = users.map((u) => {
       const ps = match.people[match.people.findIndex((p) => p.id === u.id)];
-      return { ...u.toJSON(), roles: ps?.roles || [] };
+      return { ...u, roles: ps?.roles || [] };
     });
 
     res.status(200).json(people);

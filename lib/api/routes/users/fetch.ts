@@ -26,7 +26,7 @@ export default async function fetchUser(
     );
     res.status(200).json(
       definedVals({
-        ...(err ? getTruncatedUser(user) : user).toJSON(),
+        ...(err ? getTruncatedUser(user) : user),
         hash: attrs?.uid === userId ? getUserHash(userId) : undefined,
       })
     );

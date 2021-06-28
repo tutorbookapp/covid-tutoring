@@ -46,7 +46,7 @@ export default async function updateUser(
 
     await Promise.all([updateUserDoc(user), updateUserSearchObj(user)]);
 
-    res.status(200).json(user.toJSON());
+    res.status(200).json(user);
 
     logger.info(`Updated ${user.toString()}.`);
 

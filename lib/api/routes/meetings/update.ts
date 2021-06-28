@@ -58,7 +58,7 @@ export default async function updateMeeting(
 
     // TODO: Verify the option data types just like we do for the request body.
     const options = verifyOptions<UpdateMeetingOptions>(req.body, {
-      original: body.toJSON(),
+      original: body,
       action: 'future',
     });
     const beforeUpdateStart = new Date(options.original.time.from);
@@ -125,7 +125,7 @@ export default async function updateMeeting(
           sendEmails(withTagsUpdate, people, updater, org),
         ]);
 
-        res.status(200).json(body.toJSON());
+        res.status(200).json(body);
 
         logger.info(`Updated ${body.toString()}.`);
 
@@ -181,7 +181,7 @@ export default async function updateMeeting(
           sendEmails(newMeeting, people, updater, org),
         ]);
 
-        res.status(200).json(newMeeting.toJSON());
+        res.status(200).json(newMeeting);
 
         logger.info(`Updated ${newMeeting.toString()}.`);
 
@@ -232,7 +232,7 @@ export default async function updateMeeting(
           sendEmails(newRecurringMeeting, people, updater, org),
         ]);
 
-        res.status(200).json(newRecurringMeeting.toJSON());
+        res.status(200).json(newRecurringMeeting);
 
         logger.info(`Updated ${newRecurringMeeting.toString()}.`);
 
@@ -265,7 +265,7 @@ export default async function updateMeeting(
         sendEmails(meeting, people, updater, org),
       ]);
 
-      res.status(200).json(meeting.toJSON());
+      res.status(200).json(meeting);
 
       logger.info(`Updated ${meeting.toString()}.`);
 

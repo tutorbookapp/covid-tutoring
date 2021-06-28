@@ -30,7 +30,7 @@ export default async function listMatches(
     });
 
     const { results, hits } = await getMatches(query);
-    res.status(200).json({ hits, matches: results.map((m) => m.toJSON()) });
+    res.status(200).json({ hits, matches: results });
 
     segment.track({ userId: uid, event: 'Matches Listed' });
   } catch (e) {

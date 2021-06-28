@@ -13,7 +13,7 @@ export default async function fetchOrg(
 ): Promise<void> {
   try {
     const id = verifyQueryId(req.query);
-    res.status(200).json((await getOrg(id)).toJSON());
+    res.status(200).json((await getOrg(id)));
   } catch (e) {
     handle(e, res);
   }

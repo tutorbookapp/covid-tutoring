@@ -117,7 +117,7 @@ export default async function createMeeting(
     const orgAdmins = await Promise.all(org.members.map((id) => getUser(id)));
     await sendEmails(meeting, people, creator, org, orgAdmins);
 
-    res.status(200).json(meeting.toJSON());
+    res.status(200).json(meeting);
 
     logger.info(`Created ${meeting.toString()}.`);
 

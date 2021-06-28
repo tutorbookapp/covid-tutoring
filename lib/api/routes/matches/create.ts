@@ -60,7 +60,7 @@ export default async function createMatch(
 
     logger.info(`Created ${match.toString()}.`);
 
-    res.status(201).json(match.toJSON());
+    res.status(201).json(match);
 
     segment.track({
       userId: creator.id,

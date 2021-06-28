@@ -21,7 +21,7 @@ export default async function listOrgs(
   try {
     const { uid } = await verifyAuth(req.headers);
     const orgs = await getOrgsByAdminId(uid);
-    res.status(200).json(orgs.map((o) => o.toJSON()));
+    res.status(200).json(orgs);
     segment.track({ userId: uid, event: 'Orgs Listed' });
   } catch (e) {
     handle(e, res);

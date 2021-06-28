@@ -27,7 +27,7 @@ export default async function fetchMeetings(
       orgIds: [match.org],
     });
 
-    res.status(200).json(meetings.map((m) => m.toJSON()));
+    res.status(200).json(meetings);
 
     segment.track({
       userId: uid,

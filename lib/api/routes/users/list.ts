@@ -48,7 +48,7 @@ export default async function listUsers(
       segment.track({ userId: uid, event: 'Users Listed' });
     }
 
-    res.status(200).json({ hits, users: users.map((u) => u.toJSON()) });
+    res.status(200).json({ hits, users });
   } catch (e) {
     handle(e, res);
   }

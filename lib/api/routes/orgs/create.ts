@@ -21,7 +21,7 @@ export default async function createOrg(
     const { uid } = await verifyAuth(req.headers);
     verifyIsOrgAdmin(body, uid);
     const org = await createOrgDoc(await updatePhoto(body, Org));
-    res.status(201).json(org.toJSON());
+    res.status(201).json(org);
 
     // TODO: Use `segment.group` calls to associate all admins with the new org.
     segment.track({

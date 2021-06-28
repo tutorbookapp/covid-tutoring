@@ -44,7 +44,7 @@ export default async function updateMatch(
 
     await Promise.all([updateMatchDoc(match), updateMatchSearchObj(match)]);
 
-    res.status(200).json(match.toJSON());
+    res.status(200).json(match);
 
     logger.info(`Updated ${match.toString()}.`);
 

@@ -35,7 +35,7 @@ export default async function listMeetings(
     });
 
     const { results, hits } = await getMeetings(query);
-    res.status(200).json({ hits, meetings: results.map((m) => m.toJSON()) });
+    res.status(200).json({ hits, meetings: results });
 
     segment.track({ userId: uid, event: 'Meetings Listed' });
   } catch (e) {

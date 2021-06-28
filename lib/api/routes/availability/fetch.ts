@@ -20,7 +20,7 @@ export default async function fetchAvailability(
     const id = verifyQueryId(req.query);
     const { month, year } = verifyAvailabilityQuery(req.query);
     const availability = await getAvailability(id, month, year);
-    res.status(200).json(availability.toJSON());
+    res.status(200).json(availability);
   } catch (e) {
     handle(e, res);
   }

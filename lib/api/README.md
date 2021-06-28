@@ -25,7 +25,7 @@ export default async function createUser(
     const body = verifyBody<User, UserJSON>(req.body, isUserJSON, User);
     const user = await createUserDoc(await createAuthUser(body));
     await createUserNotification(user);
-    res.status(201).json(user.toJSON());
+    res.status(201).json(user);
   } catch (e) {
     handle(e, res);
   }

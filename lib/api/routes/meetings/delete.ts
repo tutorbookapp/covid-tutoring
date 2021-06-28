@@ -41,7 +41,7 @@ export default async function deleteMeeting(
 
     // TODO: Verify the option data types just like we do for the request body.
     const options = verifyOptions<DeleteMeetingOptions>(req.body, {
-      deleting: meeting.toJSON(),
+      deleting: meeting,
       action: 'future',
     });
     const deleting = Meeting.parse(options.deleting);

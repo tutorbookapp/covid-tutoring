@@ -23,7 +23,7 @@ export default async function fetchMatch(
       orgIds: [match.org],
     });
 
-    res.status(200).json(match.toJSON());
+    res.status(200).json(match);
 
     segment.track({
       userId: uid,
