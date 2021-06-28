@@ -15,10 +15,10 @@ import to from 'await-to-js';
 import DialogContent from 'components/dialog';
 
 import { Meeting, MeetingAction, MeetingJSON } from 'lib/model/meeting';
+import { MeetingsQuery, endpoint } from 'lib/model/query/meetings';
 import useClickOutside, { ClickContext } from 'lib/hooks/click-outside';
 import { APIErrorJSON } from 'lib/api/error';
 import { ListMeetingsRes } from 'lib/api/routes/meetings/list';
-import { MeetingsQuery } from 'lib/model/query/meetings';
 import { Position } from 'lib/model/position';
 import { useOrg } from 'lib/context/org';
 import usePeople from 'lib/hooks/people';
@@ -53,13 +53,13 @@ export default function Calendar({
   const [mutatedIds, setMutatedIds] = useState<Set<string>>(new Set());
   const [query, setQuery] = useState<MeetingsQuery>(MeetingsQuery.parse({}));
 
-  useURLParamSync(query, setQuery, MeetingsQuery, byOrg ? ['org'] : ['people']);
+  useURLParamSync(query, setQuery, MeetingsQuery, endpoint, byOrg ? ['org'] : ['people']);
 
   const { org } = useOrg();
   const { user } = useUser();
   const { data } = useSWR<ListMeetingsRes>(
     (byOrg && query.org) || (byUser && query.people.length)
-      ? query.endpoint
+      ? endpoint(query)
       : null,
     {
       revalidateOnFocus: !mutatedIds.size,
@@ -127,12 +127,11 @@ export default function Calendar({
       if (dequal(updated, meetings)) return;
       // Note: If we ever need to use the `hits` property, we'll have to update
       // this callback function to properly cache and reuse the previous value.
-      const json = updated.map((m) => m.toJSON());
-      await mutate(query.endpoint, { meetings: json }, hasBeenUpdated);
+      await mutate(endpoint(query), { meetings: updated }, hasBeenUpdated);
       // Remove the RND once there is a meeting item to replace it.
       if (idx < 0) setRnd(false);
     },
-    [query.endpoint, meetings]
+    [query, meetings]
   );
 
   const original = useRef<Meeting>(initialEditData);
@@ -141,14 +140,14 @@ export default function Calendar({
       if (updated.id.startsWith('temp')) {
         const { data: createdMeeting } = await axios.post<MeetingJSON>(
           '/api/meetings',
-          updated.toJSON()
+          updated
         );
         return Meeting.parse(createdMeeting);
       }
       const url = `/api/meetings/${updated.id}`;
       const { data: updatedMeeting } = await axios.put<MeetingJSON>(url, {
-        ...updated.toJSON(),
-        options: { action, original: original.current.toJSON() },
+        ...updated,
+        options: { action, original: original.current },
       });
       return Meeting.parse(updatedMeeting);
     },
@@ -255,7 +254,7 @@ export default function Calendar({
     setEditChecked(false);
     setEditLoading(true);
     const url = `/api/meetings/${editing.parentId || editing.id}`;
-    const options = { action, deleting: original.current.toJSON() };
+    const options = { action, deleting: original.current };
     const [err] = await to(axios.delete(url, { data: { options } }));
     if (err) {
       const e = (err as AxiosError<APIErrorJSON>).response?.data || err;
@@ -267,14 +266,13 @@ export default function Calendar({
         const idx = meetings.findIndex((m) => m.id === editing.id);
         if (idx < 0) return;
         const updated = [...meetings.slice(0, idx), ...meetings.slice(idx + 1)];
-        const json = updated.map((m) => m.toJSON());
-        void mutate(query.endpoint, { meetings: json }, true);
+        void mutate(endpoint(query), { meetings: updated }, true);
       }, 1000);
     }
   }, [
     setEditLoading,
     setEditChecked,
-    query.endpoint,
+    query,
     meetings,
     editing.parentId,
     editing.id,

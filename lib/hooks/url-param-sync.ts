@@ -15,10 +15,12 @@ interface Constructor<T extends Query> {
 // link that contains their query state (e.g. I can share a link showing all the
 // Songwriting teachers with another org admin).
 // TODO: Perhaps look into directly managing state using the Next.js router.
+// TODO: Rethink how this will all work with the new `zod` data models.
 export default function useURLParamSync<T extends Query>(
   query: T,
   setQuery: Callback<T>,
   Model: Constructor<T>,
+  endpoint: (query: T) => string,
   overrides: string[] = []
 ): void {
   useEffect(() => {
@@ -26,19 +28,21 @@ export default function useURLParamSync<T extends Query>(
       if (typeof window === 'undefined') return prev;
       const params = new URLSearchParams(window.location.search);
       const updated = Model.parse({
-        ...prev.getURLParams(),
+        ...Object.fromEntries(new URLSearchParams(endpoint(prev)).entries()),
         ...Object.fromEntries(params.entries()),
       });
       if (dequal(prev, updated)) return prev;
       return updated;
     });
-  }, [setQuery, Model]);
+  }, [endpoint, setQuery, Model]);
 
   // TODO: Don't include query params that are specified in other ways (e.g. the
   // users dashboard specifies org in the `[org]` dynamic page param).
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const params = query.getURLParams();
+    const params = Object.fromEntries(
+      new URLSearchParams(endpoint(query)).entries()
+    );
     overrides.forEach((field) => {
       delete params[field];
     });
@@ -49,5 +53,5 @@ export default function useURLParamSync<T extends Query>(
     const prevURL = `${window.location.pathname}${window.location.search}`;
     if (updatedURL === prevURL) return;
     void Router.replace(updatedURL, undefined, { shallow: true });
-  }, [query, overrides]);
+  }, [endpoint, query, overrides]);
 }

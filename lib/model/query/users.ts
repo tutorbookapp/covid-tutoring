@@ -34,3 +34,7 @@ export const UsersQuery = Query.extend({
   visible: z.boolean().optional(),
 });
 export type UsersQuery = z.infer<typeof UsersQuery>;
+
+export function endpoint(query: UsersQuery): string {
+  return '';
+}

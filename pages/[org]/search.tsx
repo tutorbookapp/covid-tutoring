@@ -13,11 +13,11 @@ import Search from 'components/search';
 
 import { Org, OrgJSON } from 'lib/model/org';
 import { PageProps, getPageProps } from 'lib/page';
+import { UsersQuery, endpoint } from 'lib/model/query/users';
 import { CallbackParam } from 'lib/model/callback';
 import { ListUsersRes } from 'lib/api/routes/users/list';
 import { OrgContext } from 'lib/context/org';
 import { User } from 'lib/model/user';
-import { UsersQuery } from 'lib/model/query/users';
 import { accountToSegment } from 'lib/model/account';
 import clone from 'lib/utils/clone';
 import { prefetch } from 'lib/fetch';
@@ -50,7 +50,7 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
   const [canSearch, setCanSearch] = useState<boolean>(false);
   const [searching, setSearching] = useState<boolean>(true);
 
-  useURLParamSync(query, setQuery, UsersQuery, [
+  useURLParamSync(query, setQuery, UsersQuery, endpoint, [
     'orgs',
     'available',
     'visible',

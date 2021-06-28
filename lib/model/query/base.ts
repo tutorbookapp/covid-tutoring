@@ -24,15 +24,3 @@ export const Query = z.object({
 });
 export type Query = z.infer<typeof Query>;
 export type QueryJSON = z.input<typeof Query>;
-
-// TODO: Do I really need this conversion method at all? Ideally, I would rely
-// solely on `zod` to convert URI encoded objects to `Query` and then depend on
-// the browser's built-in conversions to encode `Query` into URI params.
-export type Params = Record<string, string | number | boolean>;
-export function getURLParams(query: Query): Params {
-  const params: Params = {};
-  if (query.search) params.search = encodeURIComponent(query.search);
-  if (query.hitsPerPage !== 20) params.hitsPerPage = query.hitsPerPage;
-  if (query.page !== 0) params.page = query.page;
-  return params;
-}
