@@ -30,7 +30,7 @@ export default function Profile(): JSX.Element {
   const updateRemote = useCallback(
     async (updated: User) => {
       const url = `/api/users/${updated.id}`;
-      const { data } = await axios.put<UserJSON>(url, updated.toJSON());
+      const { data } = await axios.put<UserJSON>(url, updated);
       track('Profile Updated', accountToSegment(updated));
       return User.parse(data);
     },

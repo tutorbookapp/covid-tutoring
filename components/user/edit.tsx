@@ -31,16 +31,16 @@ export default function UserEdit({
   user: initialData,
 }: UserEditProps): JSX.Element {
   const updateLocal = useCallback(async (updated: User) => {
-    await mutate(`/api/users/${updated.id}`, updated.toJSON(), false);
+    await mutate(`/api/users/${updated.id}`, updated, false);
   }, []);
   const updateRemote = useCallback(async (updated: User) => {
     if (updated.id.startsWith('temp')) {
-      const json = { ...updated.toJSON(), id: '' };
+      const json = { ...updated, id: '' };
       const { data } = await axios.post<UserJSON>('/api/users', json);
       return User.parse(data);
     }
     const url = `/api/users/${updated.id}`;
-    const { data } = await axios.put<UserJSON>(url, updated.toJSON());
+    const { data } = await axios.put<UserJSON>(url, updated);
     return User.parse(data);
   }, []);
 

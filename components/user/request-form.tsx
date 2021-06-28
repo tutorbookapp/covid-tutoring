@@ -125,7 +125,7 @@ export default function RequestForm({
         const [err, res] = await to<
           AxiosResponse<UserJSON>,
           AxiosError<APIErrorJSON>
-        >(axios.put('/api/account', updatedUser.toJSON()));
+        >(axios.put('/api/account', updatedUser));
         if (err) {
           setLoading(false);
           setError(getErrorMessage(err, 'updating profile', t));
@@ -163,7 +163,7 @@ export default function RequestForm({
         people.push(creator);
       } else if (student === 'My child') {
         const updatedChild = {
-          ...child.toJSON(),
+          ...child,
           roles: studentRoles, // Specifying roles skips signup emails.
           parents: [updatedUser.id], // Use now-logged-in parent ID.
         };
@@ -210,7 +210,7 @@ export default function RequestForm({
       const [err] = await to<
         AxiosResponse<MeetingJSON>,
         AxiosError<APIErrorJSON>
-      >(axios.post('/api/meetings', meeting.toJSON()));
+      >(axios.post('/api/meetings', meeting));
       if (err) {
         setLoading(false);
         setError(getErrorMessage(err, 'creating meeting', t));

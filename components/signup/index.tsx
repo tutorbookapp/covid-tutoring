@@ -45,7 +45,7 @@ export default function Signup({ aspect }: SignupProps): JSX.Element {
         return created;
       }
       const url = `/api/users/${updated.id}`;
-      const { data } = await axios.put<UserJSON>(url, updated.toJSON());
+      const { data } = await axios.put<UserJSON>(url, updated);
       track('User Updated', { ...accountToSegment(updated), aspect });
       return User.parse(data);
     },

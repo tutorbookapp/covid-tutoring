@@ -36,7 +36,7 @@ export default function Settings({
   );
   const updateRemote = useCallback(async (updated: Org) => {
     const url = `/api/orgs/${updated.id}`;
-    const { data } = await axios.put<OrgJSON>(url, updated.toJSON());
+    const { data } = await axios.put<OrgJSON>(url, updated);
     return Org.parse(data);
   }, []);
 
