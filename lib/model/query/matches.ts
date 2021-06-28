@@ -12,7 +12,7 @@ export const MatchesQuery = Query.extend({
 });
 export type MatchesQuery = z.infer<typeof MatchesQuery>;
 
-export function endpoint(query: MatchesQuery): string {
+export function endpoint(query: MatchesQuery, pathname = '/api/matches'): string {
   function encode(p?: unknown): string {
     return encodeURIComponent(JSON.stringify(p));
   }
@@ -24,5 +24,5 @@ export function endpoint(query: MatchesQuery): string {
   if (query.org) params.org = encodeURIComponent(query.org);
   if (query.people.length) params.people = encode(query.people);
   if (query.subjects.length) params.subjects = encode(query.subjects);
-  return url.format({ pathname: '/api/matches', query: params });
+  return url.format({ pathname, query: params });
 }

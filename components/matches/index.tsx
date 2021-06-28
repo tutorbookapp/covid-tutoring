@@ -68,7 +68,7 @@ export default function Matches({
     });
   }, []);
   const downloadResults = useCallback(() => {
-    if (query) window.open(query.getURL('/api/matches/csv'));
+    if (query) window.open(endpoint(query, '/api/matches/csv'));
   }, [query]);
 
   useEffect(() => {

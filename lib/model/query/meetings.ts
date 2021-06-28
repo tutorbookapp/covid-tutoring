@@ -23,7 +23,7 @@ export const MeetingsQuery = MatchesQuery.extend({
 });
 export type MeetingsQuery = z.infer<typeof MeetingsQuery>;
 
-export function endpoint(query: MeetingsQuery): string {
+export function endpoint(query: MeetingsQuery, pathname = '/api/meetings'): string {
   function encode(p?: unknown): string {
     return encodeURIComponent(JSON.stringify(p));
   }
@@ -35,5 +35,5 @@ export function endpoint(query: MeetingsQuery): string {
   if (query.tags.length) params.tags = encode(query.tags);
   params.from = query.from.toJSON();
   params.to = query.to.toJSON();
-  return url.format({ pathname: '/api/meetings', query: params });
+  return url.format({ pathname, query: params });
 }

@@ -7,8 +7,8 @@ import useTranslation from 'next-translate/useTranslation';
 import FilterListIcon from 'components/icons/filter-list';
 import DownloadIcon from 'components/icons/download';
 
+import { UsersQuery, endpoint } from 'lib/model/query/users';
 import { Callback } from 'lib/model/callback';
-import { UsersQuery } from 'lib/model/query/users';
 import { useOrg } from 'lib/context/org';
 
 import styles from './search-bar.module.scss';
@@ -37,7 +37,7 @@ function SearchBar({ query, setQuery, setOpen }: SearchBarProps): JSX.Element {
         />
         <IconButton
           data-cy='download-button'
-          onClick={() => window.open(query.getURL('/api/users/csv'))}
+          onClick={() => window.open(endpoint(query, '/api/users/csv'))}
           icon={<DownloadIcon />}
         />
         <ChipSet className={styles.filterChips}>

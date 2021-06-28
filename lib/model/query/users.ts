@@ -35,6 +35,7 @@ export const UsersQuery = Query.extend({
 });
 export type UsersQuery = z.infer<typeof UsersQuery>;
 
-export function endpoint(query: UsersQuery): string {
-  return '';
+// TODO: Actually implement this endpoint conversion function.
+export function endpoint(query: UsersQuery, pathname = '/api/users'): string {
+  return pathname;
 }

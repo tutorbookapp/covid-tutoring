@@ -6,8 +6,8 @@ import { dequal } from 'dequal/lite';
 import DownloadIcon from 'components/icons/download';
 import FilterListIcon from 'components/icons/filter-list';
 
+import { MeetingsQuery, endpoint } from 'lib/model/query/meetings';
 import { Callback } from 'lib/model/callback';
-import { MeetingsQuery } from 'lib/model/query/meetings';
 
 import styles from './search-bar.module.scss';
 
@@ -25,7 +25,7 @@ function SearchBar({
   byOrg,
 }: SearchBarProps): JSX.Element {
   const downloadResults = useCallback(() => {
-    window.open(query.getURL('/api/meetings/csv'));
+    window.open(endpoint(query, '/api/meetings/csv'));
   }, [query]);
 
   return (

@@ -5,8 +5,8 @@ import useTranslation from 'next-translate/useTranslation';
 import Button from 'components/button';
 import SubjectSelect from 'components/subject-select';
 
+import { UsersQuery, endpoint } from 'lib/model/query/users';
 import { Option } from 'lib/model/query/base';
-import { UsersQuery } from 'lib/model/query/users';
 import { useUser } from 'lib/context/user';
 
 import styles from './search-form.module.scss';
@@ -21,7 +21,8 @@ export default function SearchForm(): JSX.Element {
   );
 
   useEffect(() => {
-    void Router.prefetch(query.getURL(`/${user.orgs[0] || 'default'}/search`));
+    const pathname = `/${user.orgs[0] || 'default'}/search`;
+    void Router.prefetch(endpoint(query, pathname));
   }, [query, user.orgs]);
 
   const onSubjectsChange = useCallback((subjects: Option[]) => {
@@ -34,7 +35,7 @@ export default function SearchForm(): JSX.Element {
       evt.stopPropagation();
       setSubmitting(true);
       const qry = UsersQuery.parse({ ...query, aspect: 'mentoring' });
-      return Router.push(qry.getURL(`/${user.orgs[0] || 'default'}/search`));
+      return Router.push(endpoint(qry, `/${user.orgs[0] || 'default'}/search`));
     },
     [query, user.orgs]
   );
@@ -44,7 +45,7 @@ export default function SearchForm(): JSX.Element {
       evt.stopPropagation();
       setSubmitting(true);
       const qry = UsersQuery.parse({ ...query, aspect: 'tutoring' });
-      return Router.push(qry.getURL(`/${user.orgs[0] || 'default'}/search`));
+      return Router.push(endpoint(qry, `/${user.orgs[0] || 'default'}/search`));
     },
     [query, user.orgs]
   );
