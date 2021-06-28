@@ -54,9 +54,9 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
       // an issue where the profile view would locally update to an empty
       // `User()` *before* our `/api/account` endpoint could respond. SWR
       // cancelled the `/api/account` mutation in favor of the empty one.
-      await mutate('/api/account', updated.toJSON(), loggedIn === undefined);
+      await mutate('/api/account', updated, loggedIn === undefined);
       if (updated.id)
-        await mutate(`/api/users/${updated.id}`, updated.toJSON(), false);
+        await mutate(`/api/users/${updated.id}`, updated, false);
     },
     [user, loggedIn]
   );
@@ -68,7 +68,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       if (prev.timezone === timezone || !prev.id) return prev;
       const updated = User.parse({ ...prev, timezone });
-      void axios.put<UserJSON>('/api/account', updated.toJSON());
+      void axios.put<UserJSON>('/api/account', updated);
       return updated;
     });
   }, [updateUser]);
@@ -99,9 +99,9 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
       if (typeof param === 'object') updatedOrg = Org.parse(param);
       if (typeof param === 'function') updatedOrg = Org.parse(param(updatedOrg));
       const updated = [
-        ...orgs.map((org: Org) => org.toJSON()).slice(0, idx),
-        updatedOrg.toJSON(),
-        ...orgs.map((org: Org) => org.toJSON()).slice(idx + 1),
+        ...orgs.map((org: Org) => org).slice(0, idx),
+        updatedOrg,
+        ...orgs.map((org: Org) => org).slice(idx + 1),
       ];
       await mutate('/api/orgs', updated, loggedIn === undefined);
     },

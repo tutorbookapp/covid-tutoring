@@ -77,7 +77,7 @@ export const getStaticProps: GetStaticProps<
     ]);
     const { props } = await getPageProps();
     return {
-      props: { org: org.toJSON(), user: user.toJSON(), ...props },
+      props: { org: org, user: user, ...props },
       revalidate: 1,
     };
   } catch (e) {

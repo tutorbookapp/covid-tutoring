@@ -173,7 +173,7 @@ async function updateAccount(req: Req, res: Res): Promise<void> {
     updateUserSearchObj(withAuthUpdate),
   ]);
 
-  res.status(200).json(withAuthUpdate.toJSON());
+  res.status(200).json(withAuthUpdate);
   segment.track({
     userId: withAuthUpdate.id,
     event: 'Account Updated',

@@ -70,7 +70,7 @@ function ConfirmPage(props: PageProps): JSX.Element {
       const [err, res] = await to<
         AxiosResponse<UserJSON>,
         AxiosError<APIErrorJSON>
-      >(axios.put('/api/account', { ...user.toJSON(), token }));
+      >(axios.put('/api/account', { ...user, token }));
 
       let e: string | undefined;
       if (err && err.response) e = err.response.data.message;

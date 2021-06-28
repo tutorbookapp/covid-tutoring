@@ -60,7 +60,7 @@ export const getStaticProps: GetStaticProps<
   if (!data || !data[0]) return { notFound: true };
   const org = Org.parse(data[0]);
   const { props } = await getPageProps();
-  return { props: { org: org.toJSON(), ...props }, revalidate: 1 };
+  return { props: { org: org, ...props }, revalidate: 1 };
 };
 
 export const getStaticPaths: GetStaticPaths<HomePageQuery> = async () => {

@@ -145,10 +145,10 @@ export const getStaticProps: GetStaticProps<
     //    "teaches" section could change.
     return {
       props: {
+        org,
         langs,
-        org: org.toJSON(),
         subjects: { tutoring, mentoring },
-        user: getTruncatedUser(user).toJSON(),
+        user: getTruncatedUser(user),
         ...props,
       },
       revalidate: 1,
