@@ -15,7 +15,7 @@ export async function login(user: User): Promise<User> {
   const [err, res] = await to<
     AxiosResponse<UserJSON>,
     AxiosError<APIErrorJSON>
-  >(axios.post('/api/users', user.toJSON()));
+  >(axios.post('/api/users', user));
 
   if (err && err.response) throw new Error(err.response.data.message);
   if (err && err.request) throw new Error('Users API did not respond.');
@@ -63,7 +63,7 @@ export async function loginWithGoogle(
   const [err, res] = await to<
     AxiosResponse<UserJSON>,
     AxiosError<APIErrorJSON>
-  >(axios.put('/api/account', { ...signedInUser.toJSON(), token }));
+  >(axios.put('/api/account', { ...signedInUser, token }));
 
   if (err && err.response) throw new Error(err.response.data.message);
   if (err && err.request) throw new Error('Users API did not respond.');
