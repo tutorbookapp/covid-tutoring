@@ -1,6 +1,6 @@
 import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 
-import { User, UserJSON, isUserJSON } from 'lib/model/user';
+import { User, UserJSON } from 'lib/model/user';
 import { accountToSegment } from 'lib/model/account';
 import analytics from 'lib/api/analytics';
 import createAuthUser from 'lib/api/create/auth-user';
@@ -18,7 +18,6 @@ import updateAvailability from 'lib/api/update/availability';
 import updatePhoto from 'lib/api/update/photo';
 import updateUserOrgs from 'lib/api/update/user-orgs';
 import updateUserTags from 'lib/api/update/user-tags';
-import verifyBody from 'lib/api/verify/body';
 
 export type CreateUserRes = UserJSON;
 
@@ -27,7 +26,7 @@ export default async function createUser(
   res: Res<CreateUserRes>
 ): Promise<void> {
   try {
-    const body = verifyBody<User, UserJSON>(req.body, isUserJSON, User);
+    const body = User.parse(req.body);
 
     logger.info(`Creating ${body.toString()}...`);
 

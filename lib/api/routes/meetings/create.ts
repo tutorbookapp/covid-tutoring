@@ -2,8 +2,8 @@ import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 import to from 'await-to-js';
 
 import { APIError, handle } from 'lib/api/error';
-import { Meeting, MeetingJSON, meetingToSegment, isMeetingJSON } from 'lib/model/meeting';
 import { Match, matchToSegment } from 'lib/model/match';
+import { Meeting, MeetingJSON, meetingToSegment } from 'lib/model/meeting';
 import analytics from 'lib/api/analytics';
 import createMatchDoc from 'lib/api/create/match-doc';
 import createMatchSearchObj from 'lib/api/create/match-search-obj';
@@ -25,7 +25,6 @@ import updateMatchTags from 'lib/api/update/match-tags';
 import updateMeetingTags from 'lib/api/update/meeting-tags';
 import updatePeopleTags from 'lib/api/update/people-tags';
 import verifyAuth from 'lib/api/verify/auth';
-import verifyBody from 'lib/api/verify/body';
 import verifyIsOrgAdmin from 'lib/api/verify/is-org-admin';
 import verifySubjectsCanBeTutored from 'lib/api/verify/subjects-can-be-tutored';
 import verifyTimeInAvailability from 'lib/api/verify/time-in-availability';
@@ -37,11 +36,7 @@ export default async function createMeeting(
   res: Res<CreateMeetingRes>
 ): Promise<void> {
   try {
-    const body = verifyBody<Meeting, MeetingJSON>(
-      req.body,
-      isMeetingJSON,
-      Meeting
-    );
+    const body = Meeting.parse(req.body);
     const people = await getPeople(body.match.people);
 
     logger.info(`Creating ${body.toString()}...`);

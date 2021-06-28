@@ -22,7 +22,7 @@ export default async function createUser(
   res: Res<CreateUserRes>
 ): Promise<void> {
   try {
-    const body = verifyBody<User, UserJSON>(req.body, isUserJSON, User);
+    const body = User.parse(req.body);
     const user = await createUserDoc(await createAuthUser(body));
     await createUserNotification(user);
     res.status(201).json(user);

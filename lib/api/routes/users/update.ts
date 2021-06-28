@@ -1,6 +1,6 @@
 import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 
-import { User, UserJSON, isUserJSON } from 'lib/model/user';
+import { User, UserJSON } from 'lib/model/user';
 import { accountToSegment } from 'lib/model/account';
 import analytics from 'lib/api/analytics';
 import { handle } from 'lib/api/error';
@@ -14,7 +14,6 @@ import updateUserOrgs from 'lib/api/update/user-orgs';
 import updateUserSearchObj from 'lib/api/update/user-search-obj';
 import updateUserTags from 'lib/api/update/user-tags';
 import verifyAuth from 'lib/api/verify/auth';
-import verifyBody from 'lib/api/verify/body';
 import verifyDocExists from 'lib/api/verify/doc-exists';
 
 export type UpdateUserRes = UserJSON;
@@ -24,7 +23,7 @@ export default async function updateUser(
   res: Res<UpdateUserRes>
 ): Promise<void> {
   try {
-    const body = verifyBody<User, UserJSON>(req.body, isUserJSON, User);
+    const body = User.parse(req.body);
 
     logger.info(`Updating ${body.toString()}...`);
 

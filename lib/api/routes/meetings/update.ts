@@ -5,7 +5,6 @@ import {
   Meeting,
   MeetingAction,
   MeetingJSON,
-  isMeetingJSON,
   meetingToSegment
 } from 'lib/model/meeting';
 import { Timeslot } from 'lib/model/timeslot';
@@ -30,7 +29,6 @@ import updateMeetingSearchObj from 'lib/api/update/meeting-search-obj';
 import updateMeetingTags from 'lib/api/update/meeting-tags';
 import updatePeopleTags from 'lib/api/update/people-tags';
 import verifyAuth from 'lib/api/verify/auth';
-import verifyBody from 'lib/api/verify/body';
 import verifyDocExists from 'lib/api/verify/doc-exists';
 import verifyOptions from 'lib/api/verify/options';
 import verifyRecurIncludesTime from 'lib/api/verify/recur-includes-time';
@@ -48,11 +46,7 @@ export default async function updateMeeting(
   res: Res<UpdateMeetingRes>
 ): Promise<void> {
   try {
-    const body = verifyBody<Meeting, MeetingJSON>(
-      req.body,
-      isMeetingJSON,
-      Meeting
-    );
+    const body = Meeting.parse(req.body);
 
     logger.info(`Updating ${body.toString()}...`);
 

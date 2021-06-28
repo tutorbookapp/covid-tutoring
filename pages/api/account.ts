@@ -6,12 +6,7 @@ import to from 'await-to-js';
 import { APIError, handle } from 'lib/api/error';
 import { DecodedIdToken, auth } from 'lib/api/firebase';
 import { Social, accountToSegment } from 'lib/model/account';
-import {
-  Subjects,
-  User,
-  UserJSON,
-  isUserJSON,
-} from 'lib/model/user';
+import { Subjects, User, UserJSON } from 'lib/model/user';
 import { Availability } from 'lib/model/availability';
 import { Timeslot } from 'lib/model/timeslot';
 import { Verification } from 'lib/model/verification';
@@ -25,7 +20,6 @@ import updateUserOrgs from 'lib/api/update/user-orgs';
 import updateUserSearchObj from 'lib/api/update/user-search-obj';
 import updateUserTags from 'lib/api/update/user-tags';
 import verifyAuth from 'lib/api/verify/auth';
-import verifyBody from 'lib/api/verify/body';
 
 function mergeSocials(
   overrides: Social[],
@@ -124,7 +118,7 @@ function mergeUsers(overrides: User, baseline: User): User {
 }
 
 async function updateAccount(req: Req, res: Res): Promise<void> {
-  const body = verifyBody<User, UserJSON>(req.body, isUserJSON, User);
+  const body = User.parse(req.body);
 
   // Revert to old behavior if user doesn't already exist; just create it.
   const original = (await to(getUser(body.id)))[1];
