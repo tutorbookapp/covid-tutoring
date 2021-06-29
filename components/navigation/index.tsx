@@ -183,7 +183,7 @@ export function QueryHeader({
             <DesktopTabs
               aspect={query.aspect}
               onChange={(aspect: Aspect) =>
-                onChange(new UsersQuery({ ...query, aspect }))
+                onChange(UsersQuery.parse({ ...query, aspect }))
               }
             />
           )}

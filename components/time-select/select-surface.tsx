@@ -93,17 +93,17 @@ function SelectSurface({
     uid ? `/api/users/${uid}/availability?month=${month}&year=${year}` : null
   );
   const full = useMemo(() => {
-    const full = new Availability();
+    const full = Availability.parse({});
     const days = Array(7).fill(null);
     days.forEach((_, day) => {
-      full.push(new Timeslot({ from: getDate(day, 0), to: getDate(day, 24) }));
+      full.push(Timeslot.parse({ from: getDate(day, 0), to: getDate(day, 24) }));
     });
     return getMonthsTimeslots(full, month, year);
   }, [month, year]);
   const availability = useMemo(() => {
     // TODO: Shouldn't I make this empty by default? Not filled?
-    const base = data ? Availability.fromJSON(data) : full;
-    return new Availability(...base.filter((t) => t.from > now));
+    const base = data ? Availability.parse(data) : full;
+    return Availability.parse(base.filter((t) => t.from > now));
   }, [data, month, year, now, full]);
   const availabilityOnSelected = useMemo(() => availability.onDate(selected), [
     selected,

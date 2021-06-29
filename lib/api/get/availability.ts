@@ -24,13 +24,13 @@ export default async function getAvailability(
   const { availability: baseline } = await getUser(uid);
 
   // 2. Remove the weekly recurring match times from that availability.
-  const query = new MeetingsQuery({
+  const query = MeetingsQuery.parse({
     people: [{ label: '', value: uid }],
     from: new Date(year, month, 0),
     to: new Date(year, month + 1, 0),
   });
   const meetings = (await getMeetings(query)).results;
-  const booked = new Availability(...meetings.map((m) => m.time));
+  const booked = Availability.parse(meetings.map((m) => m.time));
 
   // 3. Enforce that lessons must be booked at least 3 days in advance and
   // cannot be booked more than 30 days into the future.

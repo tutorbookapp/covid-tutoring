@@ -3,8 +3,8 @@ import { dequal } from 'dequal/lite';
 
 import Pagination from 'components/pagination';
 
+import { UsersQuery, endpoint } from 'lib/model/query/users';
 import { CallbackParam } from 'lib/model/callback';
-import { UsersQuery } from 'lib/model/query/users';
 import { useOrg } from 'lib/context/org';
 import useURLParamSync from 'lib/hooks/url-param-sync';
 
@@ -32,7 +32,7 @@ export default function Users(): JSX.Element {
   const [searching, setSearching] = useState<boolean>(true);
   const [filtersOpen, setFiltersOpen] = useState<boolean>(false);
   const [query, setQuery] = useState<UsersQuery>(
-    new UsersQuery({
+    UsersQuery.parse({
       orgs: org ? [org.id] : [],
       aspect: org?.aspects[0] || 'tutoring',
       hitsPerPage: 5,
@@ -40,7 +40,7 @@ export default function Users(): JSX.Element {
   );
   const [hits, setHits] = useState<number>(query.hitsPerPage);
 
-  useURLParamSync(query, setQuery, UsersQuery, ['orgs']);
+  useURLParamSync(query, setQuery, UsersQuery, endpoint, ['orgs']);
 
   const onQueryChange = useCallback((param: CallbackParam<UsersQuery>) => {
     setQuery((prev) => {
@@ -59,7 +59,7 @@ export default function Users(): JSX.Element {
       const aspect = org.aspects.includes(prev.aspect)
         ? prev.aspect
         : org.aspects[0];
-      return new UsersQuery({ ...prev, orgs: [org.id], aspect });
+      return UsersQuery.parse({ ...prev, orgs: [org.id], aspect });
     });
   }, [org, onQueryChange]);
 
@@ -88,7 +88,6 @@ export default function Users(): JSX.Element {
         </div>
         <Pagination
           query={query}
-          model={UsersQuery}
           setQuery={onQueryChange}
           hits={hits}
         />

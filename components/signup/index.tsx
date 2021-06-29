@@ -18,6 +18,7 @@ import { User, UserJSON } from 'lib/model/user';
 import { Aspect } from 'lib/model/aspect';
 import { Availability } from 'lib/model/availability';
 import { ValidationsContext } from 'lib/context/validations';
+import { accountToSegment } from 'lib/model/account';
 import { login } from 'lib/firebase/login';
 import useAnalytics from 'lib/hooks/analytics';
 import { useOrg } from 'lib/context/org';
@@ -38,15 +39,15 @@ export default function Signup({ aspect }: SignupProps): JSX.Element {
   const updateRemote = useCallback(
     async (updated: User) => {
       if (!updated.id) {
-        track('User Signup Started', { ...updated.toSegment(), aspect });
+        track('User Signup Started', { ...accountToSegment(updated), aspect });
         const created = await login(updated);
-        track('User Signed Up', { ...created.toSegment(), aspect });
+        track('User Signed Up', { ...accountToSegment(created), aspect });
         return created;
       }
       const url = `/api/users/${updated.id}`;
-      const { data } = await axios.put<UserJSON>(url, updated.toJSON());
-      track('User Updated', { ...updated.toSegment(), aspect });
-      return User.fromJSON(data);
+      const { data } = await axios.put<UserJSON>(url, updated);
+      track('User Updated', { ...accountToSegment(updated), aspect });
+      return User.parse(data);
     },
     [track, aspect]
   );
@@ -67,7 +68,7 @@ export default function Signup({ aspect }: SignupProps): JSX.Element {
 
   useAnalytics(
     'User Signup Errored',
-    () => error && { ...user.toSegment(), error, aspect }
+    () => error && { ...accountToSegment(user), error, aspect }
   );
 
   const getSocialProps = useSocialProps(
@@ -83,7 +84,7 @@ export default function Signup({ aspect }: SignupProps): JSX.Element {
     setUser((prev) => {
       const orgs = new Set(prev.orgs);
       orgs.add(org.id);
-      return new User({ ...prev, orgs: [...orgs] });
+      return User.parse({ ...prev, orgs: [...orgs] });
     });
   }, [setUser, org]);
 
@@ -104,7 +105,7 @@ export default function Signup({ aspect }: SignupProps): JSX.Element {
     (evt: FormEvent<HTMLInputElement>) => {
       const name = evt.currentTarget.value;
       track('User Name Updated', { name });
-      setUser((prev) => new User({ ...prev, name }));
+      setUser((prev) => User.parse({ ...prev, name }));
     },
     [track, setUser]
   );
@@ -112,7 +113,7 @@ export default function Signup({ aspect }: SignupProps): JSX.Element {
     (evt: FormEvent<HTMLInputElement>) => {
       const email = evt.currentTarget.value;
       track('User Email Updated', { email });
-      setUser((prev) => new User({ ...prev, email }));
+      setUser((prev) => User.parse({ ...prev, email }));
     },
     [track, setUser]
   );
@@ -120,27 +121,27 @@ export default function Signup({ aspect }: SignupProps): JSX.Element {
     (evt: FormEvent<HTMLInputElement>) => {
       const phone = evt.currentTarget.value;
       track('User Phone Updated', { phone });
-      setUser((prev) => new User({ ...prev, phone }));
+      setUser((prev) => User.parse({ ...prev, phone }));
     },
     [track, setUser]
   );
   const onPhotoChange = useCallback(
     (photo: string) => {
       track('User Photo Updated', { photo });
-      setUser((prev) => new User({ ...prev, photo }));
+      setUser((prev) => User.parse({ ...prev, photo }));
     },
     [track, setUser]
   );
   const onBackgroundChange = useCallback(
     (background: string) => {
       track('User Background Updated', { background });
-      setUser((prev) => new User({ ...prev, background }));
+      setUser((prev) => User.parse({ ...prev, background }));
     },
     [track, setUser]
   );
   const onVenueChange = useCallback(
     (venue: string) => {
-      setUser((prev) => new User({ ...prev, venue }));
+      setUser((prev) => User.parse({ ...prev, venue }));
     },
     [setUser]
   );
@@ -148,7 +149,7 @@ export default function Signup({ aspect }: SignupProps): JSX.Element {
     (evt: FormEvent<HTMLInputElement>) => {
       const bio = evt.currentTarget.value;
       track('User Bio Updated', { bio });
-      setUser((prev) => new User({ ...prev, bio }));
+      setUser((prev) => User.parse({ ...prev, bio }));
     },
     [track, setUser]
   );
@@ -156,7 +157,7 @@ export default function Signup({ aspect }: SignupProps): JSX.Element {
     (subjects: string[]) => {
       track('User Subjects Updated', { aspect, subjects }, 2500);
       setUser(
-        (prev) => new User({ ...prev, [aspect]: { ...prev[aspect], subjects } })
+        (prev) => User.parse({ ...prev, [aspect]: { ...prev[aspect], subjects } })
       );
     },
     [track, setUser, aspect]
@@ -165,17 +166,15 @@ export default function Signup({ aspect }: SignupProps): JSX.Element {
     (availability: Availability) => {
       // TODO: Fix the `useContinuous` hook that the `AvailabilitySelect` uses
       // to skip this callback when the component is initially mounted.
-      track('User Availability Updated', {
-        availability: availability.toSegment(),
-      });
-      setUser((prev) => new User({ ...prev, availability }));
+      track('User Availability Updated', { availability });
+      setUser((prev) => User.parse({ ...prev, availability }));
     },
     [track, setUser]
   );
   const onLangsChange = useCallback(
     (langs: string[]) => {
       track('User Langs Updated', { langs }, 2500);
-      setUser((prev) => new User({ ...prev, langs }));
+      setUser((prev) => User.parse({ ...prev, langs }));
     },
     [track, setUser]
   );
@@ -183,7 +182,7 @@ export default function Signup({ aspect }: SignupProps): JSX.Element {
     (evt: FormEvent<HTMLInputElement>) => {
       const reference = evt.currentTarget.value;
       track('User Reference Updated', { reference }, 2500);
-      setUser((prev) => new User({ ...prev, reference }));
+      setUser((prev) => User.parse({ ...prev, reference }));
     },
     [track, setUser]
   );

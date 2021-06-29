@@ -1,4 +1,7 @@
-# Data Backups
+# `scripts/backups` 
+
+**This is deprecated. I will be replacing these with SQL utilities to backup our
+Supabase PostgreSQL database eventually.**
 
 Included in this directory are locally stored (not backed up to GitHub for
 obvious privacy reasons) Firestore backup JSON files created with [this command

@@ -7,8 +7,8 @@ import useTranslation from 'next-translate/useTranslation';
 import FilterListIcon from 'components/icons/filter-list';
 import DownloadIcon from 'components/icons/download';
 
+import { UsersQuery, endpoint } from 'lib/model/query/users';
 import { Callback } from 'lib/model/callback';
-import { UsersQuery } from 'lib/model/query/users';
 import { useOrg } from 'lib/context/org';
 
 import styles from './search-bar.module.scss';
@@ -37,7 +37,7 @@ function SearchBar({ query, setQuery, setOpen }: SearchBarProps): JSX.Element {
         />
         <IconButton
           data-cy='download-button'
-          onClick={() => window.open(query.getURL('/api/users/csv'))}
+          onClick={() => window.open(endpoint(query, '/api/users/csv'))}
           icon={<DownloadIcon />}
         />
         <ChipSet className={styles.filterChips}>
@@ -48,7 +48,7 @@ function SearchBar({ query, setQuery, setOpen }: SearchBarProps): JSX.Element {
               setQuery((prev) => {
                 const { visible: vprev } = prev;
                 const visible = vprev !== true ? true : undefined;
-                return new UsersQuery({ ...prev, visible, page: 0 });
+                return UsersQuery.parse({ ...prev, visible, page: 0 });
               });
             }}
             selected={query.visible === true}
@@ -60,7 +60,7 @@ function SearchBar({ query, setQuery, setOpen }: SearchBarProps): JSX.Element {
               setQuery((prev) => {
                 const { visible: vprev } = prev;
                 const visible = vprev !== false ? false : undefined;
-                return new UsersQuery({ ...prev, visible, page: 0 });
+                return UsersQuery.parse({ ...prev, visible, page: 0 });
               });
             }}
             selected={query.visible === false}
@@ -71,7 +71,7 @@ function SearchBar({ query, setQuery, setOpen }: SearchBarProps): JSX.Element {
               checkmark
               onInteraction={() => {
                 const aspect = 'mentoring';
-                setQuery((p) => new UsersQuery({ ...p, aspect, page: 0 }));
+                setQuery((p) => UsersQuery.parse({ ...p, aspect, page: 0 }));
               }}
               selected={query.aspect === 'mentoring'}
             />
@@ -82,7 +82,7 @@ function SearchBar({ query, setQuery, setOpen }: SearchBarProps): JSX.Element {
               checkmark
               onInteraction={() => {
                 const aspect = 'tutoring';
-                setQuery((p) => new UsersQuery({ ...p, aspect, page: 0 }));
+                setQuery((p) => UsersQuery.parse({ ...p, aspect, page: 0 }));
               }}
               selected={query.aspect === 'tutoring'}
             />
@@ -99,7 +99,7 @@ function SearchBar({ query, setQuery, setOpen }: SearchBarProps): JSX.Element {
             const search = event.currentTarget.value;
             // TODO: Throttle the actual API requests but immediately show the
             // loading state (i.e. we can't just throttle `setQuery` updates).
-            setQuery((p) => new UsersQuery({ ...p, search, page: 0 }));
+            setQuery((p) => UsersQuery.parse({ ...p, search, page: 0 }));
           }}
         />
       </div>

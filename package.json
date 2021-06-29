@@ -126,6 +126,7 @@
     "@sendgrid/client": "^7.2.2",
     "@sendgrid/helpers": "^7.2.0",
     "@sendgrid/mail": "^7.2.2",
+    "@supabase/supabase-js": "^1.13.1",
     "accept-language-parser": "^1.5.0",
     "algoliasearch": "^4.8.6",
     "analytics-node": "^4.0.1",
@@ -165,7 +166,8 @@
     "url": "^0.11.0",
     "uuid": "^8.2.0",
     "vanilla-tilt": "^1.7.0",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "zod": "^3.2.0"
   },
   "browser": {
     "firebase-admin": false

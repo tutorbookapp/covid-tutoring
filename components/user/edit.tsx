@@ -21,7 +21,7 @@ import useSocialProps from 'lib/hooks/social-props';
 
 import styles from './edit.module.scss';
 
-const empty = new User();
+const empty = User.parse({});
 
 export interface UserEditProps {
   user?: User;
@@ -31,17 +31,17 @@ export default function UserEdit({
   user: initialData,
 }: UserEditProps): JSX.Element {
   const updateLocal = useCallback(async (updated: User) => {
-    await mutate(`/api/users/${updated.id}`, updated.toJSON(), false);
+    await mutate(`/api/users/${updated.id}`, updated, false);
   }, []);
   const updateRemote = useCallback(async (updated: User) => {
     if (updated.id.startsWith('temp')) {
-      const json = { ...updated.toJSON(), id: '' };
+      const json = { ...updated, id: '' };
       const { data } = await axios.post<UserJSON>('/api/users', json);
-      return User.fromJSON(data);
+      return User.parse(data);
     }
     const url = `/api/users/${updated.id}`;
-    const { data } = await axios.put<UserJSON>(url, updated.toJSON());
-    return User.fromJSON(data);
+    const { data } = await axios.put<UserJSON>(url, updated);
+    return User.parse(data);
   }, []);
 
   // TODO: Prevent revalidations of `initialData` when local data has been
@@ -72,51 +72,51 @@ export default function UserEdit({
   const onNameChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const name = evt.currentTarget.value;
-      setUser((prev) => new User({ ...prev, name }));
+      setUser((prev) => User.parse({ ...prev, name }));
     },
     [setUser]
   );
   const onEmailChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const email = evt.currentTarget.value;
-      setUser((prev) => new User({ ...prev, email }));
+      setUser((prev) => User.parse({ ...prev, email }));
     },
     [setUser]
   );
   const onPhoneChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const phone = evt.currentTarget.value;
-      setUser((prev) => new User({ ...prev, phone }));
+      setUser((prev) => User.parse({ ...prev, phone }));
     },
     [setUser]
   );
   const onPhotoChange = useCallback(
     (photo: string) => {
-      setUser((prev) => new User({ ...prev, photo }));
+      setUser((prev) => User.parse({ ...prev, photo }));
     },
     [setUser]
   );
   const onBackgroundChange = useCallback(
     (background: string) => {
-      setUser((prev) => new User({ ...prev, background }));
+      setUser((prev) => User.parse({ ...prev, background }));
     },
     [setUser]
   );
   const onVenueChange = useCallback(
     (venue: string) => {
-      setUser((prev) => new User({ ...prev, venue }));
+      setUser((prev) => User.parse({ ...prev, venue }));
     },
     [setUser]
   );
   const onAvailabilityChange = useCallback(
     (availability: Availability) =>
-      setUser((prev) => new User({ ...prev, availability })),
+      setUser((prev) => User.parse({ ...prev, availability })),
     [setUser]
   );
   const onBioChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const bio = evt.currentTarget.value;
-      setUser((prev) => new User({ ...prev, bio }));
+      setUser((prev) => User.parse({ ...prev, bio }));
     },
     [setUser]
   );
@@ -124,7 +124,7 @@ export default function UserEdit({
     (subjects: string[]) => {
       setUser(
         (prev) =>
-          new User({ ...prev, mentoring: { ...prev.mentoring, subjects } })
+          User.parse({ ...prev, mentoring: { ...prev.mentoring, subjects } })
       );
     },
     [setUser]
@@ -133,7 +133,7 @@ export default function UserEdit({
     (searches: string[]) => {
       setUser(
         (prev) =>
-          new User({ ...prev, mentoring: { ...prev.mentoring, searches } })
+          User.parse({ ...prev, mentoring: { ...prev.mentoring, searches } })
       );
     },
     [setUser]
@@ -142,7 +142,7 @@ export default function UserEdit({
     (subjects: string[]) => {
       setUser(
         (prev) =>
-          new User({ ...prev, tutoring: { ...prev.tutoring, subjects } })
+          User.parse({ ...prev, tutoring: { ...prev.tutoring, subjects } })
       );
     },
     [setUser]
@@ -151,21 +151,21 @@ export default function UserEdit({
     (searches: string[]) => {
       setUser(
         (prev) =>
-          new User({ ...prev, tutoring: { ...prev.tutoring, searches } })
+          User.parse({ ...prev, tutoring: { ...prev.tutoring, searches } })
       );
     },
     [setUser]
   );
   const onLangsChange = useCallback(
     (langs: string[]) => {
-      setUser((prev) => new User({ ...prev, langs }));
+      setUser((prev) => User.parse({ ...prev, langs }));
     },
     [setUser]
   );
   const onReferenceChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const reference = evt.currentTarget.value;
-      setUser((prev) => new User({ ...prev, reference }));
+      setUser((prev) => User.parse({ ...prev, reference }));
     },
     [setUser]
   );

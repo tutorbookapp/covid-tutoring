@@ -6,5 +6,5 @@ import clone from 'lib/utils/clone';
 export default function updateMatchTags(match: Match): Match {
   const tags: MatchTag[] = [];
   if (false) tags.push('meeting');
-  return new Match(clone({ ...match, tags }));
+  return Match.parse(clone({ ...match, tags }));
 }

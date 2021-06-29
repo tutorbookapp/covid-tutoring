@@ -34,7 +34,7 @@ function CalendarHeader({ query, setQuery }: CalendarHeaderProps): JSX.Element {
     setQuery((prev) => {
       const to = new Date(prev.from);
       const from = new Date(to.getFullYear(), to.getMonth(), to.getDate() - 7);
-      return new MeetingsQuery({ ...prev, from, to });
+      return MeetingsQuery.parse({ ...prev, from, to });
     });
   }, [setQuery]);
 
@@ -46,15 +46,15 @@ function CalendarHeader({ query, setQuery }: CalendarHeaderProps): JSX.Element {
         from.getMonth(),
         from.getDate() + 7
       );
-      return new MeetingsQuery({ ...prev, from, to });
+      return MeetingsQuery.parse({ ...prev, from, to });
     });
   }, [setQuery]);
 
   const today = useCallback(() => {
     setQuery((prev) => {
-      const { from, to } = new MeetingsQuery();
+      const { from, to } = MeetingsQuery.parse({});
       if (dequal(from, prev.from) && dequal(to, prev.to)) return prev;
-      return new MeetingsQuery({ ...prev, from, to });
+      return MeetingsQuery.parse({ ...prev, from, to });
     });
   }, [setQuery]);
 

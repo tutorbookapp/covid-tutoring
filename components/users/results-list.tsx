@@ -8,8 +8,8 @@ import Placeholder from 'components/placeholder';
 import Result from 'components/search/result';
 
 import { User, UserJSON } from 'lib/model/user';
+import { UsersQuery, endpoint } from 'lib/model/query/users';
 import { Callback } from 'lib/model/callback';
-import { UsersQuery } from 'lib/model/query/users';
 import { ListUsersRes } from 'lib/api/routes/users/list';
 import clone from 'lib/utils/clone';
 import { prefetch } from 'lib/fetch';
@@ -35,15 +35,15 @@ export default memo(function ResultsList({
 }: ResultsListProps): JSX.Element {
   const { org } = useOrg();
   const { t } = useTranslation();
-  const { data, isValidating } = useSWR<ListUsersRes>(query.endpoint);
+  const { data, isValidating } = useSWR<ListUsersRes>(endpoint(query));
 
   // Prefetch the next page of results (using SWR's global cache).
   // @see {@link https://swr.vercel.app/docs/prefetching}
   useEffect(() => {
-    const nextPageQuery = new UsersQuery(
+    const nextPageQuery = UsersQuery.parse(
       clone({ ...query, page: query.page + 1 })
     );
-    void prefetch(nextPageQuery.endpoint);
+    void prefetch(endpoint(nextPageQuery));
   }, [query]);
 
   // TODO: Avoid code duplication from the main search page by porting over all
@@ -69,7 +69,7 @@ export default memo(function ResultsList({
         (data?.users || []).map((user: UserJSON) => (
           <Result
             href={`/${org?.id || ''}/users/${user.id}`}
-            user={User.fromJSON(user)}
+            user={User.parse(user)}
             className={styles.item}
             key={user.id}
             newTab

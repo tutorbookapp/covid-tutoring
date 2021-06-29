@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 
+import { accountToSegment } from 'lib/model/account';
 import { useOrg } from 'lib/context/org';
 
 const queue: Record<string, ReturnType<typeof setTimeout>> = {};
@@ -17,7 +18,7 @@ export default function useTrack(): Track {
         // @see {@link https://bit.ly/36YrRsT}
         const properties = {
           ...(props as object),
-          org: org?.toSegment(),
+          org: org ? accountToSegment(org) : undefined,
           orgId: org?.id,
         };
         window.analytics?.track(event, properties);

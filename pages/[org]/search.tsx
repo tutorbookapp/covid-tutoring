@@ -13,14 +13,15 @@ import Search from 'components/search';
 
 import { Org, OrgJSON } from 'lib/model/org';
 import { PageProps, getPageProps } from 'lib/page';
+import { UsersQuery, endpoint } from 'lib/model/query/users';
 import { CallbackParam } from 'lib/model/callback';
 import { ListUsersRes } from 'lib/api/routes/users/list';
 import { OrgContext } from 'lib/context/org';
 import { User } from 'lib/model/user';
-import { UsersQuery } from 'lib/model/query/users';
+import { accountToSegment } from 'lib/model/account';
 import clone from 'lib/utils/clone';
-import { db } from 'lib/api/firebase';
 import { prefetch } from 'lib/fetch';
+import supabase from 'lib/api/supabase';
 import useAnalytics from 'lib/hooks/analytics';
 import usePage from 'lib/hooks/page';
 import useTrack from 'lib/hooks/track';
@@ -43,20 +44,20 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
   const { t } = useTranslation();
   const { user: currentUser, orgs, loggedIn } = useUser();
 
-  const [query, setQuery] = useState<UsersQuery>(new UsersQuery());
+  const [query, setQuery] = useState<UsersQuery>(UsersQuery.parse({}));
   const [hits, setHits] = useState<number>(query.hitsPerPage);
   const [auth, setAuth] = useState<boolean>(false);
   const [canSearch, setCanSearch] = useState<boolean>(false);
   const [searching, setSearching] = useState<boolean>(true);
 
-  useURLParamSync(query, setQuery, UsersQuery, [
+  useURLParamSync(query, setQuery, UsersQuery, endpoint, [
     'orgs',
     'available',
     'visible',
   ]);
 
   const { data, isValidating } = useSWR<ListUsersRes>(
-    canSearch ? query.endpoint : null
+    canSearch ? endpoint(query) : null
   );
 
   /**
@@ -90,17 +91,17 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
   // Prefetch the next page of results (using SWR's global cache).
   // @see {@link https://swr.vercel.app/docs/prefetching}
   useEffect(() => {
-    const nextPageQuery = new UsersQuery(
+    const nextPageQuery = UsersQuery.parse(
       clone({ ...query, page: query.page + 1 })
     );
-    void prefetch(nextPageQuery.endpoint);
+    void prefetch(endpoint(nextPageQuery));
   }, [query]);
 
   // TODO: Perhaps we should only allow filtering by a single org, as we don't
   // ever filter by more than one at once.
   useEffect(() => {
     setQuery((prev: UsersQuery) => {
-      const updated = new UsersQuery({
+      const updated = UsersQuery.parse({
         ...prev,
         available: true,
         visible: true,
@@ -116,7 +117,7 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
   // should get rid of it when updating the `Query` object definitions.
   useEffect(() => {
     setSearching(true);
-    void mutate(query.endpoint);
+    void mutate(endpoint(query));
   }, [query]);
 
   // TODO: Debug issues where `searching` stays true even after we receive data
@@ -137,7 +138,7 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
       track(
         'User List Filtered',
         {
-          org: org ? Org.fromJSON(org).toSegment() : undefined,
+          org: org ? accountToSegment(Org.parse(org)) : undefined,
           subjects: updated.subjects.map((o) => o.value).join(' AND '),
           langs: updated.langs.map((o) => o.value).join(' AND '),
           aspect: updated.aspect,
@@ -159,12 +160,12 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
     'User List Loaded',
     () =>
       !searching && {
-        org: org ? Org.fromJSON(org).toSegment() : undefined,
+        org: org ? accountToSegment(Org.parse(org)) : undefined,
         subjects: query.subjects.map((o) => o.value).join(' AND '),
         langs: query.langs.map((o) => o.value).join(' AND '),
         aspect: query.aspect,
         users: results.map((res, idx) => ({
-          ...User.fromJSON(res).toSegment(),
+          ...accountToSegment(User.parse(res)),
           position: idx,
           url: `${url}/${org?.id || 'default'}/search/${res.id}`,
           subjects: res[query.aspect].subjects,
@@ -173,7 +174,7 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
   );
 
   return (
-    <OrgContext.Provider value={{ org: org ? Org.fromJSON(org) : undefined }}>
+    <OrgContext.Provider value={{ org: org ? Org.parse(org) : undefined }}>
       <Page
         title={`${org?.name || 'Loading'} - Search - Tutorbook`}
         description={t('search:description', {
@@ -210,18 +211,18 @@ export const getStaticProps: GetStaticProps<
   SearchPageQuery
 > = async (ctx: GetStaticPropsContext<SearchPageQuery>) => {
   if (!ctx.params) throw new Error('Cannot fetch org w/out params.');
-  const doc = await db.collection('orgs').doc(ctx.params.org).get();
-  if (!doc.exists) return { notFound: true };
+  const { data } = await supabase.from<Org>('orgs').select().eq('id', ctx.params.org);
+  if (!data || !data[0]) return { notFound: true };
   const { props } = await getPageProps();
   return {
-    props: { org: Org.fromFirestoreDoc(doc).toJSON(), ...props },
+    props: { org: Org.parse(data[0]), ...props },
     revalidate: 1,
   };
 };
 
 export const getStaticPaths: GetStaticPaths<SearchPageQuery> = async () => {
-  const orgs = (await db.collection('orgs').get()).docs;
-  const paths = orgs.map((org) => ({ params: { org: org.id } }));
+  const { data } = await supabase.from<Org>('orgs').select();
+  const paths = (data || []).map((org) => ({ params: { org: org.id } }));
   return { paths, fallback: true };
 };
 

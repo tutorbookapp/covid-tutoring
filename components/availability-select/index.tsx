@@ -17,8 +17,8 @@ import { ResizeObserver as polyfill } from '@juggle/resize-observer';
 import useMeasure from 'react-use-measure';
 import useTranslation from 'next-translate/useTranslation';
 
+import { availabilityToString, Availability } from 'lib/model/availability';
 import { getDateWithDay, getDateWithTime } from 'lib/utils/time';
-import { Availability } from 'lib/model/availability';
 import { TCallback } from 'lib/model/callback';
 import { Timeslot } from 'lib/model/timeslot';
 import { useUser } from 'lib/context/user';
@@ -92,8 +92,8 @@ function AvailabilitySelect({
   // Sync with controlled data and ensure all timeslots have valid React keys.
   useEffect(() => {
     setAvailability((prev) => {
-      const updated = new Availability(
-        ...value.map((t) => new Timeslot({ ...t, id: t.id || nanoid() }))
+      const updated = Availability.parse(
+        value.map((t) => Timeslot.parse({ ...t, id: t.id || nanoid() }))
       );
       if (dequal(prev, updated)) return prev;
       return updated;
@@ -117,46 +117,46 @@ function AvailabilitySelect({
   const updateTimeslot = useCallback((origIdx: number, updated?: Timeslot) => {
     setAvailability((prev) => {
       if (!updated)
-        return new Availability(
+        return Availability.parse([
           ...prev.slice(0, origIdx),
           ...prev.slice(origIdx + 1)
-        );
+        ]);
       let avail: Availability;
       if (origIdx < 0) {
-        avail = new Availability(...prev, updated).sort();
+        avail = Availability.parse([...prev, updated]).sort();
       } else {
-        avail = new Availability(
+        avail = Availability.parse([
           ...prev.slice(0, origIdx),
           updated,
           ...prev.slice(origIdx + 1)
-        ).sort();
+        ]).sort();
       }
       const idx = avail.findIndex((t) => t.id === updated.id);
       const last = avail[idx - 1];
       if (last && last.from.getDay() === updated.from.getDay()) {
         // Contained within another timeslot.
         if (last.to.valueOf() >= updated.to.valueOf())
-          return new Availability(
+          return Availability.parse([
             ...avail.slice(0, idx),
             ...avail.slice(idx + 1)
-          );
+          ]);
         // Overlapping with end of another timeslot.
         if (last.to.valueOf() >= updated.from.valueOf())
-          return new Availability(
+          return Availability.parse([
             ...avail.slice(0, idx - 1),
-            new Timeslot({ ...last, to: updated.to }),
+            Timeslot.parse({ ...last, to: updated.to }),
             ...avail.slice(idx + 1)
-          );
+          ]);
       }
       const next = avail[idx + 1];
       if (next && next.from.getDay() === updated.from.getDay()) {
         // Overlapping with start of another timeslot.
         if (next.from.valueOf() <= updated.to.valueOf())
-          return new Availability(
+          return Availability.parse([
             ...avail.slice(0, idx),
-            new Timeslot({ ...next, from: updated.from }),
+            Timeslot.parse({ ...next, from: updated.from }),
             ...avail.slice(idx + 2)
-          );
+          ]);
       }
       return avail;
     });
@@ -167,7 +167,7 @@ function AvailabilitySelect({
   const onClick = useCallback(
     (event: MouseEvent) => {
       const position = { x: event.clientX - x, y: event.clientY - y };
-      const original = new Timeslot({ id: nanoid() });
+      const original = Timeslot.parse({ id: nanoid() });
       updateTimeslot(-1, getTimeslot(48, position, original));
     },
     [x, y, updateTimeslot]
@@ -297,7 +297,7 @@ function AvailabilitySelect({
         readOnly
         textarea={false}
         inputRef={inputRef}
-        value={availability.toString(locale, user.timezone)}
+        value={availabilityToString(availability, locale, user.timezone)}
         className={styles.textField}
         onFocus={() => {
           if (onFocused) onFocused();

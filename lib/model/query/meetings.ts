@@ -1,104 +1,39 @@
-import {
-  MatchesQuery,
-  MatchesQueryInterface,
-  MatchesQueryJSON,
-  isMatchesQueryURL,
-} from 'lib/model/query/matches';
+import url from 'url';
+
+import { z } from 'zod';
+
+import { MatchesQuery } from 'lib/model/query/matches';
 import { MeetingHitTag } from 'lib/model/meeting';
-import construct from 'lib/model/construct';
+import { date } from 'lib/model/timeslot';
+import { number } from 'lib/model/query/base';
 
-export interface MeetingsQueryInterface extends MatchesQueryInterface {
-  tags: MeetingHitTag[];
-  from: Date;
-  to: Date;
-}
-
-export type MeetingsQueryJSON = Omit<
-  MeetingsQueryInterface,
-  keyof MatchesQueryInterface | 'from' | 'to'
-> &
-  MatchesQueryJSON & { from: string; to: string };
-
-export type MeetingsQueryURL = {
-  [key in keyof MeetingsQueryInterface]?: string;
-};
-
-// TODO: Implement this to verify that the given query params are valid.
-export function isMeetingsQueryURL(query: unknown): query is MeetingsQueryURL {
-  return isMatchesQueryURL(query);
-}
-
-export class MeetingsQuery
-  extends MatchesQuery
-  implements MeetingsQueryInterface {
-  public tags: MeetingHitTag[] = [];
-
-  // Start query on the most recent Sunday at 12am.
-  public from = new Date(
+export const MeetingsQuery = MatchesQuery.extend({
+  tags: z.array(MeetingHitTag),
+  from: date.default(() => new Date(
     new Date().getFullYear(),
     new Date().getMonth(),
     new Date().getDate() - new Date().getDay()
-  );
-
-  // End query on the next Sunday at 12am (instead of Saturday 11:59:59.99).
-  public to = new Date(
+  )),
+  to: date.default(() => new Date(
     new Date().getFullYear(),
     new Date().getMonth(),
     new Date().getDate() - new Date().getDay() + 7
-  );
+  )),
+  hitsPerPage: number.default(1000),
+});
+export type MeetingsQuery = z.infer<typeof MeetingsQuery>;
 
-  // TODO: Will there ever be more than 1000 meetings to display at once?
-  public hitsPerPage = 1000;
-
-  public constructor(query: Partial<MeetingsQueryInterface> = {}) {
-    super(query);
-    construct<MeetingsQueryInterface, MatchesQueryInterface>(
-      this,
-      query,
-      new MatchesQuery()
-    );
+export function endpoint(query: MeetingsQuery, pathname = '/api/meetings'): string {
+  function encode(p?: unknown): string {
+    return encodeURIComponent(JSON.stringify(p));
   }
 
-  public getURLParams(): Record<string, string | number | boolean> {
-    function encode(p?: any[]): string {
-      return encodeURIComponent(JSON.stringify(p));
-    }
-
-    const query = super.getURLParams();
-    if (this.hitsPerPage !== 1000) {
-      query.hitsPerPage = this.hitsPerPage;
-    } else {
-      delete query.hitsPerPage;
-    }
-    if (this.tags.length) query.tags = encode(this.tags);
-    query.from = this.from.toJSON();
-    query.to = this.to.toJSON();
-    return query;
-  }
-
-  public static fromURLParams(params: MeetingsQueryURL): MeetingsQuery {
-    function decode<T>(p?: string): T[] {
-      return p ? (JSON.parse(decodeURIComponent(p)) as T[]) : [];
-    }
-
-    return new MeetingsQuery({
-      ...MatchesQuery.fromURLParams(params),
-      tags: decode<MeetingHitTag>(params.tags),
-      from: new Date(params.from || new Date().toJSON()),
-      to: new Date(params.to || new Date().toJSON()),
-      hitsPerPage: Number(decodeURIComponent(params.hitsPerPage || '1000')),
-    });
-  }
-
-  public get endpoint(): string {
-    return this.getURL('/api/meetings');
-  }
-
-  public static fromJSON(json: MeetingsQueryJSON): MeetingsQuery {
-    return new MeetingsQuery({
-      ...MatchesQuery.fromJSON(json),
-      from: new Date(json.from),
-      to: new Date(json.to),
-    });
-  }
+  const params: Record<string, string | number> = {};
+  if (query.search) params.search = encodeURIComponent(query.search);
+  if (query.hitsPerPage !== 1000) params.hitsPerPage = query.hitsPerPage;
+  if (query.page !== 0) params.page = query.page;
+  if (query.tags.length) params.tags = encode(query.tags);
+  params.from = query.from.toJSON();
+  params.to = query.to.toJSON();
+  return url.format({ pathname, query: params });
 }

@@ -1,4 +1,7 @@
-export type Aspect = 'mentoring' | 'tutoring';
-export function isAspect(param: any): param is Aspect {
-  return param === 'mentoring' || param === 'tutoring';
-}
+import { z } from 'zod';
+
+export const Aspect = z.union([
+  z.literal('mentoring'),
+  z.literal('tutoring'),
+]);
+export type Aspect = z.infer<typeof Aspect>;

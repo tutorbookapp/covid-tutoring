@@ -10,6 +10,7 @@ import { Theme, ThemeContext } from 'lib/context/theme';
 import { UpdateOrgParam, UpdateUserParam, UserContext } from 'lib/context/user';
 import { User, UserJSON } from 'lib/model/user';
 import { APIError } from 'lib/api/error';
+import { accountToSegment } from 'lib/model/account';
 import { fetcher } from 'lib/fetch';
 import useTrack from 'lib/hooks/track';
 
@@ -25,8 +26,8 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   const user = useMemo(
     () =>
       data
-        ? User.fromJSON(data)
-        : new User({
+        ? User.parse(data)
+        : User.parse({
             langs: ['en'],
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
           }),
@@ -47,15 +48,15 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   const updateUser = useCallback(
     async (param: UpdateUserParam) => {
       let updated: User = user;
-      if (typeof param === 'object') updated = new User(param);
-      if (typeof param === 'function') updated = new User(param(user));
+      if (typeof param === 'object') updated = User.parse(param);
+      if (typeof param === 'function') updated = User.parse(param(user));
       // Re-validate if we haven't gotten any account data yet. This fixes
       // an issue where the profile view would locally update to an empty
       // `User()` *before* our `/api/account` endpoint could respond. SWR
       // cancelled the `/api/account` mutation in favor of the empty one.
-      await mutate('/api/account', updated.toJSON(), loggedIn === undefined);
+      await mutate('/api/account', updated, loggedIn === undefined);
       if (updated.id)
-        await mutate(`/api/users/${updated.id}`, updated.toJSON(), false);
+        await mutate(`/api/users/${updated.id}`, updated, false);
     },
     [user, loggedIn]
   );
@@ -66,8 +67,8 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
     void updateUser((prev) => {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       if (prev.timezone === timezone || !prev.id) return prev;
-      const updated = new User({ ...prev, timezone });
-      void axios.put<UserJSON>('/api/account', updated.toJSON());
+      const updated = User.parse({ ...prev, timezone });
+      void axios.put<UserJSON>('/api/account', updated);
       return updated;
     });
   }, [updateUser]);
@@ -77,7 +78,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   const prevLoggedIn = useRef<boolean | undefined>(loggedIn);
   useEffect(() => {
     if (loggedIn === true && prevLoggedIn.current === false) {
-      track('User Signed In', user.toSegment());
+      track('User Signed In', accountToSegment(user));
     } else if (loggedIn === false && prevLoggedIn.current === true) {
       track('User Signed Out');
     }
@@ -87,7 +88,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   // Consumers can update local app-wide org data (proxy to SWR's mutate FN).
   const { data: orgsData } = useSWR<OrgJSON[], APIError>('/api/orgs', fetcher);
   const orgs = useMemo(
-    () => (orgsData ? orgsData.map((o) => Org.fromJSON(o)) : []),
+    () => (orgsData ? orgsData.map((o) => Org.parse(o)) : []),
     [orgsData]
   );
   const updateOrg = useCallback(
@@ -95,12 +96,12 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
       const idx = orgs.findIndex((org: Org) => org.id === id);
       if (idx < 0) throw new Error(`Org (${id}) not found in local data.`);
       let updatedOrg: Org = orgs[idx];
-      if (typeof param === 'object') updatedOrg = new Org(param);
-      if (typeof param === 'function') updatedOrg = new Org(param(updatedOrg));
+      if (typeof param === 'object') updatedOrg = Org.parse(param);
+      if (typeof param === 'function') updatedOrg = Org.parse(param(updatedOrg));
       const updated = [
-        ...orgs.map((org: Org) => org.toJSON()).slice(0, idx),
-        updatedOrg.toJSON(),
-        ...orgs.map((org: Org) => org.toJSON()).slice(idx + 1),
+        ...orgs.map((org: Org) => org).slice(0, idx),
+        updatedOrg,
+        ...orgs.map((org: Org) => org).slice(idx + 1),
       ];
       await mutate('/api/orgs', updated, loggedIn === undefined);
     },

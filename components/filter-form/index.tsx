@@ -29,8 +29,8 @@ function SearchButton({ onClick, children }: SearchButtonProps): JSX.Element {
   );
 }
 
-function join(options: Option<string>[]): string {
-  return options.map((option: Option<string>) => option.label).join(', ');
+function join(options: Option[]): string {
+  return options.map((option: Option) => option.label).join(', ');
 }
 
 interface FilterFormProps {
@@ -72,20 +72,20 @@ export default function FilterForm({
     setActive(false);
   }, []);
   const onSubjectsChange = useCallback(
-    (subjects: Option<string>[]) => {
-      onChange((prev) => new UsersQuery({ ...prev, subjects, page: 0 }));
+    (subjects: Option[]) => {
+      onChange((prev) => UsersQuery.parse({ ...prev, subjects, page: 0 }));
     },
     [onChange]
   );
   const onAvailabilityChange = useCallback(
     (availability: Availability) => {
-      onChange((prev) => new UsersQuery({ ...prev, availability, page: 0 }));
+      onChange((prev) => UsersQuery.parse({ ...prev, availability, page: 0 }));
     },
     [onChange]
   );
   const onLangsChange = useCallback(
-    (langs: Option<string>[]) => {
-      onChange((prev) => new UsersQuery({ ...prev, langs, page: 0 }));
+    (langs: Option[]) => {
+      onChange((prev) => UsersQuery.parse({ ...prev, langs, page: 0 }));
     },
     [onChange]
   );

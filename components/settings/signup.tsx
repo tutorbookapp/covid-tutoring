@@ -26,7 +26,7 @@ export default function Signup(): JSX.Element {
             },
           },
         };
-        return new Org({ ...prev, signup });
+        return Org.parse({ ...prev, signup });
       });
     },
     [locale, setOrg]
@@ -45,7 +45,7 @@ export default function Signup(): JSX.Element {
             },
           },
         };
-        return new Org({ ...prev, signup });
+        return Org.parse({ ...prev, signup });
       });
     },
     [locale, setOrg]
@@ -64,7 +64,7 @@ export default function Signup(): JSX.Element {
             },
           },
         };
-        return new Org({ ...prev, signup });
+        return Org.parse({ ...prev, signup });
       });
     },
     [locale, setOrg]

@@ -4,5 +4,5 @@ import clone from 'lib/utils/clone';
 export default function updateMeetingTags(meeting: Meeting): Meeting {
   const tags: MeetingTag[] = [];
   if (meeting.time.recur) tags.push('recurring');
-  return new Meeting(clone({ ...meeting, tags }));
+  return Meeting.parse(clone({ ...meeting, tags }));
 }

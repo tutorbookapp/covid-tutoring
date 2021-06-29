@@ -45,14 +45,14 @@ function UserVetPage({
   });
 
   return (
-    <OrgContext.Provider value={{ org: org ? Org.fromJSON(org) : undefined }}>
+    <OrgContext.Provider value={{ org: org ? Org.parse(org) : undefined }}>
       <Page
         title={`${data?.name || 'Loading'} - Vet - Tutorbook`}
         formWidth
         {...props}
       >
         <EmptyHeader formWidth />
-        <UserVet user={data ? User.fromJSON(data) : undefined} />
+        <UserVet user={data ? User.parse(data) : undefined} />
       </Page>
     </OrgContext.Provider>
   );
@@ -77,7 +77,7 @@ export const getStaticProps: GetStaticProps<
     ]);
     const { props } = await getPageProps();
     return {
-      props: { org: org.toJSON(), user: user.toJSON(), ...props },
+      props: { org: org, user: user, ...props },
       revalidate: 1,
     };
   } catch (e) {

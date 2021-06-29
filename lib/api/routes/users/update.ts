@@ -1,6 +1,7 @@
 import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 
-import { User, UserJSON, isUserJSON } from 'lib/model/user';
+import { User, UserJSON } from 'lib/model/user';
+import { accountToSegment } from 'lib/model/account';
 import analytics from 'lib/api/analytics';
 import { handle } from 'lib/api/error';
 import logger from 'lib/api/logger';
@@ -13,7 +14,6 @@ import updateUserOrgs from 'lib/api/update/user-orgs';
 import updateUserSearchObj from 'lib/api/update/user-search-obj';
 import updateUserTags from 'lib/api/update/user-tags';
 import verifyAuth from 'lib/api/verify/auth';
-import verifyBody from 'lib/api/verify/body';
 import verifyDocExists from 'lib/api/verify/doc-exists';
 
 export type UpdateUserRes = UserJSON;
@@ -23,7 +23,7 @@ export default async function updateUser(
   res: Res<UpdateUserRes>
 ): Promise<void> {
   try {
-    const body = verifyBody<User, UserJSON>(req.body, isUserJSON, User);
+    const body = User.parse(req.body);
 
     logger.info(`Updating ${body.toString()}...`);
 
@@ -45,15 +45,15 @@ export default async function updateUser(
 
     await Promise.all([updateUserDoc(user), updateUserSearchObj(user)]);
 
-    res.status(200).json(user.toJSON());
+    res.status(200).json(user);
 
     logger.info(`Updated ${user.toString()}.`);
 
-    segment.identify({ userId: user.id, traits: user.toSegment() });
+    segment.identify({ userId: user.id, traits: accountToSegment(user) });
     segment.track({
       userId: uid,
       event: 'User Updated',
-      properties: user.toSegment(),
+      properties: accountToSegment(user),
     });
 
     await analytics(user, 'updated', User.fromFirestoreDoc(originalDoc));

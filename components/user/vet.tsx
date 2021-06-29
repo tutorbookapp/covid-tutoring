@@ -8,7 +8,7 @@ import { useOrg } from 'lib/context/org';
 
 import styles from './vet.module.scss';
 
-const empty = new User();
+const empty = User.parse({});
 
 export interface UserVetProps {
   user?: User;

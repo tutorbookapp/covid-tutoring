@@ -97,7 +97,7 @@ function UserDisplayPage({
   usePage({ name: 'User Display', org: org?.id });
 
   return (
-    <OrgContext.Provider value={{ org: org ? Org.fromJSON(org) : undefined }}>
+    <OrgContext.Provider value={{ org: org ? Org.parse(org) : undefined }}>
       <Page
         title={`${data?.name || 'Loading'} - Tutorbook`}
         description={data?.bio}
@@ -105,7 +105,7 @@ function UserDisplayPage({
       >
         <EmptyHeader />
         <UserDisplay
-          user={data ? User.fromJSON(data) : undefined}
+          user={data ? User.parse(data) : undefined}
           subjects={subjectsDisplayed}
           langs={langs}
         />
@@ -145,10 +145,10 @@ export const getStaticProps: GetStaticProps<
     //    "teaches" section could change.
     return {
       props: {
+        org,
         langs,
-        org: org.toJSON(),
         subjects: { tutoring, mentoring },
-        user: getTruncatedUser(user).toJSON(),
+        user: getTruncatedUser(user),
         ...props,
       },
       revalidate: 1,

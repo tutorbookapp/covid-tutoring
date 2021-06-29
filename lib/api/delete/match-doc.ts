@@ -1,12 +1,10 @@
-import to from 'await-to-js';
-
 import { APIError } from 'lib/api/error';
-import { db } from 'lib/api/firebase';
+import supabase from 'lib/api/supabase';
 
 export default async function deleteMatchDoc(matchId: string): Promise<void> {
-  const [err] = await to(db.collection('matches').doc(matchId).delete());
-  if (err) {
-    const msg = `${err.name} deleting match (${matchId}) from database`;
-    throw new APIError(`${msg}: ${err.message}`, 500);
+  const { error } = await supabase.from('matches').delete().eq('id', matchId);
+  if (error) {
+    const msg = `Error deleting match (${matchId}) from database`;
+    throw new APIError(`${msg}: ${error.message}`, 500);
   }
 }

@@ -71,7 +71,7 @@ export default function Search({
               const search = event.currentTarget.value;
               // TODO: Throttle the actual API requests but immediately show the
               // loading state (i.e. we can't just throttle `setQuery` updates).
-              onChange((p) => new UsersQuery({ ...p, search, page: 0 }));
+              onChange((p) => UsersQuery.parse({ ...p, search, page: 0 }));
             }}
           />
         </div>
@@ -82,7 +82,7 @@ export default function Search({
           results.map((res) => (
             <Result
               key={res.id}
-              user={User.fromJSON(res)}
+              user={User.parse(res)}
               href={`/${org?.id || 'default'}/users/${res.id}?aspect=${
                 query.aspect
               }`}

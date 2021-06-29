@@ -25,7 +25,7 @@ export default function AuthDialog(): JSX.Element {
     setError('');
     setLoggingIn(true);
     track('Google Login Started');
-    const user = new User({ orgs: org ? [org.id] : ['default'] });
+    const user = User.parse({ orgs: org ? [org.id] : ['default'] });
     const gsuite = !!org && !!org.domains.length;
     const [err] = await to(loginWithGoogle(user, gsuite));
     if (err) {

@@ -54,7 +54,7 @@ function ConfirmPage(props: PageProps): JSX.Element {
       if (!email) return setError(confirm['no-email']);
       const [signInErr, cred] = await to(auth.signInWithEmailLink(email));
       if (signInErr || !cred?.user) return setError(signInErr?.message || '');
-      const user = new User({
+      const user = User.parse({
         id: cred.user.uid,
         name: cred.user.displayName as string,
         photo: cred.user.photoURL as string,
@@ -70,7 +70,7 @@ function ConfirmPage(props: PageProps): JSX.Element {
       const [err, res] = await to<
         AxiosResponse<UserJSON>,
         AxiosError<APIErrorJSON>
-      >(axios.put('/api/account', { ...user.toJSON(), token }));
+      >(axios.put('/api/account', { ...user, token }));
 
       let e: string | undefined;
       if (err && err.response) e = err.response.data.message;

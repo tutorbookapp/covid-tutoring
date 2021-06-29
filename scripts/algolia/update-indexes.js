@@ -1,8 +1,9 @@
 const path = require('path');
 const dotenv = require('dotenv');
+const logger = require('../lib/logger');
 
 const env = process.env.NODE_ENV || 'production';
-console.log(`Loading ${env} environment variables...`);
+logger.info(`Loading ${env} environment variables...`);
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
 dotenv.config({ path: path.resolve(__dirname, `../../.env.${env}`) });
@@ -20,7 +21,7 @@ const subjects = async (id) => {
   const index = client.initIndex(id);
   const [err] = await to(index.clearObjects());
   if (err) {
-    console.error(`${err.name} clearing index (${id}):`, err);
+    loggger.error(`${err.name} clearing index (${id}): ${err.message}`);
     debugger;
   }
   index.setSettings({
@@ -44,17 +45,17 @@ const subjects = async (id) => {
     })
   );
   if (e) {
-    console.error(`${e.name} updating index (${id}):`, e);
+    logger.error(`${e.name} updating index (${id}): ${e.message}`);
     debugger;
   }
 };
 
 const generic = async (id) => {
   const index = client.initIndex(id);
-  console.log(`Clearing index (${id})...`);
+  logger.info(`Clearing index (${id})...`);
   const [clearErr] = await to(index.clearObjects());
   if (clearErr) {
-    console.error(`${clearErr.name} clearing index (${id}):`, clearErr);
+    logger.error(`${clearErr.name} clearing index (${id}): ${clearErr.message}`);
     debugger;
   }
   const objs = parse(fs.readFileSync(`./${id}.csv`), {
@@ -71,10 +72,10 @@ const generic = async (id) => {
       }
       return obj;
     });
-  console.log(`Saving ${objs.length} objects...`);
+  logger.info(`Saving ${objs.length} objects...`);
   const [updateErr] = await to(index.saveObjects(objs));
   if (updateErr) {
-    console.error(`${updateErr.name} updating index (${id}):`, updateErr);
+    logger.error(`${updateErr.name} updating index (${id}): ${updateErr.message}`);
     debugger;
   }
 };

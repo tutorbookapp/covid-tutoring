@@ -5,7 +5,7 @@ import {
   Meeting,
   MeetingAction,
   MeetingJSON,
-  isMeetingJSON,
+  meetingToSegment
 } from 'lib/model/meeting';
 import { Timeslot } from 'lib/model/timeslot';
 import analytics from 'lib/api/analytics';
@@ -29,7 +29,6 @@ import updateMeetingSearchObj from 'lib/api/update/meeting-search-obj';
 import updateMeetingTags from 'lib/api/update/meeting-tags';
 import updatePeopleTags from 'lib/api/update/people-tags';
 import verifyAuth from 'lib/api/verify/auth';
-import verifyBody from 'lib/api/verify/body';
 import verifyDocExists from 'lib/api/verify/doc-exists';
 import verifyOptions from 'lib/api/verify/options';
 import verifyRecurIncludesTime from 'lib/api/verify/recur-includes-time';
@@ -47,17 +46,13 @@ export default async function updateMeeting(
   res: Res<UpdateMeetingRes>
 ): Promise<void> {
   try {
-    const body = verifyBody<Meeting, MeetingJSON>(
-      req.body,
-      isMeetingJSON,
-      Meeting
-    );
+    const body = Meeting.parse(req.body);
 
     logger.info(`Updating ${body.toString()}...`);
 
     // TODO: Verify the option data types just like we do for the request body.
     const options = verifyOptions<UpdateMeetingOptions>(req.body, {
-      original: body.toJSON(),
+      original: body,
       action: 'future',
     });
     const beforeUpdateStart = new Date(options.original.time.from);
@@ -103,12 +98,12 @@ export default async function updateMeeting(
         const change = body.time.from.valueOf() - beforeUpdateStart.valueOf();
         const from = new Date(original.time.from.valueOf() + change);
         const to = new Date(from.valueOf() + body.time.duration);
-        const time = new Timeslot({ ...body.time, from, to });
+        const time = Timeslot.parse({ ...body.time, from, to });
 
         time.recur = verifyRecurIncludesTime(time);
         time.last = getLastTime(time);
 
-        const updatedOriginal = new Meeting({ ...body, time });
+        const updatedOriginal = Meeting.parse({ ...body, time });
 
         updatedOriginal.id = original.id;
         updatedOriginal.parentId = undefined;
@@ -124,14 +119,14 @@ export default async function updateMeeting(
           sendEmails(withTagsUpdate, people, updater, org),
         ]);
 
-        res.status(200).json(body.toJSON());
+        res.status(200).json(body);
 
         logger.info(`Updated ${body.toString()}.`);
 
         segment.track({
           userId: uid,
           event: 'Meeting Updated',
-          properties: body.toSegment(),
+          properties: meetingToSegment(body),
         });
 
         await Promise.all([
@@ -180,14 +175,14 @@ export default async function updateMeeting(
           sendEmails(newMeeting, people, updater, org),
         ]);
 
-        res.status(200).json(newMeeting.toJSON());
+        res.status(200).json(newMeeting);
 
         logger.info(`Updated ${newMeeting.toString()}.`);
 
         segment.track({
           userId: uid,
           event: 'Meeting Updated',
-          properties: newMeeting.toSegment(),
+          properties: meetingToSegment(newMeeting),
         });
 
         await Promise.all([
@@ -231,14 +226,14 @@ export default async function updateMeeting(
           sendEmails(newRecurringMeeting, people, updater, org),
         ]);
 
-        res.status(200).json(newRecurringMeeting.toJSON());
+        res.status(200).json(newRecurringMeeting);
 
         logger.info(`Updated ${newRecurringMeeting.toString()}.`);
 
         segment.track({
           userId: uid,
           event: 'Meeting Updated',
-          properties: newRecurringMeeting.toSegment(),
+          properties: meetingToSegment(newRecurringMeeting),
         });
 
         await Promise.all([
@@ -264,14 +259,14 @@ export default async function updateMeeting(
         sendEmails(meeting, people, updater, org),
       ]);
 
-      res.status(200).json(meeting.toJSON());
+      res.status(200).json(meeting);
 
       logger.info(`Updated ${meeting.toString()}.`);
 
       segment.track({
         userId: uid,
         event: 'Meeting Updated',
-        properties: meeting.toSegment(),
+        properties: meetingToSegment(meeting),
       });
 
       // TODO: Should we also track the match update?

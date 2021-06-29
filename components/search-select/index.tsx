@@ -31,13 +31,13 @@ function orderHits(hits: SearchHit[], langs: string[]): SearchHit[] {
   });
 }
 
-export type SearchSelectProps<T extends string> = SelectControllerProps<T> & {
+export type SearchSelectProps = SelectControllerProps & {
   index: string;
   noResultsMessage: string;
-  options?: T[];
+  options?: string[];
 };
 
-export default function SearchSelect<T extends string>({
+export default function SearchSelect({
   index,
   value,
   onChange,
@@ -45,18 +45,18 @@ export default function SearchSelect<T extends string>({
   onSelectedChange,
   options,
   ...props
-}: SearchSelectProps<T>): JSX.Element {
+}: SearchSelectProps): JSX.Element {
   // Store a cache of labels fetched (i.e. a map of values and labels).
   // TODO: Make sure this is globally stored and can be accessed across pages.
   const cache = useRef<Record<string, SearchHit>>({});
   const searchIdx = useMemo(() => client.initIndex(index), [index]);
 
   // Directly control the `Select` component with this internal state.
-  const [selectedOptions, setSelectedOptions] = useState<Option<T>[]>(
+  const [selectedOptions, setSelectedOptions] = useState<Option[]>(
     selected || []
   );
   const onSelectedOptionsChange = useCallback(
-    (os: Option<T>[]) => {
+    (os: Option[]) => {
       setSelectedOptions(os);
       if (onSelectedChange) onSelectedChange(os);
       if (onChange) onChange(os.map(({ value: val }) => val));
@@ -69,7 +69,7 @@ export default function SearchSelect<T extends string>({
   const hitToOption = useCallback(
     (hit: SearchHit) => {
       cache.current[hit.objectID] = hit;
-      return { label: hit[locale].name, value: hit.objectID as T };
+      return { label: hit[locale].name, value: hit.objectID };
     },
     [locale]
   );
@@ -87,7 +87,7 @@ export default function SearchSelect<T extends string>({
   // Sync the controlled values (i.e. locale codes) with the internally stored
   // `selectedOptions` state **only** if they don't already match.
   useEffect(() => {
-    setSelectedOptions((prev: Option<T>[]) => {
+    setSelectedOptions((prev: Option[]) => {
       // If they already match, do nothing.
       if (!value) return prev;
       if (!value.length) return [];
@@ -116,7 +116,7 @@ export default function SearchSelect<T extends string>({
 
   // Expose API surface to directly control the `selectedOptions` state.
   useEffect(() => {
-    setSelectedOptions((prev: Option<T>[]) => {
+    setSelectedOptions((prev: Option[]) => {
       if (!selected || dequal(prev, selected)) return prev;
       return selected;
     });
@@ -124,7 +124,7 @@ export default function SearchSelect<T extends string>({
 
   // Don't allow selections not included in `options` prop.
   useEffect(() => {
-    setSelectedOptions((prev: Option<T>[]) => {
+    setSelectedOptions((prev: Option[]) => {
       const os = prev.filter((s) => !options || options.includes(s.value));
       if (dequal(os, prev)) return prev;
       if (onSelectedChange) onSelectedChange(os);

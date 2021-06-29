@@ -42,12 +42,12 @@ export default async function updateAuthUser(user: User): Promise<User> {
         'auth/phone-number-already-exists',
       ].includes(err.code)
     )
-      return new User(clone(user));
+      return User.parse(clone(user));
     const msg = `${err.name} (${err.code}) updating auth account`;
     throw new APIError(`${msg} for ${user.toString()}: ${err.message}`, 500);
   }
   const record = userRecord as UserRecord;
-  const updatedUser = new User(
+  const updatedUser = User.parse(
     clone({
       ...user,
       email: record.email,

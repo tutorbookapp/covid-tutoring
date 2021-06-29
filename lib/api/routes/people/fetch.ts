@@ -5,6 +5,7 @@ import getMatch from 'lib/api/get/match';
 import getTruncatedUser from 'lib/api/get/truncated-user';
 import getUser from 'lib/api/get/user';
 import { handle } from 'lib/api/error';
+import { matchToSegment } from 'lib/model/match';
 import segment from 'lib/api/segment';
 import verifyAuth from 'lib/api/verify/auth';
 import verifyQueryId from 'lib/api/verify/query-id';
@@ -34,7 +35,7 @@ export default async function fetchPeople(
     );
     const people = users.map((u) => {
       const ps = match.people[match.people.findIndex((p) => p.id === u.id)];
-      return { ...u.toJSON(), roles: ps?.roles || [] };
+      return { ...u, roles: ps?.roles || [] };
     });
 
     res.status(200).json(people);
@@ -42,7 +43,7 @@ export default async function fetchPeople(
     segment.track({
       userId: uid,
       event: 'Match People Fetched',
-      properties: match.toSegment(),
+      properties: matchToSegment(match),
     });
   } catch (e) {
     handle(e, res);

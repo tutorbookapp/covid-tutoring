@@ -45,14 +45,14 @@ function UserEditPage({
   });
 
   return (
-    <OrgContext.Provider value={{ org: org ? Org.fromJSON(org) : undefined }}>
+    <OrgContext.Provider value={{ org: org ? Org.parse(org) : undefined }}>
       <Page
         title={`${data?.name || 'Loading'} - Edit - Tutorbook`}
         formWidth
         {...props}
       >
         <EmptyHeader formWidth />
-        <UserEdit user={data ? User.fromJSON(data) : undefined} />
+        <UserEdit user={data ? User.parse(data) : undefined} />
       </Page>
     </OrgContext.Provider>
   );
@@ -76,10 +76,7 @@ export const getStaticProps: GetStaticProps<
       getUser(ctx.params.id),
     ]);
     const { props } = await getPageProps();
-    return {
-      props: { org: org.toJSON(), user: user.toJSON(), ...props },
-      revalidate: 1,
-    };
+    return { props: { org, user, ...props }, revalidate: 1 };
   } catch (e) {
     return { notFound: true };
   }

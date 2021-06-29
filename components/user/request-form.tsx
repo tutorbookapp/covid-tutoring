@@ -13,16 +13,16 @@ import Button from 'components/button';
 import Loader from 'components/loader';
 import TimeSelect from 'components/time-select';
 
-import { Aspect, isAspect } from 'lib/model/aspect';
 import { Meeting, MeetingJSON } from 'lib/model/meeting';
 import { Person, Role } from 'lib/model/person';
 import { User, UserJSON } from 'lib/model/user';
+import { UsersQuery, endpoint } from 'lib/model/query/users';
 import { join, translate } from 'lib/utils';
 import { APIErrorJSON } from 'lib/api/error';
+import { Aspect } from 'lib/model/aspect';
 import { ListUsersRes } from 'lib/api/routes/users/list';
 import { Match } from 'lib/model/match';
 import { Timeslot } from 'lib/model/timeslot';
-import { UsersQuery } from 'lib/model/query/users';
 import { getErrorMessage } from 'lib/fetch';
 import { loginWithGoogle } from 'lib/firebase/login';
 import { useOrg } from 'lib/context/org';
@@ -45,9 +45,9 @@ export default function RequestForm({
   const { query } = useRouter();
   const { user, updateUser } = useUser();
   const { t, lang: locale } = useTranslation();
-  const { data: children } = useSWR<ListUsersRes>(user.id ? new UsersQuery({ parents: [user.id] }).endpoint : null);
+  const { data: children } = useSWR<ListUsersRes>(user.id ? endpoint(UsersQuery.parse({ parents: [user.id] })) : null);
     
-  const [child, setChild] = useState<User>(new User());
+  const [child, setChild] = useState<User>(User.parse({}));
   const [student, setStudent] = useState<string>('Me');
   const [options, setOptions] = useState<Record<string, User>>({
     'Me': user, 
@@ -55,7 +55,7 @@ export default function RequestForm({
   });
   useEffect(() => {
     setOptions((prev) => {
-      const kids = children?.users.map((u) => User.fromJSON(u)) || [];
+      const kids = children?.users.map((u) => User.parse(u)) || [];
       const updated = {
         'Me': user,
         'My child': child,
@@ -107,7 +107,7 @@ export default function RequestForm({
       event.preventDefault();
       setError('');
       setLoading(true);
-      let updatedUser = new User({ ...user, phone, reference });
+      let updatedUser = User.parse({ ...user, phone, reference });
       if (!user.id) {
         const [err, signedUpUser] = await to(loginWithGoogle(updatedUser));
         if (err) {
@@ -125,14 +125,14 @@ export default function RequestForm({
         const [err, res] = await to<
           AxiosResponse<UserJSON>,
           AxiosError<APIErrorJSON>
-        >(axios.put('/api/account', updatedUser.toJSON()));
+        >(axios.put('/api/account', updatedUser));
         if (err) {
           setLoading(false);
           setError(getErrorMessage(err, 'updating profile', t));
           return;
         }
         if (res) {
-          updatedUser = User.fromJSON(res.data);
+          updatedUser = User.parse(res.data);
           await updateUser(updatedUser);
         }
       }
@@ -163,7 +163,7 @@ export default function RequestForm({
         people.push(creator);
       } else if (student === 'My child') {
         const updatedChild = {
-          ...child.toJSON(),
+          ...child,
           roles: studentRoles, // Specifying roles skips signup emails.
           parents: [updatedUser.id], // Use now-logged-in parent ID.
         };
@@ -196,10 +196,10 @@ export default function RequestForm({
           roles: studentRoles,
         });
       }
-      const meeting = new Meeting({
+      const meeting = Meeting.parse({
         time,
         creator,
-        match: new Match({
+        match: Match.parse({
           creator,
           people,
           message,
@@ -210,7 +210,7 @@ export default function RequestForm({
       const [err] = await to<
         AxiosResponse<MeetingJSON>,
         AxiosError<APIErrorJSON>
-      >(axios.post('/api/meetings', meeting.toJSON()));
+      >(axios.post('/api/meetings', meeting));
       if (err) {
         setLoading(false);
         setError(getErrorMessage(err, 'creating meeting', t));
@@ -271,7 +271,7 @@ export default function RequestForm({
               value={child.name}
               onChange={(evt) => {
                 const name = evt.currentTarget.value;
-                setChild((prev) => new User({ ...prev, name }));
+                setChild((prev) => User.parse({ ...prev, name }));
               }}
               className={styles.field}
               outlined
@@ -282,7 +282,7 @@ export default function RequestForm({
               value={child.age}
               onChange={(evt) => {
                 const age = Number(evt.currentTarget.value);
-                setChild((prev) => new User({ ...prev, age }));
+                setChild((prev) => User.parse({ ...prev, age }));
               }}
               className={styles.field}
               type='number'

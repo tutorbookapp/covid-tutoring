@@ -54,7 +54,7 @@ export function addArrayFilter(
  */
 export function addOptionsFilter(
   base: string,
-  filters: Option<string>[],
+  filters: Option[],
   attr: string,
   concat: 'OR' | 'AND' = 'AND'
 ): string {

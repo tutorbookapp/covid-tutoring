@@ -3,22 +3,15 @@ import { dequal } from 'dequal/lite';
 import { serialize } from 'cookie';
 import to from 'await-to-js';
 
-import {
-  Subjects,
-  User,
-  UserInterface,
-  UserJSON,
-  isUserJSON,
-} from 'lib/model/user';
+import { APIError, handle } from 'lib/api/error';
 import { DecodedIdToken, auth } from 'lib/api/firebase';
-import { APIError } from 'lib/api/error';
+import { Social, accountToSegment } from 'lib/model/account';
+import { Subjects, User, UserJSON } from 'lib/model/user';
 import { Availability } from 'lib/model/availability';
-import { SocialInterface } from 'lib/model/account';
 import { Timeslot } from 'lib/model/timeslot';
 import { Verification } from 'lib/model/verification';
 import clone from 'lib/utils/clone';
 import getUser from 'lib/api/get/user';
-import { handle } from 'lib/api/error';
 import segment from 'lib/api/segment';
 import updateAuthUser from 'lib/api/update/auth-user';
 import updatePhoto from 'lib/api/update/photo';
@@ -27,12 +20,11 @@ import updateUserOrgs from 'lib/api/update/user-orgs';
 import updateUserSearchObj from 'lib/api/update/user-search-obj';
 import updateUserTags from 'lib/api/update/user-tags';
 import verifyAuth from 'lib/api/verify/auth';
-import verifyBody from 'lib/api/verify/body';
 
 function mergeSocials(
-  overrides: SocialInterface[],
-  baseline: SocialInterface[]
-): SocialInterface[] {
+  overrides: Social[],
+  baseline: Social[]
+): Social[] {
   const socials = clone(overrides);
   baseline.forEach((s) => {
     if (!socials.some((sc) => sc.type === s.type)) socials.push(clone(s));
@@ -62,7 +54,7 @@ function mergeAvailability(
   overrides: Availability,
   baseline: Availability
 ): Availability {
-  return new Availability(...mergeArrays(overrides, baseline, Timeslot));
+  return Availability.parse(mergeArrays(overrides, baseline, Timeslot));
 }
 
 function mergeSubjects(overrides: Subjects, baseline: Subjects): Subjects {
@@ -80,7 +72,7 @@ function mergeSubjects(overrides: Subjects, baseline: Subjects): Subjects {
  * from `overrides` and fallbacks to taking from `baseline`.
  */
 function mergeUsers(overrides: User, baseline: User): User {
-  const merged: UserInterface = {
+  const merged: User = {
     id: overrides.id || baseline.id,
     name: overrides.name || baseline.name,
 
@@ -122,18 +114,18 @@ function mergeUsers(overrides: User, baseline: User): User {
     created: baseline.created || overrides.created,
     updated: overrides.updated || baseline.updated,
   };
-  return new User(merged);
+  return User.parse(merged);
 }
 
 async function updateAccount(req: Req, res: Res): Promise<void> {
-  const body = verifyBody<User, UserJSON>(req.body, isUserJSON, User);
+  const body = User.parse(req.body);
 
   // Revert to old behavior if user doesn't already exist; just create it.
   const original = (await to(getUser(body.id)))[1];
 
   // Merge the two users giving priority to the request body (but preventing any
   // loss of data; `mergeUsers` won't allow falsy values or empty arrays).
-  const merged = mergeUsers(body, original || new User());
+  const merged = mergeUsers(body, original || User.parse({}));
 
   // Either:
   // 1. Verify the user's authentication cookie (that this API endpoint sets).
@@ -175,11 +167,11 @@ async function updateAccount(req: Req, res: Res): Promise<void> {
     updateUserSearchObj(withAuthUpdate),
   ]);
 
-  res.status(200).json(withAuthUpdate.toJSON());
+  res.status(200).json(withAuthUpdate);
   segment.track({
     userId: withAuthUpdate.id,
     event: 'Account Updated',
-    properties: withAuthUpdate.toSegment(),
+    properties: accountToSegment(withAuthUpdate),
   });
 }
 

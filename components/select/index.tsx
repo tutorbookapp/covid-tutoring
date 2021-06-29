@@ -28,7 +28,7 @@ import styles from './select.module.scss';
 
 type TextFieldPropOverrides = 'textarea' | 'onFocus' | 'onBlur';
 
-interface UniqueSelectProps<T, O extends Option<T> = Option<T>> {
+interface UniqueSelectProps<O extends Option = Option> {
   value: O[];
   onChange: TCallback<O[]>;
   getSuggestions: (query: string) => Promise<O[]>;
@@ -42,16 +42,16 @@ interface UniqueSelectProps<T, O extends Option<T> = Option<T>> {
   onBlurred?: () => any;
 }
 
-type Overrides<T, O extends Option<T> = Option<T>> =
+type Overrides<O extends Option = Option> =
   | TextFieldPropOverrides
-  | keyof UniqueSelectProps<T, O>;
+  | keyof UniqueSelectProps<O>;
 
-export type SelectProps<T, O extends Option<T> = Option<T>> = Omit<
+export type SelectProps<O extends Option = Option> = Omit<
   TextFieldHTMLProps,
-  Overrides<T, O>
+  Overrides<O>
 > &
-  Omit<TextFieldProps, Overrides<T, O>> &
-  UniqueSelectProps<T, O>;
+  Omit<TextFieldProps, Overrides<O>> &
+  UniqueSelectProps<O>;
 
 /**
  * Each `Select` component provides a wrapper around the base `Select`
@@ -61,23 +61,23 @@ export type SelectProps<T, O extends Option<T> = Option<T>> = Omit<
  * Algolia search indices.
  * 3. Also exposes that `Option[]` state if needed by the parent component.
  */
-export interface SelectControls<T, O extends Option<T> = Option<T>> {
-  value: T[];
-  onChange: (value: T[]) => void;
+export interface SelectControls<O extends Option = Option> {
+  value: string[];
+  onChange: (value: string[]) => void;
   selected: O[];
   onSelectedChange: (options: O[]) => void;
 }
 
-export type SelectControllerProps<T, O extends Option<T> = Option<T>> = Omit<
-  SelectProps<T, O>,
-  | keyof SelectControls<T, O>
+export type SelectControllerProps<O extends Option = Option> = Omit<
+  SelectProps<O>,
+  | keyof SelectControls<O>
   | 'getSuggestions'
   | 'noResultsMessage'
   | 'forceUpdateSuggestions'
 > &
-  Partial<SelectControls<T, O>>;
+  Partial<SelectControls<O>>;
 
-export default function Select<T, O extends Option<T>>({
+export default function Select<O extends Option>({
   value,
   onChange,
   getSuggestions,
@@ -91,12 +91,12 @@ export default function Select<T, O extends Option<T>>({
   onBlurred = () => {},
   className,
   ...textFieldProps
-}: SelectProps<T, O>): JSX.Element {
+}: SelectProps<O>): JSX.Element {
   const suggestionsTimeoutId = useRef<ReturnType<typeof setTimeout>>();
   const foundationRef = useRef<MDCMenuSurfaceFoundation>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const ghostElementRef = useRef<HTMLSpanElement>(null);
-  const lastSelectedRef = useRef<Option<T>>();
+  const lastSelectedRef = useRef<Option>();
   const textareaBreakWidth = useRef<number>();
   const hasOpenedSuggestions = useRef<boolean>(false);
 

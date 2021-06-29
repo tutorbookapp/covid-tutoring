@@ -1,4 +1,4 @@
-import { FormEvent, useCallback } from 'react';
+import { FormEvent, useCallback, useMemo } from 'react';
 import { IconButton } from '@rmwc/icon-button';
 import { Select } from '@rmwc/select';
 import useTranslation from 'next-translate/useTranslation';
@@ -7,7 +7,7 @@ import ChevronLeftIcon from 'components/icons/chevron-left';
 import ChevronRightIcon from 'components/icons/chevron-right';
 
 import { Callback } from 'lib/model/callback';
-import { Query } from 'lib/model/query';
+import { Query } from 'lib/model/query/base';
 
 import styles from './pagination.module.scss';
 
@@ -15,7 +15,6 @@ export interface PaginationProps<T extends Query> {
   hits: number;
   query: T;
   setQuery: Callback<T>;
-  model: new (query: Partial<T>) => T;
 }
 
 // TODO: For some reason, the React `memo` types don't allow for the `T` type
@@ -25,21 +24,25 @@ export default function Pagination<T extends Query>({
   hits,
   query,
   setQuery,
-  model: QueryModel,
 }: PaginationProps<T>): JSX.Element {
   const onHitsPerPageChange = useCallback(
     (event: FormEvent<HTMLSelectElement>) => {
       const hitsPerPage = Number(event.currentTarget.value);
-      setQuery((prev) => new QueryModel({ ...prev, hitsPerPage, page: 0 }));
+      setQuery((prev) => ({ ...prev, hitsPerPage, page: 0 }));
     },
-    [QueryModel, setQuery]
+    [setQuery]
   );
   const pageLeft = useCallback(() => {
-    setQuery((prev) => new QueryModel({ ...prev, page: prev.page - 1 }));
-  }, [QueryModel, setQuery]);
+    setQuery((prev) => ({ ...prev, page: prev.page - 1 }));
+  }, [setQuery]);
   const pageRight = useCallback(() => {
-    setQuery((prev) => new QueryModel({ ...prev, page: prev.page + 1 }));
-  }, [QueryModel, setQuery]);
+    setQuery((prev) => ({ ...prev, page: prev.page + 1 }));
+  }, [setQuery]);
+  const paginationString = useMemo(() => {
+    const begin = query.hitsPerPage * query.page + 1;
+    const end = query.hitsPerPage * (query.page + 1);
+    return `${begin}-${end > hits ? hits : end} of ${hits}`;
+  }, [query, hits]);
 
   const { t } = useTranslation();
 
@@ -57,7 +60,7 @@ export default function Pagination<T extends Query>({
           />
         </div>
         <div className={styles.pageNumber}>
-          {query.getPaginationString(hits)}
+          {paginationString}
         </div>
         <IconButton
           disabled={query.page <= 0}

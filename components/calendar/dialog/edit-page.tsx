@@ -49,9 +49,9 @@ export default function EditPage({
     (subjects: string[]) => {
       setEditing(
         (prev) =>
-          new Meeting({
+          Meeting.parse({
             ...prev,
-            match: new Match({ ...prev.match, subjects }),
+            match: Match.parse({ ...prev.match, subjects }),
           })
       );
     },
@@ -59,7 +59,7 @@ export default function EditPage({
   );
   const onTimeChange = useCallback(
     (time: Timeslot) => {
-      setEditing((prev) => new Meeting({ ...prev, time }));
+      setEditing((prev) => Meeting.parse({ ...prev, time }));
     },
     [setEditing]
   );
@@ -67,8 +67,8 @@ export default function EditPage({
     (evt: FormEvent<HTMLInputElement>) => {
       const url = evt.currentTarget.value;
       setEditing((prev) => {
-        const venue = new Venue({ ...prev.venue, url, updated: new Date() });
-        return new Meeting({ ...prev, venue });
+        const venue = Venue.parse({ ...prev.venue, url, updated: new Date() });
+        return Meeting.parse({ ...prev, venue });
       });
     },
     [setEditing]
@@ -76,8 +76,8 @@ export default function EditPage({
   const onRecurChange = useCallback(
     (recur?: string) => {
       setEditing((prev) => {
-        const time = new Timeslot({ ...prev.time, recur });
-        return new Meeting({ ...prev, time });
+        const time = Timeslot.parse({ ...prev.time, recur });
+        return Meeting.parse({ ...prev, time });
       });
     },
     [setEditing]
@@ -85,7 +85,7 @@ export default function EditPage({
   const onDescriptionChange = useCallback(
     (evt: FormEvent<HTMLInputElement>) => {
       const description = evt.currentTarget.value;
-      setEditing((prev) => new Meeting({ ...prev, description }));
+      setEditing((prev) => Meeting.parse({ ...prev, description }));
     },
     [setEditing]
   );

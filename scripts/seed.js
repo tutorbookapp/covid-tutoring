@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 const firebaseAdminLib = require('firebase-admin');
 const firebaseClient = require('firebase/app');
 require('firebase/auth');
+const logger = require('./lib/logger');
 
 const admin = require('../cypress/fixtures/users/admin.json');
 const match = require('../cypress/fixtures/match.json');
@@ -24,7 +25,7 @@ const env = process.env.NODE_ENV || 'development';
   path.resolve(__dirname, `../.env.${env}`),
   path.resolve(__dirname, '../.env'),
 ].forEach((dotfile) => {
-  console.log(`Loaded env from ${dotfile}`);
+  logger.info(`Loaded env from ${dotfile}`);
   dotenv.config({ path: dotfile });
 });
 
@@ -72,7 +73,7 @@ const matchesIdx = search.initIndex(`${prefix}-matches`);
 const meetingsIdx = search.initIndex(`${prefix}-meetings`);
 
 function createIndices() {
-  console.log('Creating indices...');
+  logger.info('Creating indices...');
   return Promise.all([
     usersIdx.setSettings({
       searchableAttributes: [
@@ -121,7 +122,7 @@ function createIndices() {
 }
 
 async function clear() {
-  console.log('Clearing data...');
+  logger.info('Clearing data...');
   const clearFirestoreEndpoint =
     `http://${process.env.FIRESTORE_EMULATOR_HOST}/emulator/v1/projects/` +
     `${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}/databases/(default)/` +
@@ -164,7 +165,7 @@ async function seed(overrides = {}) {
   const rconfig = { headers: await getHeaders(admin.id) };
 
   async function create(route, data) {
-    console.log(`Creating ${data.length} ${route}...`);
+    logger.info(`Creating ${data.length} ${route}...`);
     const endpoint = `http://localhost:3000/api/${route}`;
     await Promise.all(data.map((d) => axios.post(endpoint, d, rconfig)));
   }

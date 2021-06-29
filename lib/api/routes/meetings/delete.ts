@@ -1,7 +1,7 @@
 import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 import { RRule } from 'rrule';
 
-import { Meeting, MeetingAction, MeetingJSON } from 'lib/model/meeting';
+import { Meeting, MeetingAction, MeetingJSON, meetingToSegment } from 'lib/model/meeting';
 import analytics from 'lib/api/analytics';
 import deleteMeetingDoc from 'lib/api/delete/meeting-doc';
 import deleteMeetingSearchObj from 'lib/api/delete/meeting-search-obj';
@@ -41,10 +41,10 @@ export default async function deleteMeeting(
 
     // TODO: Verify the option data types just like we do for the request body.
     const options = verifyOptions<DeleteMeetingOptions>(req.body, {
-      deleting: meeting.toJSON(),
+      deleting: meeting,
       action: 'future',
     });
-    const deleting = Meeting.fromJSON(options.deleting);
+    const deleting = Meeting.parse(options.deleting);
 
     const { uid } = await verifyAuth(req.headers, {
       userIds: meeting.match.people.map((p) => p.id),
@@ -127,7 +127,7 @@ export default async function deleteMeeting(
     segment.track({
       userId: uid,
       event: 'Meeting Deleted',
-      properties: deleting.toSegment(),
+      properties: meetingToSegment(deleting),
     });
 
     // TODO: Ensure that this updates the org statistics as expected (e.g. we

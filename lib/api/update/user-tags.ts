@@ -18,5 +18,5 @@ export default function updateUserTags(
   actions?.add?.forEach((tag) => tags.add(tag));
   actions?.remove?.forEach((tag) => tags.delete(tag));
 
-  return new User(clone({ ...user, tags: [...tags] }));
+  return User.parse(clone({ ...user, tags: [...tags] }));
 }

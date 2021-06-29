@@ -19,13 +19,13 @@ export default function getMeetingVenue(
   people: User[]
 ): Venue {
   if (!meeting.venue.url.includes('meet.jit.si')) return meeting.venue;
-  if (org.venue) return new Venue({ url: org.venue });
+  if (org.venue) return Venue.parse({ url: org.venue });
 
   const priority: Role[] = ['tutor', 'mentor', 'parent', 'tutee', 'mentee'];
   // eslint-disable-next-line no-restricted-syntax
   for (const role of priority) {
     const person = people.find((p) => p.roles.includes(role) && p.venue);
-    if (person?.venue) return new Venue({ url: person.venue });
+    if (person?.venue) return Venue.parse({ url: person.venue });
   }
 
   return meeting.venue;

@@ -15,7 +15,7 @@ export async function login(user: User): Promise<User> {
   const [err, res] = await to<
     AxiosResponse<UserJSON>,
     AxiosError<APIErrorJSON>
-  >(axios.post('/api/users', user.toJSON()));
+  >(axios.post('/api/users', user));
 
   if (err && err.response) throw new Error(err.response.data.message);
   if (err && err.request) throw new Error('Users API did not respond.');
@@ -25,7 +25,7 @@ export async function login(user: User): Promise<User> {
   await auth.signInWithCustomToken(data.token as string);
   await mutate('/api/account', data, false);
 
-  return User.fromJSON(data);
+  return User.parse(data);
 }
 
 export async function loginWithGoogle(
@@ -54,7 +54,7 @@ export async function loginWithGoogle(
     email: cred.user.email as string,
     phone: cred.user.phoneNumber as string,
   };
-  const signedInUser = new User({ ...user, ...firebaseUser });
+  const signedInUser = User.parse({ ...user, ...firebaseUser });
 
   // Create the Firestore profile document (we cannot call the `POST /api/users`
   // endpoint because the Firebase Authentication account already exists). This
@@ -63,7 +63,7 @@ export async function loginWithGoogle(
   const [err, res] = await to<
     AxiosResponse<UserJSON>,
     AxiosError<APIErrorJSON>
-  >(axios.put('/api/account', { ...signedInUser.toJSON(), token }));
+  >(axios.put('/api/account', { ...signedInUser, token }));
 
   if (err && err.response) throw new Error(err.response.data.message);
   if (err && err.request) throw new Error('Users API did not respond.');
@@ -72,5 +72,5 @@ export async function loginWithGoogle(
   const { data } = res as AxiosResponse<UserJSON>;
   await mutate('/api/account', data, false);
 
-  return User.fromJSON(data);
+  return User.parse(data);
 }

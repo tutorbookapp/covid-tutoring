@@ -17,13 +17,13 @@ import getMeetings from 'lib/api/get/meetings';
  * (e.g. "Allow bookings 3 weeks in advance").
  */
 export default async function updateAvailability(user: User): Promise<void> {
-  const query = new MeetingsQuery({
+  const query = MeetingsQuery.parse({
     people: [{ label: user.name, value: user.id }],
     to: new Date(new Date().getFullYear(), new Date().getMonth() + 3),
     from: new Date(),
   });
   const meetings = (await getMeetings(query)).results;
-  const booked = new Availability(...meetings.map((m) => m.time));
+  const booked = Availability.parse(meetings.map((m) => m.time));
 
   const availability = getAlgoliaAvailability(
     user.availability,

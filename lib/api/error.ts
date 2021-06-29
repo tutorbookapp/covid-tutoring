@@ -1,5 +1,7 @@
 import { ServerResponse } from 'http';
 
+import { ZodError } from 'zod';
+
 import { period } from 'lib/utils';
 
 export interface APIErrorJSON {
@@ -43,6 +45,7 @@ export function handle(e: unknown, res: ServerResponse): void {
   if (!(e instanceof APIError) || e.code !== 401)
     console.error('API endpoint encountered error:', e);
   if (e instanceof APIError) return send(e, res);
+  if (e instanceof ZodError) return send(new APIError(e.message, 400), res);
   if (e instanceof Error) return send(new APIError(e.message, 500), res);
   if (typeof e === 'string') return send(new APIError(e, 500), res);
   return send(new APIError('Unknown error', 500), res);

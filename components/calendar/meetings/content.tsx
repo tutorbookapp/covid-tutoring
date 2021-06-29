@@ -82,10 +82,10 @@ const MeetingContent = forwardRef(
     ]);
     const timeString = useMemo(
       () =>
-        `${(meeting.time || new Timeslot()).from.toLocaleString(locale, {
+        `${(meeting.time || Timeslot.parse({})).from.toLocaleString(locale, {
           hour: 'numeric',
           minute: 'numeric',
-        })} - ${(meeting.time || new Timeslot()).to.toLocaleString(locale, {
+        })} - ${(meeting.time || Timeslot.parse({})).to.toLocaleString(locale, {
           hour: 'numeric',
           minute: 'numeric',
         })}`,

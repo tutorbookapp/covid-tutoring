@@ -164,7 +164,7 @@ export default function PopOverMenu({
     await fetch('/api/logout');
     // TODO: Set the default langs both here and in `pages/app` to be
     // the current i18n locale (instead of just English by default).
-    await updateUser(new User({ langs: ['en'] }));
+    await updateUser(User.parse({ langs: ['en'] }));
     window.analytics?.reset();
     Intercom('shutdown');
     Intercom('boot');

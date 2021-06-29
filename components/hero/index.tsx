@@ -14,7 +14,7 @@ export default function Hero(): JSX.Element {
 
   // TODO: Why is only mentoring being shown here? Shouldn't it change?
   const query = useMemo(
-    () => new UsersQuery({ aspect: 'mentoring', visible: true }),
+    () => UsersQuery.parse({ aspect: 'mentoring', visible: true }),
     []
   );
 

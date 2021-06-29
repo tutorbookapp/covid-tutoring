@@ -2,6 +2,7 @@ import { NextApiRequest as Req, NextApiResponse as Res } from 'next';
 import to from 'await-to-js';
 
 import { UserJSON } from 'lib/model/user';
+import { accountToSegment } from 'lib/model/account';
 import definedVals from 'lib/model/defined-vals';
 import getTruncatedUser from 'lib/api/get/truncated-user';
 import getUser from 'lib/api/get/user';
@@ -25,7 +26,7 @@ export default async function fetchUser(
     );
     res.status(200).json(
       definedVals({
-        ...(err ? getTruncatedUser(user) : user).toJSON(),
+        ...(err ? getTruncatedUser(user) : user),
         hash: attrs?.uid === userId ? getUserHash(userId) : undefined,
       })
     );
@@ -34,7 +35,7 @@ export default async function fetchUser(
       segment.track({
         userId: attrs?.uid,
         event: 'User Fetched',
-        properties: user.toSegment(),
+        properties: accountToSegment(user),
       });
   } catch (e) {
     handle(e, res);

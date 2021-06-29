@@ -8,7 +8,7 @@ import { Option } from 'lib/model/query/base';
 import styles from './select.module.scss';
 
 // TODO: Debug why the `updateSelected` type doesn't work with `Select`.
-export interface SelectSurfaceProps<T, O extends Option<T> = Option<T>> {
+export interface SelectSurfaceProps<O extends Option> {
   suggestions: O[];
   noResultsMessage: string;
   updateSelected: (option: any, event?: MouseEvent) => void;
@@ -16,13 +16,13 @@ export interface SelectSurfaceProps<T, O extends Option<T> = Option<T>> {
   value: O[];
 }
 
-function SelectSurface<T, O extends Option<T>>({
+function SelectSurface<O extends Option>({
   suggestions,
   noResultsMessage,
   updateSelected,
   errored,
   value,
-}: SelectSurfaceProps<T, O>): JSX.Element {
+}: SelectSurfaceProps<O>): JSX.Element {
   return (
     <List>
       {!suggestions.length && (

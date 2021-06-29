@@ -15,7 +15,7 @@ export interface UserContextValue {
 }
 
 export const UserContext = createContext<UserContextValue>({
-  user: new User(),
+  user: User.parse({}),
   orgs: [],
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   updateUser: async (user: UpdateUserParam) => {},
