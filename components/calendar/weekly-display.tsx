@@ -113,7 +113,7 @@ function WeeklyDisplay({
       const pos = { x: event.clientX - offset.x, y: event.clientY - offset.y };
       const creating = Meeting.parse({
         id: `temp-${nanoid()}`,
-        creator: user.toPerson(),
+        creator: user,
       });
       setEventTarget(undefined);
       setEventData(undefined);

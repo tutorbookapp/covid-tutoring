@@ -57,7 +57,7 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
   ]);
 
   const { data, isValidating } = useSWR<ListUsersRes>(
-    canSearch ? query.endpoint : null
+    canSearch ? endpoint(query) : null
   );
 
   /**
@@ -94,7 +94,7 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
     const nextPageQuery = UsersQuery.parse(
       clone({ ...query, page: query.page + 1 })
     );
-    void prefetch(nextPageQuery.endpoint);
+    void prefetch(endpoint(nextPageQuery));
   }, [query]);
 
   // TODO: Perhaps we should only allow filtering by a single org, as we don't
@@ -117,7 +117,7 @@ function SearchPage({ org, ...props }: SearchPageProps): JSX.Element {
   // should get rid of it when updating the `Query` object definitions.
   useEffect(() => {
     setSearching(true);
-    void mutate(query.endpoint);
+    void mutate(endpoint(query));
   }, [query]);
 
   // TODO: Debug issues where `searching` stays true even after we receive data

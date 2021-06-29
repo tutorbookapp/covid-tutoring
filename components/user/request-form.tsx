@@ -13,16 +13,16 @@ import Button from 'components/button';
 import Loader from 'components/loader';
 import TimeSelect from 'components/time-select';
 
-import { Aspect, isAspect } from 'lib/model/aspect';
 import { Meeting, MeetingJSON } from 'lib/model/meeting';
 import { Person, Role } from 'lib/model/person';
 import { User, UserJSON } from 'lib/model/user';
+import { UsersQuery, endpoint } from 'lib/model/query/users';
 import { join, translate } from 'lib/utils';
 import { APIErrorJSON } from 'lib/api/error';
+import { Aspect } from 'lib/model/aspect';
 import { ListUsersRes } from 'lib/api/routes/users/list';
 import { Match } from 'lib/model/match';
 import { Timeslot } from 'lib/model/timeslot';
-import { UsersQuery } from 'lib/model/query/users';
 import { getErrorMessage } from 'lib/fetch';
 import { loginWithGoogle } from 'lib/firebase/login';
 import { useOrg } from 'lib/context/org';
@@ -45,7 +45,7 @@ export default function RequestForm({
   const { query } = useRouter();
   const { user, updateUser } = useUser();
   const { t, lang: locale } = useTranslation();
-  const { data: children } = useSWR<ListUsersRes>(user.id ? UsersQuery.parse({ parents: [user.id] }).endpoint : null);
+  const { data: children } = useSWR<ListUsersRes>(user.id ? endpoint(UsersQuery.parse({ parents: [user.id] })) : null);
     
   const [child, setChild] = useState<User>(User.parse({}));
   const [student, setStudent] = useState<string>('Me');

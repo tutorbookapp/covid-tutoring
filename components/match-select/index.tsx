@@ -8,9 +8,9 @@ import { nanoid } from 'nanoid';
 import useSWR from 'swr';
 
 import { CallbackParam, TCallback } from 'lib/model/callback';
+import { MatchesQuery, endpoint } from 'lib/model/query/matches';
 import { ListMatchesRes } from 'lib/api/routes/matches/list';
 import { Match } from 'lib/model/match';
-import { MatchesQuery } from 'lib/model/query/matches';
 import { useClickContext } from 'lib/hooks/click-outside';
 import { useOrg } from 'lib/context/org';
 import { useUser } from 'lib/context/user';
@@ -92,7 +92,7 @@ function MatchSelect({
   const { org } = useOrg();
   const { user } = useUser();
   const { data, error, isValidating } = useSWR<ListMatchesRes>(
-    query ? query.endpoint : null
+    query ? endpoint(query) : null
   );
 
   useEffect(() => {

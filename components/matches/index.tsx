@@ -89,7 +89,7 @@ export default function Matches({
   const { t } = useTranslation();
   const { data, isValidating } = useSWR<ListMatchesRes>(
     (byOrg && query.org) || (byUser && query.people.length)
-      ? query.endpoint
+      ? endpoint(query)
       : null
   );
 

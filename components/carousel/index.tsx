@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 import { useEffect } from 'react';
 
 import { User, UserJSON } from 'lib/model/user';
-import { UsersQuery } from 'lib/model/query/users';
+import { UsersQuery, endpoint } from 'lib/model/query/users';
 import { ListUsersRes } from 'lib/api/routes/users/list';
 import { useOrg } from 'lib/context/org';
 
@@ -16,12 +16,12 @@ interface Props {
 }
 
 export default function UserCarousel({ query, onClick }: Props): JSX.Element {
-  const { data } = useSWR<ListUsersRes>(query.endpoint);
+  const { data } = useSWR<ListUsersRes>(endpoint(query));
   const { org } = useOrg();
 
   useEffect(() => {
-    void mutate(query.endpoint);
-  }, [query.endpoint]);
+    void mutate(endpoint(query));
+  }, [query]);
 
   return (
     <>

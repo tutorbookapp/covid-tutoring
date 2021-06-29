@@ -6,9 +6,9 @@ import useTranslation from 'next-translate/useTranslation';
 import Select, { SelectControllerProps } from 'components/select';
 
 import { User, UserJSON } from 'lib/model/user';
+import { UsersQuery, endpoint } from 'lib/model/query/users';
 import { ListUsersRes } from 'lib/api/routes/users/list';
 import { Option } from 'lib/model/query/base';
-import { UsersQuery } from 'lib/model/query/users';
 import { useUser } from 'lib/context/user';
 
 export interface UserOption extends Option {
@@ -63,15 +63,15 @@ export default function UserSelect({
       if (orgs.length)
         promises.push(
           axios.get<ListUsersRes>(
-            UsersQuery.parse({ search, orgs: orgs.map((o) => o.id) }).endpoint
+            endpoint(UsersQuery.parse({ search, orgs: orgs.map((o) => o.id) }))
           )
         );
       if (user.id)
         promises.push(
           axios.get<ListUsersRes>(
-            UsersQuery.parse({ search, parents: [user.id] }).endpoint
-          )
-        );
+            endpoint(UsersQuery.parse({ search, parents: [user.id] })
+                    )
+        ));
       const suggestions: UserOption[] = [];
       (await Promise.all(promises)).forEach(({ data }) => {
         data.users.forEach((u: UserJSON) => {
